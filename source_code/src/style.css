@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+}
+
+/* NUCLEAR RESET: Hapus scrollbar window & margin */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Kunci anti-scroll */
+  background-color: #030712; /* gray-950 */
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+/* Fix iOS Zooming on Inputs */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"] {
+  font-size: 16px !important; /* Forces iOS Safari not to zoom */
+}
+
+/* Hide scrollbar but keep scroll functionality */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

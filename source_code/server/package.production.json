@@ -1,0 +1,25 @@
+{
+  "name": "crypto-dashboard-server",
+  "version": "1.0.0",
+  "description": "Crypto Dashboard Backend",
+  "main": "app.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node app.js",
+    "postinstall": "npx prisma generate"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.4.1",
+    "@prisma/client": "^7.4.1",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.0.2",
+    "pg": "^8.18.0",
+    "prisma": "^7.4.1",
+    "socket.io": "^4.8.3",
+    "ws": "^8.19.0"
+  }
+}
