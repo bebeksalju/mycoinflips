@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
 const { authenticateToken } = require('../middleware/authMiddleware');
+const { auditLogger } = require('../middleware/auditLogger');
 
 // All routes require authentication
 router.use(authenticateToken);
+router.use(auditLogger);
 
 // User Management
 router.get('/users', adminController.getUsers);
@@ -46,4 +48,8 @@ router.get('/sessions', adminController.getSessions);
 router.delete('/sessions/user/:userId', adminController.deleteUserSessions);
 router.delete('/sessions/:id', adminController.deleteSession);
 
+// Audit Logs
+router.get('/audit-logs', adminController.getAuditLogs);
+
 module.exports = router;
+

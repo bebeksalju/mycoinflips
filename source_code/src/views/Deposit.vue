@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import { useMarketStore } from '../stores/market';
 import { useWalletStore } from '../stores/wallet';
 import api from '../api/axios';
@@ -7,6 +7,7 @@ import api from '../api/axios';
 const marketStore = useMarketStore();
 const walletStore = useWalletStore();
 const showDepositNotice = ref(false);
+const isSubmitting = ref(false);
 
 const depositForm = reactive({
     network: 'USDT_TRC20',
@@ -25,6 +26,10 @@ const adminWallets = ref({
     'USDC': 'Not configured'
 });
 
+// History state
+const depositHistory = ref([]);
+const isLoadingHistory = ref(false);
+
 onMounted(async () => {
     try {
         const res = await api.get('/admin/wallets/public');
@@ -34,7 +39,22 @@ onMounted(async () => {
     } catch (error) {
         console.error('Failed to fetch deposit wallets:', error);
     }
+    fetchDepositHistory();
 });
+
+const fetchDepositHistory = async () => {
+    isLoadingHistory.value = true;
+    try {
+        const res = await api.get('/wallet/transactions');
+        depositHistory.value = (res.data || [])
+            .filter(tx => tx.type === 'DEPOSIT')
+            .slice(0, 5);
+    } catch (e) {
+        console.error('Failed to fetch deposit history:', e);
+    } finally {
+        isLoadingHistory.value = false;
+    }
+};
 
 const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -57,12 +77,20 @@ const submitDeposit = async () => {
         marketStore.showToast('Error', 'Please fill all fields and upload proof', 'error');
         return;
     }
+    if (parseFloat(depositForm.amount) <= 0) {
+        marketStore.showToast('Error', 'Amount must be greater than 0', 'error');
+        return;
+    }
 
+    isSubmitting.value = true;
     const formData = new FormData();
     formData.append('amount', depositForm.amount);
+    // Fix: also send txId to backend for record keeping
+    formData.append('txId', depositForm.txId);
     formData.append('proof', proofFile.value);
 
     const result = await walletStore.deposit(formData);
+    isSubmitting.value = false;
 
     if (result.success) {
         marketStore.showToast('Deposit Submitted', result.msg, 'success');
@@ -71,10 +99,22 @@ const submitDeposit = async () => {
         fileName.value = '';
         proofFile.value = null;
         showDepositNotice.value = true;
+        fetchDepositHistory();
     } else {
         marketStore.showToast('Error', result.msg, 'error');
     }
 };
+
+function formatDate(dateStr) {
+    return new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function statusClass(status) {
+    if (status === 'COMPLETED') return 'bg-green-500/10 text-green-400 border border-green-500/20';
+    if (status === 'PENDING') return 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20';
+    if (status === 'FAILED') return 'bg-red-500/10 text-red-400 border border-red-500/20';
+    return 'bg-gray-700 text-gray-400';
+}
 </script>
 
 <template>
@@ -142,26 +182,13 @@ const submitDeposit = async () => {
                 <div
                     class="bg-gray-800/50 border border-gray-700 rounded-xl p-4 md:p-6 flex flex-col md:flex-row gap-6 items-center">
 
-                    <!-- Mock QR Code -->
-                    <div class="bg-white p-2 rounded-lg shrink-0 hidden md:block">
-                        <div class="w-32 h-32 bg-gray-900 flex items-center justify-center">
-                            <!-- Simple QR Pattern Mock -->
-                            <div class="grid grid-cols-5 gap-1 w-28 h-28 opacity-80">
-                                <div class="col-span-2 row-span-2 bg-black"></div>
-                                <div class="bg-black"></div>
-                                <div class="col-span-2 row-span-2 bg-black"></div>
-                                <div class="bg-black"></div>
-                                <div class="col-span-5 bg-black h-1 my-auto"></div>
-                                <div class="bg-black"></div>
-                                <div class="bg-black"></div>
-                                <div class="bg-black"></div>
-                                <div class="bg-black"></div>
-                                <div class="bg-black"></div>
-                                <div class="col-span-2 row-span-2 bg-black"></div>
-                                <div class="bg-black"></div>
-                                <div class="col-span-2 row-span-2 bg-black"></div>
-                            </div>
-                        </div>
+                    <!-- Network Info Badge -->
+                    <div class="hidden md:flex flex-col items-center justify-center w-28 h-28 bg-gray-900/80 border border-gray-700 rounded-xl shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-yellow-500 mb-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
+                        </svg>
+                        <p class="text-xs font-bold text-yellow-400 text-center leading-tight">{{ depositForm.network.replace('_', ' ') }}</p>
+                        <p class="text-[10px] text-gray-500 mt-1">Network</p>
                     </div>
 
                     <div class="flex-1 w-full min-w-0">
@@ -215,20 +242,49 @@ const submitDeposit = async () => {
                                         d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                                 </svg>
                             </div>
-                            <p class="text-sm font-medium text-gray-300">{{ fileName || 'Click orDragtoUploadScreenshot'
-                            }}</p>
+                            <p class="text-sm font-medium text-gray-300">{{ fileName || 'Click or drag to upload screenshot' }}</p>
                             <p class="text-xs text-gray-500 mt-1">Supports JPG, PNG (Max 5MB)</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="pt-4">
-                    <button @click="submitDeposit"
-                        class="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition-all shadow-lg shadow-green-500/10 active:scale-[0.98]">
-                        Submit Deposit Request
+                    <button @click="submitDeposit" :disabled="isSubmitting"
+                        class="w-full py-3 bg-green-500 hover:bg-green-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all shadow-lg shadow-green-500/10 active:scale-[0.98] flex items-center justify-center gap-2">
+                        <svg v-if="isSubmitting" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        {{ isSubmitting ? 'Submitting...' : 'Submit Deposit Request' }}
                     </button>
                 </div>
 
+            </div>
+
+            <!-- Deposit History -->
+            <div class="mt-6">
+                <h3 class="font-bold text-white mb-3 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-yellow-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Recent Deposits
+                </h3>
+                <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+                    <div v-if="isLoadingHistory" class="py-8 text-center text-gray-500 text-sm">Loading...</div>
+                    <div v-else-if="depositHistory.length === 0" class="py-8 text-center text-gray-600 text-sm">No deposit history yet</div>
+                    <div v-else class="divide-y divide-gray-800">
+                        <div v-for="tx in depositHistory" :key="tx.id"
+                            class="flex items-center justify-between px-4 py-3">
+                            <div>
+                                <p class="text-white font-bold text-sm">${{ tx.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }} USDT</p>
+                                <p class="text-gray-500 text-xs">{{ formatDate(tx.createdAt) }}</p>
+                            </div>
+                            <span :class="statusClass(tx.status)" class="text-xs font-bold px-2.5 py-1 rounded-full">
+                                {{ tx.status }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

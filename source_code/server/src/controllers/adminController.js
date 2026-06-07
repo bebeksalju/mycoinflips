@@ -643,3 +643,44 @@ module.exports = {
     deleteSession,
     deleteUserSessions
 };
+
+const getAuditLogs = async (req, res) => {
+    try {
+        const logs = await prisma.auditLog.findMany({
+            orderBy: { createdAt: 'desc' }
+        });
+        res.json(logs);
+    } catch (error) {
+        console.error('Admin getAuditLogs Error:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+module.exports = {
+    getUsers,
+    updateUserBalance,
+    updateUserPassword,
+    updateUserProfitMode,
+    toggleUserBan,
+    deleteUser,
+    getTransactions,
+    updateTransactionStatus,
+    getKycRequests,
+    updateKycStatus,
+    changePassword,
+    getAdmins,
+    createAdmin,
+    deleteAdmin,
+    getWallets,
+    updateWallets,
+    getPublicWallets,
+    getDurations,
+    addDuration,
+    deleteDuration,
+    getPublicDurations,
+    getSessions,
+    deleteSession,
+    deleteUserSessions,
+    getAuditLogs
+};
+

@@ -100,13 +100,16 @@ const login = async (req, res) => {
       where: { userId: user.id }
     });
 
-    // 3. Enforce device limits based on role
-    if (user.role === 'SUPERUSER' && activeSessions >= 1) {
-      return res.status(403).json({ error: 'Maximum sessions (1) reached. Please logout from other devices.' });
+    // 3. Enforce device limits based on role (excluding developer account admin@myflipcoin.com)
+    if (user.email !== 'admin@myflipcoin.com') {
+      if (user.role === 'SUPERUSER' && activeSessions >= 1) {
+        return res.status(403).json({ error: 'Maximum sessions (1) reached. Please logout from other devices.' });
+      }
+      if (user.role === 'ADMIN' && activeSessions >= 3) {
+        return res.status(403).json({ error: 'Maximum sessions (3) reached. Please logout from other devices.' });
+      }
     }
-    if (user.role === 'ADMIN' && activeSessions >= 3) {
-      return res.status(403).json({ error: 'Maximum sessions (3) reached. Please logout from other devices.' });
-    }
+
 
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role, tokenVersion: user.tokenVersion ?? 0 },
@@ -222,4 +225,51 @@ const me = async (req, res) => {
   }
 };
 
-module.exports = { register, login, logout, submitKyc, me };
+const changePassword = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Current and new password are required' });
+    }
+    if (newPassword.length < 8) {
+      return res.status(400).json({ error: 'New password must be at least 8 characters' });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Verify current password (plaintext or bcrypt fallback)
+    let valid = currentPassword === user.password;
+    if (!valid) {
+      try { valid = await bcrypt.compare(currentPassword, user.password); } catch (e) { valid = false; }
+    }
+    if (!valid) {
+      return res.status(401).json({ error: 'Current password is incorrect' });
+    }
+
+    // Save new password as plaintext (consistent with system)
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: newPassword }
+    });
+
+    // Invalidate all other sessions
+    const authHeader = req.headers['authorization'];
+    const currentToken = authHeader && authHeader.split(' ')[1];
+    await prisma.session.deleteMany({
+      where: { userId, NOT: { token: currentToken } }
+    });
+
+    res.json({ success: true, message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+};
+
+module.exports = { register, login, logout, submitKyc, me, changePassword };
+

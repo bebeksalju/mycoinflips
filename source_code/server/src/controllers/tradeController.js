@@ -265,59 +265,40 @@ const getStats = async (req, res) => {
 // Admin: Platform-wide statistics
 const getAdminStats = async (req, res) => {
     try {
-        // Total Users (Excludes ADMIN/SUPERUSER)
-        const totalUsers = await prisma.user.count({
-            where: { role: 'USER' }
+        const totalUsers = await prisma.user.count({ where: { role: 'USER' } });
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const newUsersToday = await prisma.user.count({ where: { role: 'USER', createdAt: { gte: today } } });
+
+        const transactions = await prisma.transaction.findMany({
+            where: { status: 'COMPLETED' },
+            select: { type: true, amount: true }
         });
 
-        // Total Deposits (sum of completed deposit amounts)
-        const deposits = await prisma.transaction.findMany({
-            where: { type: 'DEPOSIT', status: 'COMPLETED' },
-            select: { amount: true }
-        });
-        const totalDeposits = deposits.reduce((sum, tx) => sum + tx.amount, 0);
+        const totalDeposits = transactions.filter(t => t.type === 'DEPOSIT').reduce((sum, t) => sum + t.amount, 0);
+        const totalWithdrawals = transactions.filter(t => t.type === 'WITHDRAWAL').reduce((sum, t) => sum + t.amount, 0);
 
-        // Pending Withdrawals
-        const pendingWithdrawals = await prisma.transaction.count({
-            where: { type: 'WITHDRAWAL', status: 'PENDING' }
-        });
+        const pendingWithdrawalsList = await prisma.transaction.findMany({ where: { type: 'WITHDRAWAL', status: 'PENDING' } });
+        const pendingWithdrawalAmount = pendingWithdrawalsList.reduce((sum, t) => sum + t.amount, 0);
 
-        // Pending KYC
-        const pendingKyc = await prisma.kyc.count({
-            where: { status: 'PENDING' }
-        });
-
-        // Recent Transactions (last 10)
-        const recentActivity = await prisma.transaction.findMany({
-            take: 10,
-            orderBy: { createdAt: 'desc' },
-            include: {
-                user: { select: { email: true, name: true } }
-            }
-        });
-
-        // Total Trades
-        const totalTrades = await prisma.transaction.count({
-            where: { type: { in: ['TRADE_BUY', 'TRADE_SELL', 'TRADE_WIN', 'TRADE_LOSS'] } }
-        });
+        const winTrades = transactions.filter(t => t.type === 'TRADE_WIN');
+        const lossTrades = transactions.filter(t => t.type === 'TRADE_LOSS');
+        
+        // Revenue estimate: Platform keeps the loss, loses the win payout
+        // Simplified: (Sum of Trade Loss amounts) - (Sum of Trade Win payouts)
+        const revenue = lossTrades.reduce((sum, t) => sum + t.amount, 0) - winTrades.reduce((sum, t) => sum + (t.amount * 0.8), 0);
 
         res.json({
             totalUsers,
-            totalDeposits: parseFloat(totalDeposits.toFixed(2)),
-            pendingWithdrawals,
-            pendingKyc,
-            totalTrades,
-            recentActivity: recentActivity.map(tx => ({
-                id: tx.id,
-                type: tx.type,
-                amount: tx.amount,
-                status: tx.status,
-                userEmail: tx.user.email,
-                userName: tx.user.name,
-                createdAt: tx.createdAt
-            }))
+            newUsersToday,
+            totalDeposits,
+            totalWithdrawals,
+            pendingWithdrawals: pendingWithdrawalsList.length,
+            pendingWithdrawalAmount,
+            revenue: parseFloat(revenue.toFixed(2)),
+            winCount: winTrades.length,
+            lossCount: lossTrades.length
         });
-
     } catch (error) {
         console.error('Admin Stats Error:', error);
         res.status(500).json({ error: error.message });

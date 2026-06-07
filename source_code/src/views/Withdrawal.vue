@@ -1,9 +1,10 @@
 <script setup>
-import { reactive, computed } from 'vue';
+import { reactive, computed, ref, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useWalletStore } from '../stores/wallet';
 import { useMarketStore } from '../stores/market';
 import { useAuthStore } from '../stores/auth';
+import api from '../api/axios';
 
 const walletStore = useWalletStore();
 const marketStore = useMarketStore();
@@ -19,26 +20,59 @@ const withdrawalForm = reactive({
 });
 
 const maxAmount = computed(() => walletStore.wallet.usdt);
+const showConfirmModal = ref(false);
+const isSubmitting = ref(false);
 
-const submitWithdrawal = async () => {
+// Withdrawal history
+const withdrawHistory = ref([]);
+const isLoadingHistory = ref(false);
+
+onMounted(() => {
+    fetchWithdrawHistory();
+});
+
+const fetchWithdrawHistory = async () => {
+    isLoadingHistory.value = true;
+    try {
+        const res = await api.get('/wallet/transactions');
+        withdrawHistory.value = (res.data || [])
+            .filter(tx => tx.type === 'WITHDRAWAL')
+            .slice(0, 5);
+    } catch (e) {
+        console.error('Failed to fetch withdrawal history:', e);
+    } finally {
+        isLoadingHistory.value = false;
+    }
+};
+
+const requestWithdrawal = () => {
     if (!withdrawalForm.address || !withdrawalForm.amount) {
         marketStore.showToast('Error', 'Please fill all fields', 'error');
         return;
     }
-
+    if (parseFloat(withdrawalForm.amount) <= 0) {
+        marketStore.showToast('Error', 'Amount must be greater than 0', 'error');
+        return;
+    }
     if (parseFloat(withdrawalForm.amount) > walletStore.wallet.usdt) {
         marketStore.showToast('Error', 'Insufficient USDT Balance', 'error');
         return;
     }
+    // Open confirmation modal
+    showConfirmModal.value = true;
+};
 
-    // Call Wallet Store Action
+const submitWithdrawal = async () => {
+    isSubmitting.value = true;
     const result = await walletStore.withdraw(withdrawalForm.amount, withdrawalForm.address);
+    isSubmitting.value = false;
+    showConfirmModal.value = false;
 
     if (result.success) {
-        marketStore.showToast('Withdrawal Successful', result.msg, 'success');
-        // Reset form
+        marketStore.showToast('Withdrawal Submitted', result.msg, 'success');
         withdrawalForm.amount = '';
         withdrawalForm.address = '';
+        fetchWithdrawHistory();
     } else {
         marketStore.showToast('Withdrawal Failed', result.msg, 'error');
     }
@@ -47,6 +81,22 @@ const submitWithdrawal = async () => {
 const setMax = () => {
     withdrawalForm.amount = walletStore.wallet.usdt;
 };
+
+function formatDate(dateStr) {
+    return new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function statusClass(status) {
+    if (status === 'COMPLETED') return 'bg-green-500/10 text-green-400 border border-green-500/20';
+    if (status === 'PENDING') return 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20';
+    if (status === 'FAILED') return 'bg-red-500/10 text-red-400 border border-red-500/20';
+    return 'bg-gray-700 text-gray-400';
+}
+
+function maskAddress(addr) {
+    if (!addr || addr.length < 12) return addr;
+    return addr.slice(0, 8) + '...' + addr.slice(-6);
+}
 </script>
 
 <template>
@@ -186,7 +236,7 @@ const setMax = () => {
                     </div>
 
                     <div class="pt-4">
-                        <button @click="submitWithdrawal"
+                        <button @click="requestWithdrawal"
                             class="w-full py-3.5 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition-all shadow-lg shadow-red-500/10 active:scale-[0.98] flex items-center justify-center gap-2">
                             <span>Confirm Withdrawal</span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -200,5 +250,85 @@ const setMax = () => {
 
             </div>
         </div>
+
+        <!-- Withdrawal History -->
+        <div class="mt-6">
+            <h3 class="font-bold text-white mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-yellow-500">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Recent Withdrawals
+            </h3>
+            <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+                <div v-if="isLoadingHistory" class="py-8 text-center text-gray-500 text-sm">Loading...</div>
+                <div v-else-if="withdrawHistory.length === 0" class="py-8 text-center text-gray-600 text-sm">No withdrawal history yet</div>
+                <div v-else class="divide-y divide-gray-800">
+                    <div v-for="tx in withdrawHistory" :key="tx.id"
+                        class="flex items-center justify-between px-4 py-3">
+                        <div>
+                            <p class="text-white font-bold text-sm">${{ tx.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }} USDT</p>
+                            <p class="text-gray-500 text-xs">{{ formatDate(tx.createdAt) }}</p>
+                        </div>
+                        <span :class="statusClass(tx.status)" class="text-xs font-bold px-2.5 py-1 rounded-full">
+                            {{ tx.status }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Confirmation Modal -->
+    <Teleport to="body">
+        <div v-if="showConfirmModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+            style="background-color: rgba(0,0,0,0.75); backdrop-filter: blur(8px);">
+            <div class="w-full max-w-sm bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-red-500/15 rounded-full flex items-center justify-center shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-red-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white">Confirm Withdrawal</h3>
+                            <p class="text-xs text-gray-500">Please verify all details before confirming</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800 rounded-xl p-4 space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 text-sm">Amount</span>
+                            <span class="text-white font-bold text-sm">${{ parseFloat(withdrawalForm.amount).toLocaleString('en-US', { minimumFractionDigits: 2 }) }} USDT</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 text-sm">Network</span>
+                            <span class="text-white font-bold text-sm">{{ withdrawalForm.network }}</span>
+                        </div>
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-gray-500 text-sm shrink-0">Address</span>
+                            <span class="text-yellow-400 font-mono text-xs text-right break-all">{{ withdrawalForm.address }}</span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-red-400/80 text-center">⚠️ Withdrawals cannot be reversed once submitted</p>
+
+                    <div class="flex gap-3">
+                        <button @click="showConfirmModal = false" :disabled="isSubmitting"
+                            class="flex-1 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold rounded-xl transition-all text-sm">
+                            Cancel
+                        </button>
+                        <button @click="submitWithdrawal" :disabled="isSubmitting"
+                            class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 disabled:opacity-60 text-white font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-2">
+                            <svg v-if="isSubmitting" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                            </svg>
+                            {{ isSubmitting ? 'Processing...' : 'Confirm' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Teleport>
 </template>

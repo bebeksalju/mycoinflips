@@ -125,3 +125,14 @@ model ChatMessage {
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 }
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  userEmail String
+  userName  String?
+  action    String
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
+

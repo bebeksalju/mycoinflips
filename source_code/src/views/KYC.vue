@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { useMarketStore } from '../stores/market';
@@ -12,24 +12,36 @@ const kycForm = reactive({
     idNumber: ''
 });
 
-const frontImage = ref(null);
-const backImage = ref(null);
+// Step tracking: 1 = form not started, 2 = personal info filled, 3 = docs uploaded
+const currentStep = computed(() => {
+    if (frontFile.value && backFile.value) return 3;
+    if (kycForm.fullName && kycForm.idNumber) return 2;
+    return 1;
+});
+
+const frontPreview = ref(null);
+const backPreview = ref(null);
 const frontFile = ref(null);
 const backFile = ref(null);
 
 const handleFileUpload = (event, side) => {
     const file = event.target.files[0];
-    if (file) {
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
         if (side === 'front') {
-            frontImage.value = file.name;
+            frontPreview.value = e.target.result;
             frontFile.value = file;
-        }
-        if (side === 'back') {
-            backImage.value = file.name;
+        } else {
+            backPreview.value = e.target.result;
             backFile.value = file;
         }
-    }
+    };
+    reader.readAsDataURL(file);
 };
+
+const isSubmitting = ref(false);
 
 const submitKYC = async () => {
     if (!kycForm.fullName || !kycForm.idNumber || !frontFile.value || !backFile.value) {
@@ -43,7 +55,10 @@ const submitKYC = async () => {
     formData.append('front', frontFile.value);
     formData.append('back', backFile.value);
 
+    isSubmitting.value = true;
     const success = await authStore.submitKYC(formData);
+    isSubmitting.value = false;
+
     if (success) {
         marketStore.showToast('Submitted', 'KYC documents submitted for review', 'success');
     } else {
@@ -54,7 +69,7 @@ const submitKYC = async () => {
 
 <template>
     <div class="h-full overflow-y-auto p-4 md:p-8 w-full">
-        <div class="max-w-2xl mx-auto">
+        <div class="max-w-2xl mx-auto pb-24">
             <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-8 h-8 text-yellow-500">
@@ -64,7 +79,7 @@ const submitKYC = async () => {
                 Identity Verification (KYC)
             </h2>
 
-            <!-- Status Banner -->
+            <!-- Status Banner — Pending -->
             <div v-if="authStore.user.kycStatus === 'pending'"
                 class="bg-blue-500/10 border border-blue-500/20 p-6 rounded-lg text-center mb-6 shadow-lg shadow-blue-500/5">
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-500/20 rounded-full mb-4 ring-4 ring-blue-500/10">
@@ -76,9 +91,13 @@ const submitKYC = async () => {
                 </div>
                 <h3 class="text-xl font-bold text-white mb-2">Under Review</h3>
                 <p class="text-gray-400 text-sm leading-relaxed max-w-sm mx-auto">Your documents have been submitted and are currently being reviewed by our compliance team. This process typically takes 24-48 hours.</p>
+                <div class="flex items-center justify-center gap-2 text-blue-400 text-xs font-medium mt-4">
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                    Awaiting admin review...
+                </div>
             </div>
 
-            <!-- Approved State -->
+            <!-- Status Banner — Approved -->
             <div v-else-if="authStore.user.kycStatus === 'approved'"
                 class="bg-green-500/10 border border-green-500/20 p-8 rounded-xl text-center shadow-lg shadow-green-500/5 mt-8 relative overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-b from-green-500/5 to-transparent pointer-events-none"></div>
@@ -104,29 +123,31 @@ const submitKYC = async () => {
             <!-- KYC Form -->
             <div v-else class="bg-gray-900 border border-gray-800 rounded-xl p-6 md:p-8 relative overflow-hidden shadow-2xl">
 
-                <!-- Steps Indicator -->
+                <!-- Steps Indicator — Dynamic -->
                 <div class="flex items-center justify-between mb-8 px-2 md:px-12">
+                    <!-- Step 1 -->
                     <div class="flex flex-col items-center gap-2">
-                        <div
-                            class="w-8 h-8 rounded-full bg-yellow-500 text-gray-900 font-bold flex items-center justify-center">
-                            1</div>
-                        <span class="text-xs font-bold text-yellow-500">Details</span>
+                        <div class="w-8 h-8 rounded-full font-bold flex items-center justify-center transition-all"
+                            :class="currentStep >= 1 ? 'bg-yellow-500 text-gray-900' : 'bg-gray-800 text-gray-500 border border-gray-700'">1</div>
+                        <span class="text-xs font-bold" :class="currentStep >= 1 ? 'text-yellow-500' : 'text-gray-500'">Details</span>
                     </div>
                     <div class="flex-1 h-0.5 bg-gray-800 mx-2 relative">
-                        <div class="absolute inset-0 bg-yellow-500 w-1/2"></div>
+                        <div class="absolute inset-0 bg-yellow-500 transition-all duration-500" :style="{ width: currentStep >= 2 ? '100%' : '0%' }"></div>
                     </div>
+                    <!-- Step 2 -->
                     <div class="flex flex-col items-center gap-2">
-                        <div
-                            class="w-8 h-8 rounded-full bg-yellow-500 text-gray-900 font-bold flex items-center justify-center">
-                            2</div>
-                        <span class="text-xs font-bold text-yellow-500">Documents</span>
+                        <div class="w-8 h-8 rounded-full font-bold flex items-center justify-center transition-all"
+                            :class="currentStep >= 2 ? 'bg-yellow-500 text-gray-900' : 'bg-gray-800 text-gray-500 border border-gray-700'">2</div>
+                        <span class="text-xs font-bold" :class="currentStep >= 2 ? 'text-yellow-500' : 'text-gray-500'">Documents</span>
                     </div>
-                    <div class="flex-1 h-0.5 bg-gray-800 mx-2"></div>
+                    <div class="flex-1 h-0.5 bg-gray-800 mx-2 relative">
+                        <div class="absolute inset-0 bg-yellow-500 transition-all duration-500" :style="{ width: currentStep >= 3 ? '100%' : '0%' }"></div>
+                    </div>
+                    <!-- Step 3 -->
                     <div class="flex flex-col items-center gap-2">
-                        <div
-                            class="w-8 h-8 rounded-full bg-gray-800 text-gray-500 font-bold flex items-center justify-center border border-gray-700">
-                            3</div>
-                        <span class="text-xs font-bold text-gray-500">Review</span>
+                        <div class="w-8 h-8 rounded-full font-bold flex items-center justify-center transition-all"
+                            :class="currentStep >= 3 ? 'bg-yellow-500 text-gray-900' : 'bg-gray-800 text-gray-500 border border-gray-700'">3</div>
+                        <span class="text-xs font-bold" :class="currentStep >= 3 ? 'text-yellow-500' : 'text-gray-500'">Review</span>
                     </div>
                 </div>
 
@@ -144,8 +165,7 @@ const submitKYC = async () => {
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs uppercase font-bold text-gray-500 mb-2">Full Legal
-                                    Name</label>
+                                <label class="block text-xs uppercase font-bold text-gray-500 mb-2">Full Legal Name</label>
                                 <input type="text" v-model="kycForm.fullName" placeholder="As shown on ID"
                                     class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all">
                             </div>
@@ -169,77 +189,94 @@ const submitKYC = async () => {
                             Document Upload
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Front UI -->
+                            <!-- Front of ID -->
                             <div>
                                 <label class="block text-xs uppercase font-bold text-gray-500 mb-2">Front of ID</label>
-                                <div class="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center hover:border-yellow-500/50 hover:bg-gray-800/50 transition-all cursor-pointer group h-40 flex flex-col items-center justify-center"
-                                    @click="$refs.frontInput.click()"
-                                    :class="{ 'border-green-500/50 bg-green-500/10': frontImage }">
+                                <!-- Preview if file selected -->
+                                <div v-if="frontPreview"
+                                    class="border-2 border-green-500/40 rounded-lg overflow-hidden relative group h-40 cursor-pointer"
+                                    @click="$refs.frontInput.click()">
+                                    <img :src="frontPreview" alt="Front ID Preview" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <p class="text-white text-xs font-bold">Click to change</p>
+                                    </div>
+                                    <div class="absolute top-2 right-2 bg-green-500 rounded-full p-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-white">
+                                            <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input type="file" ref="frontInput" class="hidden" @change="(e) => handleFileUpload(e, 'front')" accept="image/*">
+                                </div>
+                                <!-- Upload zone if no file -->
+                                <div v-else
+                                    class="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center hover:border-yellow-500/50 hover:bg-gray-800/50 transition-all cursor-pointer group h-40 flex flex-col items-center justify-center"
+                                    @click="$refs.frontInput.click()">
                                     <input type="file" ref="frontInput" class="hidden"
                                         @change="(e) => handleFileUpload(e, 'front')" accept="image/*">
-                                    <div v-if="!frontImage">
-                                        <div
-                                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor"
-                                                class="w-5 h-5 text-gray-400 group-hover:text-yellow-500">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                                            </svg>
-                                        </div>
-                                        <p class="text-xs text-gray-400">Upload Front</p>
-                                    </div>
-                                    <div v-else class="text-green-400 flex flex-col items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            class="w-8 h-8">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                                clip-rule="evenodd" />
+                                    <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor"
+                                            class="w-5 h-5 text-gray-400 group-hover:text-yellow-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                                         </svg>
-                                        <p class="text-xs font-bold truncate max-w-[150px]">{{ frontImage }}</p>
                                     </div>
+                                    <p class="text-xs text-gray-400">Upload Front</p>
+                                    <p class="text-[10px] text-gray-600 mt-1">JPG, PNG up to 5MB</p>
                                 </div>
                             </div>
 
-                            <!-- Back UI -->
+                            <!-- Back of ID -->
                             <div>
                                 <label class="block text-xs uppercase font-bold text-gray-500 mb-2">Back of ID</label>
-                                <div class="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center hover:border-yellow-500/50 hover:bg-gray-800/50 transition-all cursor-pointer group h-40 flex flex-col items-center justify-center"
-                                    @click="$refs.backInput.click()"
-                                    :class="{ 'border-green-500/50 bg-green-500/10': backImage }">
+                                <!-- Preview if file selected -->
+                                <div v-if="backPreview"
+                                    class="border-2 border-green-500/40 rounded-lg overflow-hidden relative group h-40 cursor-pointer"
+                                    @click="$refs.backInput.click()">
+                                    <img :src="backPreview" alt="Back ID Preview" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <p class="text-white text-xs font-bold">Click to change</p>
+                                    </div>
+                                    <div class="absolute top-2 right-2 bg-green-500 rounded-full p-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-white">
+                                            <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input type="file" ref="backInput" class="hidden" @change="(e) => handleFileUpload(e, 'back')" accept="image/*">
+                                </div>
+                                <!-- Upload zone if no file -->
+                                <div v-else
+                                    class="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center hover:border-yellow-500/50 hover:bg-gray-800/50 transition-all cursor-pointer group h-40 flex flex-col items-center justify-center"
+                                    @click="$refs.backInput.click()">
                                     <input type="file" ref="backInput" class="hidden"
                                         @change="(e) => handleFileUpload(e, 'back')" accept="image/*">
-                                    <div v-if="!backImage">
-                                        <div
-                                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor"
-                                                class="w-5 h-5 text-gray-400 group-hover:text-yellow-500">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                                            </svg>
-                                        </div>
-                                        <p class="text-xs text-gray-400">Upload Back</p>
-                                    </div>
-                                    <div v-else class="text-green-400 flex flex-col items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            class="w-8 h-8">
-                                            <path fill-rule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                                clip-rule="evenodd" />
+                                    <div class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor"
+                                            class="w-5 h-5 text-gray-400 group-hover:text-yellow-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                                         </svg>
-                                        <p class="text-xs font-bold truncate max-w-[150px]">{{ backImage }}</p>
                                     </div>
+                                    <p class="text-xs text-gray-400">Upload Back</p>
+                                    <p class="text-[10px] text-gray-600 mt-1">JPG, PNG up to 5MB</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="pt-4">
-                    <button @click="submitKYC"
-                        class="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold rounded transition-colors shadow-lg shadow-yellow-500/10">
-                        Submit Documents
+                <div class="pt-6">
+                    <button @click="submitKYC" :disabled="isSubmitting || currentStep < 3"
+                        class="w-full py-3 font-bold rounded-lg transition-all shadow-lg flex items-center justify-center gap-2"
+                        :class="currentStep >= 3
+                            ? 'bg-yellow-500 hover:bg-yellow-400 text-gray-900 shadow-yellow-500/10 active:scale-[0.98]'
+                            : 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700'">
+                        <svg v-if="isSubmitting" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        {{ isSubmitting ? 'Submitting...' : currentStep < 3 ? 'Complete all fields to submit' : 'Submit Documents' }}
                     </button>
                 </div>
             </div>

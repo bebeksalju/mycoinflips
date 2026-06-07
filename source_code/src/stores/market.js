@@ -313,17 +313,17 @@ export const useMarketStore = defineStore('market', () => {
         } catch (error) {
             console.error('API Error (Fallback to Live Only):', error);
 
-            // Fallback: Jika API error tapi kita punya CACHE (meskipun expired), pakai saja
+            // Fallback: If API error but we have CACHE (even if expired), use it
             if (cached) {
                 showToast('API Limit', 'Using cached data', 'warning');
                 applyMarketData(cached.data);
                 connectWebSocket();
             } else {
-                // Jika benar-benar tidak ada data, kita coba connect WebSocket saja 
-                // supaya harga live tetap jalan. Chart mungkin kosong/loading.
+                // If no data available, attempt to connect WebSocket only
+                // so live price still works. Chart might be empty/loading.
                 showToast('API Limit', 'Switching to Live-Only Mode', 'warning');
 
-                // Set harga awal sementara (fallback hardcode)
+                // Set initial price (hardcoded fallback)
                 if (currentPrice.value === 0) {
                     currentPrice.value = activeCoin.symbol === 'BTC' ? 96000 : 100;
                 }
