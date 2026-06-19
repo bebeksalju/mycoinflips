@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict BaMymBB4WlD3n2MxMU0g2z6qluBfb5GKZLcOAapAxFvkcBua5R7YVBtbbCP7ErT
+\restrict WDFAECRr8dGJfpLc3fgBIrq3YGUhDTM8Ll3gsHWCIaIYitbTbvQwRpauoC6RPwx
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -612,8 +612,8 @@ COPY public."Kyc" (id, "userId", status, "documentUrl", "documentUrlBack", "full
 --
 
 COPY public."Session" (id, "userId", token, "expiresAt", "createdAt") FROM stdin;
-286	1	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5AbXlmbGlwY29pbi5jb20iLCJyb2xlIjoiU1VQRVJVU0VSIiwidG9rZW5WZXJzaW9uIjo5LCJpYXQiOjE3ODE2NjM4ODAsImV4cCI6MTc4MTc1MDI4MH0.bu0RCPyCzoqy6Eku9x-vWjsIjSBIcq4QIh9Nou79IkI	2026-06-18 02:38:00.642	2026-06-17 02:38:00.643
 287	34	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0LCJlbWFpbCI6Im12cGFudGFsbGljYUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgxNzYxNDY4LCJleHAiOjE3ODE4NDc4Njh9.ZXdMo8i2w_f6HuA28lh9kU3_43e81HXD6x-ZPPGTEOo	2026-06-19 05:44:28.493	2026-06-18 05:44:28.493
+288	1	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5AbXlmbGlwY29pbi5jb20iLCJyb2xlIjoiU1VQRVJVU0VSIiwidG9rZW5WZXJzaW9uIjo5LCJpYXQiOjE3ODE4NTkwODYsImV4cCI6MTc4MTk0NTQ4Nn0.bp5hz62UaPcLix1uKeezpFddf3RLK4t1uGK2e-nbiWA	2026-06-20 08:51:26.472	2026-06-19 08:51:26.472
 166	21	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIxLCJlbWFpbCI6ImVsYXNzb3dpcG9oQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzcyNTE5MTEsImV4cCI6MTc3NzMzODMxMX0.li7pBGABg2LaHuRfdhobTnlq9WjRbtDVEpEHIzU2_P0	2026-04-28 01:05:11.786	2026-04-27 01:05:11.786
 248	30	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMwLCJlbWFpbCI6Im5pdmVhYnV0dGVyNzc5QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA5NzcxOTMsImV4cCI6MTc4MTA2MzU5M30.PJzTSwFuMNNBtpHPvxVCVyRygRx7vHqC3GKtpNC2HJY	2026-06-10 03:53:13.538	2026-06-09 03:53:13.538
 250	30	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMwLCJlbWFpbCI6Im5pdmVhYnV0dGVyNzc5QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODEwNDk0NTksImV4cCI6MTc4MTEzNTg1OX0.qL88x67VpTefhc0OF3Pq9mTIyP6lPqnGrkfg9tVLi84	2026-06-10 23:57:39.587	2026-06-09 23:57:39.587
@@ -784,7 +784,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 6, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 287, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 288, true);
 
 
 --
@@ -980,5 +980,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict BaMymBB4WlD3n2MxMU0g2z6qluBfb5GKZLcOAapAxFvkcBua5R7YVBtbbCP7ErT
+\unrestrict WDFAECRr8dGJfpLc3fgBIrq3YGUhDTM8Ll3gsHWCIaIYitbTbvQwRpauoC6RPwx
 

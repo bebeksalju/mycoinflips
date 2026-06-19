@@ -93,7 +93,7 @@ git config user.email "backup@major-tour.com"
 # Check if there are changes before committing
 if [ -n "$(git status --porcelain)" ]; then
     git add -A
-    git commit -m "Daily backup: $(date +'%Y-%m-%d %H:%M:%S')"
+    git commit -m "Automated backup: $(date +'%Y-%m-%d %H:%M:%S')"
     # Push to main or master
     git push origin main || git push origin master
     echo "   -> Backup successfully pushed to GitHub!"
