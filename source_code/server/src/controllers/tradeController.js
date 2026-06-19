@@ -288,6 +288,24 @@ const getAdminStats = async (req, res) => {
         // Simplified: (Sum of Trade Loss amounts) - (Sum of Trade Win payouts)
         const revenue = lossTrades.reduce((sum, t) => sum + t.amount, 0) - winTrades.reduce((sum, t) => sum + (t.amount * 0.8), 0);
 
+        const pendingKyc = await prisma.kyc.count({ where: { status: 'PENDING' } });
+
+        const recentActivityRaw = await prisma.transaction.findMany({
+            take: 10,
+            orderBy: { createdAt: 'desc' },
+            include: { user: { select: { name: true, email: true } } }
+        });
+
+        const recentActivity = recentActivityRaw.map(tx => ({
+            id: tx.id,
+            type: tx.type,
+            amount: tx.amount,
+            status: tx.status,
+            createdAt: tx.createdAt,
+            userEmail: tx.user?.email || 'Unknown',
+            userName: tx.user?.name || 'Unknown'
+        }));
+
         res.json({
             totalUsers,
             newUsersToday,
@@ -297,7 +315,9 @@ const getAdminStats = async (req, res) => {
             pendingWithdrawalAmount,
             revenue: parseFloat(revenue.toFixed(2)),
             winCount: winTrades.length,
-            lossCount: lossTrades.length
+            lossCount: lossTrades.length,
+            pendingKyc,
+            recentActivity
         });
     } catch (error) {
         console.error('Admin Stats Error:', error);

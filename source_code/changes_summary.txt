@@ -1,0 +1,57 @@
+======================================================================
+                  MYCOINFLIP - PLATFORM CHANGES SUMMARY
+======================================================================
+
+The following changes and fixes have been made to the platform:
+
+1. ENFORCED ROLE-BASED ACCESS CONTROL (RBAC)
+   - Route Protection: Implemented a new 'requireAdmin' middleware 
+     (server/src/middleware/roleMiddleware.js) to restrict administrative 
+     endpoints to ADMIN and SUPERUSER roles only.
+   - Files Modified:
+     * server/src/routes/adminRoutes.js
+     * server/src/middleware/roleMiddleware.js (new file)
+
+2. PASSWORD MANAGEMENT AND DATA LEAK PREVENTION
+   - Safe API Responses: Excluded the password field from the database query 
+     results when listing users or administrators in the admin panel to 
+     prevent credential exposure.
+   - Hashing on Change/Create: Added bcrypt hashing for administrators created 
+     via the admin panel, and for users changing their passwords via settings.
+   - Manual Hashing Bypass (Applied by User): The user manually disabled 
+     bcrypt hashing inside server/src/controllers/authController.js for the 
+     registration endpoint so that new users' passwords are saved in 
+     plaintext (per application requirements).
+   - Files Modified:
+     * server/src/controllers/adminController.js
+     * server/src/controllers/authController.js
+
+3. SECURE FILE UPLOAD VALIDATION
+   - Restricted File Extensions: Updated multer upload configurations for 
+     KYC documents and deposit proofs to validate file types. The server now 
+     only accepts images (jpg, jpeg, png) and PDFs, preventing arbitrary code 
+     or script execution uploads.
+   - Files Modified:
+     * server/src/routes/authRoutes.js
+     * server/src/routes/walletRoutes.js
+
+4. API RATE LIMITING (DOS & BRUTE-FORCE PROTECTION)
+   - Login & Auth Limits: Limited authentication attempts (login and register) 
+     to a maximum of 15 attempts per minute per IP address.
+   - Global Request Limits: Configured a global API request limit of 100 
+     requests per minute per IP address to mitigate abuse.
+   - Files Modified:
+     * server/src/app.js
+     * server/package.json
+     * server/package-lock.json
+
+5. USER SETTINGS VIEW SCROLLING FIX (FRONTEND)
+   - Layout Scrollbar: Added scrolling containers ('h-full overflow-y-auto bg-gray-950') 
+     to the settings page structure to prevent settings panels from getting cut 
+     off on smaller screens or laptop displays.
+   - Files Modified:
+     * src/views/Settings.vue
+
+======================================================================
+Generated on: 2026-06-07 (Server Local Time)
+======================================================================

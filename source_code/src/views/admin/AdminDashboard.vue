@@ -149,8 +149,18 @@ function statusBadgeClass(status) {
                 <!-- Recent Activity (3 cols wide) -->
                 <div class="lg:col-span-3 bg-gray-800 rounded-xl border border-gray-700">
                     <div class="flex items-center justify-between px-5 py-4 border-b border-gray-700">
-                        <h3 class="font-bold text-white">Recent Activity</h3>
-                        <span class="text-xs text-gray-500">Last 10 transactions</span>
+                        <div>
+                            <h3 class="font-bold text-white">User Recent Activity</h3>
+                            <p class="text-xs text-gray-500 mt-0.5">Last 10 transactions across all users</p>
+                        </div>
+                        <button @click="router.push('/admin/user-activity')"
+                            class="flex items-center gap-1.5 text-xs text-yellow-400 hover:text-yellow-300 font-semibold transition-colors group">
+                            View All
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </button>
                     </div>
                     <div v-if="adminStore.platformStats.recentActivity.length === 0"
                         class="flex flex-col items-center justify-center py-12 text-gray-600">

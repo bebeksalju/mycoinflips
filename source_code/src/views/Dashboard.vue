@@ -49,6 +49,9 @@ onMounted(() => {
 
     // Pre-fetch market overview data
     marketStore.fetchMarketOverview();
+
+    // Fetch user wallet balance to sync any admin updates (deposits, balance settings)
+    walletStore.fetchBalance();
 });
 
 // Helper to get data from marketOverview array based on coin symbol/id

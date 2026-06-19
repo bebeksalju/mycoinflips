@@ -80,7 +80,7 @@ const closeLightbox = () => {
                             <th class="px-6 py-4">User</th>
                             <th class="px-6 py-4 text-right">Amount</th>
                             <th class="px-6 py-4">Network</th>
-                            <th class="px-6 py-4">Proof</th>
+                            <th class="px-6 py-4">Destination / Proof</th>
                             <th class="px-6 py-4">Date</th>
                             <th class="px-6 py-4">Status</th>
                             <th v-if="activeTab === 'pending'" class="px-6 py-4 text-right">Actions</th>
@@ -112,12 +112,25 @@ const closeLightbox = () => {
                                     }} ({{ tx.network }})</span>
                             </td>
                             <td class="px-6 py-4">
-                                <img v-if="tx.proofUrl" 
-                                    :src="tx.proofUrl" 
-                                    class="w-10 h-10 object-cover rounded border border-gray-600 cursor-pointer hover:opacity-80 transition-opacity"
-                                    @dblclick="openLightbox(tx.proofUrl)"
-                                    title="Double-click to enlarge" />
-                                <span v-else class="text-xs text-gray-600">—</span>
+                                <div v-if="tx.type === 'DEPOSIT'">
+                                    <img v-if="tx.proofUrl" 
+                                        :src="tx.proofUrl" 
+                                        class="w-10 h-10 object-cover rounded border border-gray-600 cursor-pointer hover:opacity-80 transition-opacity"
+                                        @dblclick="openLightbox(tx.proofUrl)"
+                                        title="Double-click to enlarge" />
+                                    <span v-else class="text-xs text-gray-600">—</span>
+                                </div>
+                                <div v-else-if="tx.type === 'WITHDRAWAL'">
+                                    <div v-if="tx.targetAddress" class="flex items-center gap-1">
+                                        <span class="text-[10px] font-mono text-gray-400 max-w-[120px] truncate" :title="tx.targetAddress">{{ tx.targetAddress }}</span>
+                                        <button @click="navigator.clipboard.writeText(tx.targetAddress)" class="text-gray-500 hover:text-white" title="Copy Address">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <span v-else class="text-xs text-gray-600">—</span>
+                                </div>
                             </td>
                             <td class="px-6 py-4 text-xs font-mono">{{ formatDate(tx.date) }}</td>
                             <td class="px-6 py-4">

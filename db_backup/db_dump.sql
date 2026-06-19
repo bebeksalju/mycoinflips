@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict n7ZhbFsffBjO2nGH8samwrAAbkVX3PJFP4jw3wYdYdzG2qtJrtk6DSl7mbe2yPl
+\restrict BaMymBB4WlD3n2MxMU0g2z6qluBfb5GKZLcOAapAxFvkcBua5R7YVBtbbCP7ErT
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -511,11 +511,11 @@ ALTER TABLE ONLY public."Wallet" ALTER COLUMN id SET DEFAULT nextval('public."Wa
 --
 
 COPY public."AdminWallet" (id, network, address, "createdAt", "updatedAt") FROM stdin;
-1	BTC	19rEvUZZjYJcALwhnxb2iMnvGdwAf5fjid	2026-03-04 18:50:39.953	2026-06-03 03:26:34.995
-2	ETH	0x4707be147f3fbb265923e0fda62c7192694f21b4	2026-03-04 18:50:39.96	2026-06-03 03:26:35
-3	USDT_ERC20	0x4707be147f3fbb265923e0fda62c7192694f21b4	2026-03-04 18:50:39.962	2026-06-03 03:26:35.002
-4	USDT_TRC20	TCbk3i9dmvGz3shUFpDsfAteQsCK67VkG5	2026-03-04 18:50:39.964	2026-06-03 03:26:35.004
-5	USDC	0x4707be147f3fbb265923e0fda62c7192694f21b4	2026-03-04 18:50:39.966	2026-06-03 03:26:35.006
+1	BTC	19rEvUZZjYJcALwhnxb2iMnvGdwAf5fjid	2026-03-04 18:50:39.953	2026-06-08 06:39:54.857
+2	ETH	0x4707be147f3fbb265923e0fda62c7192694f21b4	2026-03-04 18:50:39.96	2026-06-08 06:39:54.869
+3	USDT_ERC20	0x4707be147f3fbb265923e0fda62c7192694f21b4	2026-03-04 18:50:39.962	2026-06-08 06:39:54.871
+4	USDT_TRC20	TCbk3i9dmvGz3shUFpDsfAteQsCK67VkG5	2026-03-04 18:50:39.964	2026-06-08 06:39:54.873
+5	USDC	0x4707be147f3fbb265923e0fda62c7192694f21b4	2026-03-04 18:50:39.966	2026-06-08 06:39:54.875
 \.
 
 
@@ -524,10 +524,41 @@ COPY public."AdminWallet" (id, network, address, "createdAt", "updatedAt") FROM 
 --
 
 COPY public."AuditLog" (id, "userId", "userEmail", "userName", action, "ipAddress", "createdAt") FROM stdin;
-1	9	wawong77@mycoinflips.com	Admin	Changed block status of user ID 22	153.124.163.253	2026-06-02 07:28:52.553
-2	8	tkenrsi@mycoinflips.com	Admin	Updated the admin deposit wallet addresses	153.124.163.253	2026-06-03 03:26:35.009
-3	9	wawong77@mycoinflips.com	Admin	Changed balance of user Baylan Yuen (baylany@gmail.com) to $1314065	153.124.163.253	2026-06-04 15:08:13.674
-4	9	wawong77@mycoinflips.com	Admin	Changed balance of user Michael Schultz (niveabutter779@gmail.com) to $230	104.28.163.235	2026-06-06 05:09:16.845
+2	8	tkenrsi@mycoinflips.com	Admin	Updated the cryptocurrency deposit addresses for the system	153.124.163.253	2026-06-03 03:26:35.009
+3	9	wawong77@mycoinflips.com	Admin	Set the balance of Baylan Yuen (baylany@gmail.com) to $1314065	153.124.163.253	2026-06-04 15:08:13.674
+4	9	wawong77@mycoinflips.com	Admin	Set the balance of Michael Schultz (niveabutter779@gmail.com) to $230	104.28.163.235	2026-06-06 05:09:16.845
+1	9	wawong77@mycoinflips.com	Admin	Changed the block status of SADF akshana (juripeli@denipl.net)	153.124.163.253	2026-06-02 07:28:52.553
+5	9	wawong77@mycoinflips.com	Admin	Set the balance of Mark Vogel (mvpantallica@gmail.com) to $10000	153.124.163.253	2026-06-07 13:11:13.44
+6	9	wawong77@mycoinflips.com	Admin	Set the balance of Mark Vogel (mvpantallica@gmail.com) to $0	153.124.163.253	2026-06-07 13:11:20.117
+7	9	wawong77@mycoinflips.com	Admin	Set the balance of Griffin  Johnson (griffinjo77@gmail.com) to $10000	153.124.163.253	2026-06-07 13:11:28.084
+8	9	wawong77@mycoinflips.com	Admin	Set Griffin  Johnson (griffinjo77@gmail.com) to always win trades	104.28.163.232	2026-06-07 13:33:41.496
+9	9	wawong77@mycoinflips.com	Admin	Set Griffin  Johnson (griffinjo77@gmail.com) to always lose trades	104.28.163.232	2026-06-07 13:34:30.486
+10	9	wawong77@mycoinflips.com	Admin	Set Griffin  Johnson (griffinjo77@gmail.com) to win/lose trades randomly	104.28.163.232	2026-06-07 13:34:31.552
+11	9	wawong77@mycoinflips.com	Admin	Set Griffin  Johnson (griffinjo77@gmail.com) to always win trades	104.28.163.232	2026-06-07 13:42:27.885
+12	9	wawong77@mycoinflips.com	Admin	Set Griffin  Johnson (griffinjo77@gmail.com) to win/lose trades randomly	104.28.163.232	2026-06-07 13:44:09.925
+13	8	tkenrsi@mycoinflips.com	Admin	Updated the cryptocurrency deposit addresses for the system	153.124.163.253	2026-06-08 06:35:57.749
+14	8	tkenrsi@mycoinflips.com	Admin	Updated the cryptocurrency deposit addresses for the system	153.124.163.253	2026-06-08 06:39:08.061
+15	8	tkenrsi@mycoinflips.com	Admin	Updated the cryptocurrency deposit addresses for the system	153.124.163.253	2026-06-08 06:39:21.552
+16	8	tkenrsi@mycoinflips.com	Admin	Updated the cryptocurrency deposit addresses for the system	153.124.163.253	2026-06-08 06:39:27.843
+17	8	tkenrsi@mycoinflips.com	Admin	Updated the cryptocurrency deposit addresses for the system	153.124.163.253	2026-06-08 06:39:43.511
+18	8	tkenrsi@mycoinflips.com	Admin	Updated the cryptocurrency deposit addresses for the system	153.124.163.253	2026-06-08 06:39:54.878
+19	9	wawong77@mycoinflips.com	Admin	Set the balance of Baylan Yuen (baylany@gmail.com) to $1314565	153.124.163.253	2026-06-09 05:48:10.742
+20	9	wawong77@mycoinflips.com	Admin	Set Michael Schultz (niveabutter779@gmail.com) to always win trades	153.124.163.253	2026-06-10 03:34:41.382
+21	9	wawong77@mycoinflips.com	Admin	Set Michael Schultz (niveabutter779@gmail.com) to win/lose trades randomly	153.124.163.253	2026-06-10 03:34:42.232
+22	9	wawong77@mycoinflips.com	Admin	Set Michael Schultz (niveabutter779@gmail.com) to always lose trades	153.124.163.253	2026-06-10 03:34:42.613
+23	9	wawong77@mycoinflips.com	Admin	Rejected a withdrawal of $20000 for Anna Smith (Annasmith15@gmail.com)	153.124.163.253	2026-06-11 08:59:43.558
+24	9	wawong77@mycoinflips.com	Admin	Rejected a deposit of $140 for Anna Smith (Annasmith15@gmail.com)	153.124.163.253	2026-06-14 12:16:51.104
+25	9	wawong77@mycoinflips.com	Admin	Approved a deposit of $140 for Mark Vogel (mvpantallica@gmail.com)	104.28.160.162	2026-06-14 12:19:30.629
+26	9	wawong77@mycoinflips.com	Admin	Approved a deposit of $101 for Mark Vogel (mvpantallica@gmail.com)	104.28.160.162	2026-06-14 12:30:56.283
+27	9	wawong77@mycoinflips.com	Admin	Set Mark Vogel (mvpantallica@gmail.com) to always win trades	104.28.160.162	2026-06-14 12:43:14.41
+28	9	wawong77@mycoinflips.com	Admin	Set Mark Vogel (mvpantallica@gmail.com) to win/lose trades randomly	104.28.160.162	2026-06-14 12:43:17.095
+29	9	wawong77@mycoinflips.com	Admin	Set Mark Vogel (mvpantallica@gmail.com) to always win trades	104.28.160.162	2026-06-14 12:43:17.542
+30	9	wawong77@mycoinflips.com	Admin	Set Mark Vogel (mvpantallica@gmail.com) to always win trades	104.28.160.162	2026-06-14 12:43:35.318
+31	9	wawong77@mycoinflips.com	Admin	Set Mark Vogel (mvpantallica@gmail.com) to win/lose trades randomly	104.28.160.162	2026-06-14 12:54:08.867
+32	9	wawong77@mycoinflips.com	Admin	Set Mark Vogel (mvpantallica@gmail.com) to always lose trades	104.28.160.162	2026-06-14 12:54:09.867
+33	9	wawong77@mycoinflips.com	Admin	Set Mark Vogel (mvpantallica@gmail.com) to win/lose trades randomly	104.28.160.162	2026-06-14 12:54:18.888
+34	9	wawong77@mycoinflips.com	Admin	Set Mark Vogel (mvpantallica@gmail.com) to always lose trades	104.28.160.162	2026-06-14 13:33:07.004
+35	9	wawong77@mycoinflips.com	Admin	Approved a withdrawal of $30000 for Baylan Yuen (baylany@gmail.com)	59.153.130.189	2026-06-16 03:04:13.281
 \.
 
 
@@ -557,8 +588,12 @@ COPY public."ChatMessage" (id, "userId", sender, message, read, "createdAt") FRO
 42	19	admin	We just respond to your email sir. please try to check your email	t	2026-04-26 15:20:12.199
 43	19	user	Can you tell me where my first withdrawal is. I am still waiting. The 20k withdrawal was done in error.	t	2026-04-26 17:17:40.315
 44	19	user	Can someone respond to my email or reply to me here	t	2026-04-29 03:46:18.203
-46	30	user	I just have a question about my balance	f	2026-06-05 04:42:00.286
-47	30	user	I had 230 something in my account with 2 successful trades	f	2026-06-05 04:43:59.866
+48	34	user	I can’t figure out my bitcoin address	t	2026-06-08 06:39:34.704
+46	30	user	I just have a question about my balance	t	2026-06-05 04:42:00.286
+47	30	user	I had 230 something in my account with 2 successful trades	t	2026-06-05 04:43:59.866
+49	30	user	I'm trying to withdraw everything but it won't work	f	2026-06-10 01:30:03.943
+50	37	user	Ini akun IT digunakan khusus untuk maintenance	t	2026-06-12 06:33:09.222
+51	19	user	What will be the required cost for the withdrawal I just started	f	2026-06-16 02:43:14.583
 \.
 
 
@@ -577,17 +612,19 @@ COPY public."Kyc" (id, "userId", status, "documentUrl", "documentUrlBack", "full
 --
 
 COPY public."Session" (id, "userId", token, "expiresAt", "createdAt") FROM stdin;
+286	1	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5AbXlmbGlwY29pbi5jb20iLCJyb2xlIjoiU1VQRVJVU0VSIiwidG9rZW5WZXJzaW9uIjo5LCJpYXQiOjE3ODE2NjM4ODAsImV4cCI6MTc4MTc1MDI4MH0.bu0RCPyCzoqy6Eku9x-vWjsIjSBIcq4QIh9Nou79IkI	2026-06-18 02:38:00.642	2026-06-17 02:38:00.643
+287	34	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0LCJlbWFpbCI6Im12cGFudGFsbGljYUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgxNzYxNDY4LCJleHAiOjE3ODE4NDc4Njh9.ZXdMo8i2w_f6HuA28lh9kU3_43e81HXD6x-ZPPGTEOo	2026-06-19 05:44:28.493	2026-06-18 05:44:28.493
 166	21	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIxLCJlbWFpbCI6ImVsYXNzb3dpcG9oQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzcyNTE5MTEsImV4cCI6MTc3NzMzODMxMX0.li7pBGABg2LaHuRfdhobTnlq9WjRbtDVEpEHIzU2_P0	2026-04-28 01:05:11.786	2026-04-27 01:05:11.786
-169	19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJlbWFpbCI6ImJheWxhbnlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc3NzQyNTk1MSwiZXhwIjoxNzc3NTEyMzUxfQ.Hf39HMZmWb6M68atXWZEUCM__HHv_rFA8n_isLMVfsI	2026-04-30 01:25:51.895	2026-04-29 01:25:51.896
-171	19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJlbWFpbCI6ImJheWxhbnlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc3NzQzNDM2MywiZXhwIjoxNzc3NTIwNzYzfQ.g6m6_xBfJVhOHUGTO-ZYm7kZQgFhKn-loxY-5qHojJ8	2026-04-30 03:46:03.592	2026-04-29 03:46:03.592
-172	19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJlbWFpbCI6ImJheWxhbnlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc3NzQ0MDc3MywiZXhwIjoxNzc3NTI3MTczfQ.JLp0hOE0fusZz-LTI1mRwCSQSNtR-nOUdjgAPbmgEPI	2026-04-30 05:32:53.418	2026-04-29 05:32:53.418
+248	30	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMwLCJlbWFpbCI6Im5pdmVhYnV0dGVyNzc5QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA5NzcxOTMsImV4cCI6MTc4MTA2MzU5M30.PJzTSwFuMNNBtpHPvxVCVyRygRx7vHqC3GKtpNC2HJY	2026-06-10 03:53:13.538	2026-06-09 03:53:13.538
+250	30	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMwLCJlbWFpbCI6Im5pdmVhYnV0dGVyNzc5QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODEwNDk0NTksImV4cCI6MTc4MTEzNTg1OX0.qL88x67VpTefhc0OF3Pq9mTIyP6lPqnGrkfg9tVLi84	2026-06-10 23:57:39.587	2026-06-09 23:57:39.587
 191	26	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI2LCJlbWFpbCI6Im1pa2Vjb2ZmZXkzNTdAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MDQ1Njc0OCwiZXhwIjoxNzgwNTQzMTQ4fQ.LzQwxbQyBgCgo2C4n1dyRoj9YxX7MHgOnFC5b2gQd4k	2026-06-04 03:19:08.18	2026-06-03 03:19:08.181
-202	28	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI4LCJlbWFpbCI6ImdyaWZmaW5qbzc3QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA1NTkxODEsImV4cCI6MTc4MDY0NTU4MX0.Uwf7tO7Qj1xlYwkBFUDjCxA0tNUGRQw0zhXQZUukCTA	2026-06-05 07:46:21.843	2026-06-04 07:46:21.843
-207	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA2NzI4ODEsImV4cCI6MTc4MDc1OTI4MX0.J-OV0V7goIBT-cBImdNdifYUnog-wbZAEs0xJBkcoXo	2026-06-06 15:21:21.942	2026-06-05 15:21:21.942
-209	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA3MTgxMTEsImV4cCI6MTc4MDgwNDUxMX0.9G5AXQKp-ZK1crrXtYNBSxKEjfYxHgvGN3d--btgWFU	2026-06-07 03:55:11.918	2026-06-06 03:55:11.918
-211	9	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImVtYWlsIjoid2F3b25nNzdAbXljb2luZmxpcHMuY29tIiwicm9sZSI6IkFETUlOIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA3MjIzNjAsImV4cCI6MTc4MDgwODc2MH0.7QWRP6boRu8S66CvsMN3ajqPjwdf3Vgc80GTFxlqDSU	2026-06-07 05:06:00.569	2026-06-06 05:06:00.57
-212	1	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5AbXlmbGlwY29pbi5jb20iLCJyb2xlIjoiU1VQRVJVU0VSIiwidG9rZW5WZXJzaW9uIjo5LCJpYXQiOjE3ODA3MjI5OTEsImV4cCI6MTc4MDgwOTM5MX0._jdA-XZgVQrv8u0rK3Mt4MQuHk20ETPQf9Exc7rVkjk	2026-06-07 05:16:31.703	2026-06-06 05:16:31.703
-214	1	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5AbXlmbGlwY29pbi5jb20iLCJyb2xlIjoiU1VQRVJVU0VSIiwidG9rZW5WZXJzaW9uIjo5LCJpYXQiOjE3ODA3OTMzMjQsImV4cCI6MTc4MDg3OTcyNH0.3_OxXt0c3LNTWKhla9aJQQabrjsLaoQo8NssSlHYnUo	2026-06-08 00:48:44.724	2026-06-07 00:48:44.726
+219	33	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMzLCJlbWFpbCI6ImNoYXNyYWZpdGlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MDgwOTYzOCwiZXhwIjoxNzgwODk2MDM4fQ.26yLxQYlkX-v7IywySQw7OBvLEHEifUrewzRzu7wt4U	2026-06-08 05:20:38.703	2026-06-07 05:20:38.704
+221	28	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI4LCJlbWFpbCI6ImdyaWZmaW5qbzc3QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA4MzgxMjIsImV4cCI6MTc4MDkyNDUyMn0.KdbOEatqdYPUlaNTuzJWM5bxCaNXIdMRLxQy84wXlVo	2026-06-08 13:15:22.349	2026-06-07 13:15:22.349
+282	19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJlbWFpbCI6ImJheWxhbnlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MTU3NzExMiwiZXhwIjoxNzgxNjYzNTEyfQ.QHujgbCA0K6wZyFhitbVdang0vylKRO48pawSQtw8Xk	2026-06-17 02:31:52.91	2026-06-16 02:31:52.91
+225	35	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM1LCJlbWFpbCI6ImNlc2xpbmVsYXVAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MDg5NDk2NSwiZXhwIjoxNzgwOTgxMzY1fQ.mA8yRerU0k392AMxwphHFTEMyguC3tBSubcl_irZwVA	2026-06-09 05:02:45.865	2026-06-08 05:02:45.866
+283	19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJlbWFpbCI6ImJheWxhbnlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MTU3NzYzOCwiZXhwIjoxNzgxNjY0MDM4fQ.vg91RRrqZifQblM48_hRbAJ9wx6YGm4Arg191WgBaIw	2026-06-17 02:40:38.475	2026-06-16 02:40:38.475
+284	9	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImVtYWlsIjoid2F3b25nNzdAbXljb2luZmxpcHMuY29tIiwicm9sZSI6IkFETUlOIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODE1NzkwNDYsImV4cCI6MTc4MTY2NTQ0Nn0.BhhsQphU7Q1mjSXm7rkTCkqqQhD6c3qrqy79-OoLs54	2026-06-17 03:04:06.995	2026-06-16 03:04:06.995
+285	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODE2NTgwMTgsImV4cCI6MTc4MTc0NDQxOH0.URmyVn_JvfSyCfQau2z6DzyV0eTZWsrTNCgW5GQsyV0	2026-06-18 01:00:18.128	2026-06-17 01:00:18.128
 \.
 
 
@@ -610,6 +647,9 @@ COPY public."TradingDuration" (id, seconds, percentage, "minBalance") FROM stdin
 --
 
 COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, status, "targetAddress", "proofUrl", "createdAt") FROM stdin;
+144	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-15 05:31:15.01
+145	19	30000	\N	BTC	WITHDRAWAL	COMPLETED	0x17884aC617d8b946F4EEc8F359C79FfE9dc31FF4	\N	2026-06-16 02:42:12.876
+146	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-17 01:00:37.499
 58	13	100000	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1773282653332-88byko7u3nh.jpg	2026-03-12 02:30:53.338
 59	13	10000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-12 02:32:23.328
 60	13	10000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-12 02:34:06.579
@@ -645,6 +685,24 @@ COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, stat
 122	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-06 03:05:40.998
 123	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-06 03:14:46.449
 124	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-06 03:55:23.168
+125	13	1000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-07 13:30:06.893
+126	28	1000	0	BTC/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-07 13:32:30.081
+127	28	1000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-07 13:33:43.266
+128	28	1000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-07 13:34:44.271
+129	28	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-07 13:43:01.76
+130	13	88500	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-10 00:35:16.563
+131	13	16000	0	XRP/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-10 00:37:13.488
+132	13	10000	0	SOL/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-10 00:57:21.92
+133	13	20000	\N	\N	WITHDRAWAL	FAILED	BLABLABLABLABLA	\N	2026-06-11 05:45:41.325
+135	13	7000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-12 15:19:18.948
+136	13	140	0	USDT	DEPOSIT	FAILED	\N	/uploads/proofs/proof-1781439375021-593owth4zij.jfif	2026-06-14 12:16:15.026
+137	34	140	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1781439415495-7xvr5bhs90p.png	2026-06-14 12:16:55.495
+138	34	101	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1781440251287-x1m9oy0w3j.png	2026-06-14 12:30:51.291
+139	34	240	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-14 12:46:29.294
+140	34	260	0	ETH/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-14 12:51:47.07
+141	13	8500	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-15 02:06:00.814
+142	13	3000	0	XRP/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-15 05:24:24.466
+143	13	7500	0	ETH/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-15 05:28:05.095
 \.
 
 
@@ -662,8 +720,12 @@ COPY public."User" (id, email, password, name, role, "profitMode", status, "crea
 1	admin@myflipcoin.com	Monyet_ijo_Banyumas&*!	Super Admin	SUPERUSER	random	active	2026-02-27 15:31:14.314	2026-03-06 18:00:16.394	9
 26	mikecoffey357@gmail.com	Invest100	Mike Coffey	USER	random	active	2026-06-03 03:18:56.383	2026-06-03 03:18:56.383	0
 27	drvnchevy@gmail.com	Mufasa1995!	Jake Nordberg	USER	random	active	2026-06-03 14:57:14.12	2026-06-03 14:57:14.12	0
-28	griffinjo77@gmail.com	91Huskies	Griffin  Johnson	USER	random	active	2026-06-04 07:46:03.566	2026-06-04 07:46:03.566	0
-30	niveabutter779@gmail.com	GideonStone9864$@#	Michael Schultz	USER	random	active	2026-06-05 04:40:07.314	2026-06-05 04:40:07.314	0
+33	chasrafiti@gmail.com	Love!123	Chas Rafiti	USER	random	active	2026-06-07 05:12:02.874	2026-06-07 05:12:02.874	0
+28	griffinjo77@gmail.com	91Huskies	Griffin  Johnson	USER	random	active	2026-06-04 07:46:03.566	2026-06-07 13:44:09.922	0
+35	ceslinelau@gmail.com	wawong17	cesline lau	USER	random	active	2026-06-08 05:02:31.801	2026-06-08 05:02:31.801	0
+30	niveabutter779@gmail.com	GideonStone9864$@#	Michael Schultz	USER	loss	active	2026-06-05 04:40:07.314	2026-06-10 03:34:42.61	0
+37	akunit@mycoinflips.com	bokepindoh	Akun IT Mycoinflips	USER	random	active	2026-06-12 06:31:43.484	2026-06-12 06:31:43.484	0
+34	mvpantallica@gmail.com	Zebra@1993	Mark Vogel	USER	loss	active	2026-06-07 07:25:20.449	2026-06-14 13:33:07	0
 \.
 
 
@@ -676,13 +738,17 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 8	8	0	{}	2026-03-03 17:05:22.089	2026-03-03 17:05:22.089
 9	9	0	{}	2026-03-03 17:05:22.169	2026-03-03 17:05:22.169
 10	10	0	{}	2026-03-03 17:05:22.221	2026-03-03 17:05:22.221
+34	34	291	{}	2026-06-07 07:25:20.449	2026-06-14 12:52:18.23
 21	21	0	{}	2026-04-27 01:05:05.696	2026-04-27 01:05:05.696
 26	26	0	{}	2026-06-03 03:18:56.383	2026-06-03 03:18:56.383
 27	27	0	{}	2026-06-03 14:57:14.12	2026-06-03 14:57:14.12
-28	28	0	{}	2026-06-04 07:46:03.566	2026-06-04 07:46:03.566
-19	19	1314065	{}	2026-03-28 02:09:41.475	2026-06-04 15:08:13.671
-13	13	176900	{}	2026-03-12 02:28:29.356	2026-06-06 03:57:24.123
+19	19	1284565	{}	2026-03-28 02:09:41.475	2026-06-16 02:42:12.875
+13	13	210000	{}	2026-03-12 02:28:29.356	2026-06-17 01:01:38.424
 30	30	230	{}	2026-06-05 04:40:07.314	2026-06-06 05:09:16.833
+33	33	0	{}	2026-06-07 05:12:02.874	2026-06-07 05:12:02.874
+28	28	11100	{}	2026-06-04 07:46:03.566	2026-06-07 13:44:02.677
+35	35	0	{}	2026-06-08 05:02:31.801	2026-06-08 05:02:31.801
+37	37	0	{}	2026-06-12 06:31:43.484	2026-06-12 06:31:43.484
 \.
 
 
@@ -690,35 +756,35 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 -- Name: AdminWallet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."AdminWallet_id_seq"', 40, true);
+SELECT pg_catalog.setval('public."AdminWallet_id_seq"', 70, true);
 
 
 --
 -- Name: AuditLog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."AuditLog_id_seq"', 4, true);
+SELECT pg_catalog.setval('public."AuditLog_id_seq"', 35, true);
 
 
 --
 -- Name: ChatMessage_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."ChatMessage_id_seq"', 47, true);
+SELECT pg_catalog.setval('public."ChatMessage_id_seq"', 51, true);
 
 
 --
 -- Name: Kyc_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Kyc_id_seq"', 5, true);
+SELECT pg_catalog.setval('public."Kyc_id_seq"', 6, true);
 
 
 --
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 214, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 287, true);
 
 
 --
@@ -732,21 +798,21 @@ SELECT pg_catalog.setval('public."TradingDuration_id_seq"', 10, true);
 -- Name: Transaction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Transaction_id_seq"', 124, true);
+SELECT pg_catalog.setval('public."Transaction_id_seq"', 146, true);
 
 
 --
 -- Name: User_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."User_id_seq"', 32, true);
+SELECT pg_catalog.setval('public."User_id_seq"', 37, true);
 
 
 --
 -- Name: Wallet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Wallet_id_seq"', 32, true);
+SELECT pg_catalog.setval('public."Wallet_id_seq"', 37, true);
 
 
 --
@@ -914,5 +980,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict n7ZhbFsffBjO2nGH8samwrAAbkVX3PJFP4jw3wYdYdzG2qtJrtk6DSl7mbe2yPl
+\unrestrict BaMymBB4WlD3n2MxMU0g2z6qluBfb5GKZLcOAapAxFvkcBua5R7YVBtbbCP7ErT
 

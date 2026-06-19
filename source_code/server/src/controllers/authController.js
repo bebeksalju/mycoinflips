@@ -17,14 +17,15 @@ const register = async (req, res) => {
       return res.status(400).json({ error: 'User already exists' });
     }
 
-    // Store password as plaintext (User Request: "biarain ga secure gapapa")
-    const hashedPassword = password;
+    // // Hash the password securely using bcrypt
+    // const salt = await bcrypt.genSalt(12);
+    // const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create user and wallet
     const user = await prisma.user.create({
       data: {
         email,
-        password: hashedPassword,
+        password: password,
         name,
         wallet: {
           create: {
@@ -180,15 +181,15 @@ const submitKyc = async (req, res) => {
     });
 
     const formattedKyc = {
-        id: kyc.id,
-        user: kyc.user.name || 'Unknown',
-        email: kyc.user.email,
-        status: kyc.status.toLowerCase(),
-        date: kyc.createdAt,
-        fullName: kyc.fullName,
-        idNumber: kyc.idNumber,
-        documentUrl: kyc.documentUrl,
-        documentUrlBack: kyc.documentUrlBack
+      id: kyc.id,
+      user: kyc.user.name || 'Unknown',
+      email: kyc.user.email,
+      status: kyc.status.toLowerCase(),
+      date: kyc.createdAt,
+      fullName: kyc.fullName,
+      idNumber: kyc.idNumber,
+      documentUrl: kyc.documentUrl,
+      documentUrlBack: kyc.documentUrlBack
     };
 
     socketEmitter.emitToAdmins('kyc:new-request', formattedKyc);
@@ -214,10 +215,10 @@ const me = async (req, res) => {
 
     // Strip sensitive fields
     const { password, ...safeUser } = user;
-    
+
     res.json({
-        user: safeUser,
-        kycStatus: safeUser.kyc?.status?.toLowerCase() || 'unverified'
+      user: safeUser,
+      kycStatus: safeUser.kyc?.status?.toLowerCase() || 'unverified'
     });
   } catch (error) {
     console.error('Auth me error:', error);
@@ -251,10 +252,12 @@ const changePassword = async (req, res) => {
       return res.status(401).json({ error: 'Current password is incorrect' });
     }
 
-    // Save new password as plaintext (consistent with system)
+    // Hash the new password securely
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
     await prisma.user.update({
       where: { id: userId },
-      data: { password: newPassword }
+      data: { password: hashedPassword }
     });
 
     // Invalidate all other sessions

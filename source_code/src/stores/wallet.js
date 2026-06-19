@@ -65,9 +65,9 @@ export const useWalletStore = defineStore('wallet', () => {
         }
     }
 
-    async function withdraw(amount, targetAddress) {
+    async function withdraw(amount, targetAddress, network) {
         try {
-            const response = await axios.post('/wallet/withdraw', { amount: parseFloat(amount), targetAddress });
+            const response = await axios.post('/wallet/withdraw', { amount: parseFloat(amount), targetAddress, network });
             wallet.usdt = response.data.wallet.balance;
             return { success: true, msg: 'Withdrawal submitted successfully' };
         } catch (error) {

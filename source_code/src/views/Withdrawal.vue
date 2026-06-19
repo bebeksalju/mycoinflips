@@ -23,11 +23,28 @@ const maxAmount = computed(() => walletStore.wallet.usdt);
 const showConfirmModal = ref(false);
 const isSubmitting = ref(false);
 
+const adminWallets = ref({
+    'BTC': 'Not configured',
+    'ETH': 'Not configured',
+    'USDT_ERC20': 'Not configured',
+    'USDT_TRC20': 'Not configured',
+    'USDC': 'Not configured'
+});
+
 // Withdrawal history
 const withdrawHistory = ref([]);
 const isLoadingHistory = ref(false);
 
-onMounted(() => {
+onMounted(async () => {
+    try {
+        const res = await api.get('/admin/wallets/public');
+        if (res.data) {
+            adminWallets.value = { ...adminWallets.value, ...res.data };
+            withdrawalForm.network = Object.keys(adminWallets.value)[0];
+        }
+    } catch (error) {
+        console.error('Failed to fetch admin wallets:', error);
+    }
     fetchWithdrawHistory();
 });
 
@@ -64,7 +81,7 @@ const requestWithdrawal = () => {
 
 const submitWithdrawal = async () => {
     isSubmitting.value = true;
-    const result = await walletStore.withdraw(withdrawalForm.amount, withdrawalForm.address);
+    const result = await walletStore.withdraw(withdrawalForm.amount, withdrawalForm.address, withdrawalForm.network);
     isSubmitting.value = false;
     showConfirmModal.value = false;
 
@@ -191,13 +208,12 @@ function maskAddress(addr) {
                                 class="block text-xs uppercase font-bold text-gray-500 mb-2 md:mb-3 tracking-wider">Select
                                 Network</label>
                             <div class="grid grid-cols-3 gap-2 md:gap-3">
-                                <button v-for="net in ['TRC20', 'ERC20', 'BEP20']" :key="net"
+                                <button v-for="(addr, net) in adminWallets" :key="net"
                                     @click="withdrawalForm.network = net"
                                     class="px-2 py-3 rounded-lg text-xs md:text-sm font-bold border transition-all duration-200 flex flex-col items-center gap-1 group"
                                     :class="withdrawalForm.network === net ? 'bg-yellow-500 text-gray-900 border-yellow-500 shadow-lg shadow-yellow-500/20' : 'bg-gray-800 text-gray-400 border-gray-700 hover:border-gray-500 hover:bg-gray-750'">
-                                    <span>USDT</span>
-                                    <span class="text-[10px] md:text-xs opacity-70 group-hover:opacity-100 uppercase">{{ net
-                                    }}</span>
+                                    <span>{{ net.split('_')[0] }}</span>
+                                    <span class="text-[10px] md:text-xs opacity-70 group-hover:opacity-100 uppercase">{{ net.split('_')[1] || net }}</span>
                                 </button>
                             </div>
                         </div>

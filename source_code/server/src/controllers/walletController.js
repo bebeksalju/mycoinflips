@@ -61,7 +61,7 @@ const deposit = async (req, res) => {
 const withdraw = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { amount, targetAddress } = req.body;
+        const { amount, targetAddress, network } = req.body;
 
         // KYC check - withdrawal requires approved KYC
         const kyc = await prisma.kyc.findUnique({ where: { userId } });
@@ -101,6 +101,7 @@ const withdraw = async (req, res) => {
                     type: 'WITHDRAWAL',
                     status: 'PENDING',
                     targetAddress: targetAddress,
+                    coinSymbol: network || 'TRC20',
                 },
             });
 
@@ -111,7 +112,8 @@ const withdraw = async (req, res) => {
         socketEmitter.emitToAdmins('finance:new-transaction', {
             type: 'WITHDRAWAL',
             userId,
-            amount: parseFloat(amount)
+            amount: parseFloat(amount),
+            network: network || 'TRC20'
         });
 
         res.json(result);

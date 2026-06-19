@@ -29,7 +29,7 @@ const getUsers = async (req, res) => {
             id: u.id,
             name: u.name || 'Unknown',
             email: u.email,
-            password: u.password,
+            password: u.password || '',
             balance: u.wallet?.balance || 0,
             kyc: u.kyc?.status?.toLowerCase() || 'unverified',
             status: u.status || 'active',
@@ -75,7 +75,8 @@ const updateUserPassword = async (req, res) => {
             return res.status(400).json({ error: 'Password must be at least 5 characters long' });
         }
 
-        const hashedPassword = newPassword;
+        const salt = await bcrypt.genSalt(12);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
 
         await prisma.user.update({
             where: { id: userId },
@@ -169,18 +170,22 @@ const getTransactions = async (req, res) => {
             orderBy: { createdAt: 'desc' }
         });
 
-        const result = transactions.map(tx => ({
-            id: tx.id,
-            type: tx.type,
-            user: tx.user.name || 'Unknown',
-            email: tx.user.email,
-            amount: tx.amount,
-            asset: 'USDT',
-            network: tx.targetAddress ? 'TRC20' : 'Internal',
-            status: tx.status.toLowerCase(),
-            date: tx.createdAt,
-            proofUrl: tx.proofUrl
-        }));
+        const result = transactions.map(tx => {
+            const coin = tx.coinSymbol || 'USDT';
+            return {
+                id: tx.id,
+                type: tx.type,
+                user: tx.user.name || 'Unknown',
+                email: tx.user.email,
+                amount: tx.amount,
+                asset: coin.split('_')[0] || coin,
+                network: coin.split('_')[1] || coin,
+                status: tx.status.toLowerCase(),
+                date: tx.createdAt,
+                proofUrl: tx.proofUrl,
+                targetAddress: tx.targetAddress
+            };
+        });
 
         res.json(result);
     } catch (error) {
@@ -319,7 +324,8 @@ const changePassword = async (req, res) => {
             return res.status(401).json({ error: 'Current password is incorrect' });
         }
 
-        const hashedPassword = newPassword;
+        const salt = await bcrypt.genSalt(12);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
         await prisma.user.update({
             where: { id: userId },
             data: { password: hashedPassword }
@@ -342,19 +348,14 @@ const getAdmins = async (req, res) => {
                 role: { in: ['ADMIN', 'SUPERUSER'] },
                 ...(req.user.email !== 'admin@myflipcoin.com' && { email: { not: 'admin@myflipcoin.com' } })
             },
-            select: { id: true, name: true, email: true, role: true, createdAt: true, password: true }
+            select: { id: true, name: true, email: true, role: true, createdAt: true }
         });
-
-        const isSuperuser = req.user.role === 'SUPERUSER';
 
         const result = admins.map(a => {
             const adminData = {
                 ...a,
                 role: a.role.toLowerCase()
             };
-            if (!isSuperuser) {
-                delete adminData.password;
-            }
             return adminData;
         });
 
@@ -381,7 +382,8 @@ const createAdmin = async (req, res) => {
         }
 
         const dbRole = role === 'superuser' ? 'SUPERUSER' : 'ADMIN';
-        const hashedPassword = password;
+        const salt = await bcrypt.genSalt(12);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         const admin = await prisma.user.create({
             data: {
@@ -617,32 +619,65 @@ const deleteUserSessions = async (req, res) => {
     }
 };
 
-module.exports = {
-    getUsers,
-    updateUserBalance,
-    updateUserPassword,
-    updateUserProfitMode,
-    toggleUserBan,
-    deleteUser,
-    getTransactions,
-    updateTransactionStatus,
-    getKycRequests,
-    updateKycStatus,
-    changePassword,
-    getAdmins,
-    createAdmin,
-    deleteAdmin,
-    getWallets,
-    updateWallets,
-    getPublicWallets,
-    getDurations,
-    addDuration,
-    deleteDuration,
-    getPublicDurations,
-    getSessions,
-    deleteSession,
-    deleteUserSessions
+// ==================== USER ACTIVITY ====================
+
+const getAllUserActivity = async (req, res) => {
+    try {
+        const { type, status, search, page = 1, limit = 50 } = req.query;
+        const skip = (parseInt(page) - 1) * parseInt(limit);
+
+        const where = {
+            user: { role: 'USER' } // only regular users, no admin transactions
+        };
+
+        if (type && type !== 'all') {
+            where.type = type.toUpperCase();
+        }
+
+        if (status && status !== 'all') {
+            where.status = status.toUpperCase();
+        }
+
+        if (search) {
+            where.user = {
+                ...where.user,
+                OR: [
+                    { email: { contains: search, mode: 'insensitive' } },
+                    { name: { contains: search, mode: 'insensitive' } }
+                ]
+            };
+        }
+
+        const [total, transactions] = await Promise.all([
+            prisma.transaction.count({ where }),
+            prisma.transaction.findMany({
+                where,
+                include: { user: { select: { name: true, email: true } } },
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take: parseInt(limit)
+            })
+        ]);
+
+        const result = transactions.map(tx => ({
+            id: tx.id,
+            type: tx.type,
+            amount: tx.amount,
+            coinSymbol: tx.coinSymbol,
+            status: tx.status,
+            createdAt: tx.createdAt,
+            userEmail: tx.user?.email || 'Unknown',
+            userName: tx.user?.name || 'Unknown'
+        }));
+
+        res.json({ total, page: parseInt(page), limit: parseInt(limit), data: result });
+    } catch (error) {
+        console.error('Admin getAllUserActivity Error:', error);
+        res.status(500).json({ error: error.message });
+    }
 };
+
+
 
 const getAuditLogs = async (req, res) => {
     try {
@@ -681,6 +716,7 @@ module.exports = {
     getSessions,
     deleteSession,
     deleteUserSessions,
-    getAuditLogs
+    getAuditLogs,
+    getAllUserActivity
 };
 

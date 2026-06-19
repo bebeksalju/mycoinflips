@@ -144,6 +144,11 @@ const router = createRouter({
           component: () => import('../views/admin/AdminLogs.vue')
         },
         {
+          path: 'user-activity',
+          name: 'admin-user-activity',
+          component: () => import('../views/admin/AdminUserActivity.vue')
+        },
+        {
           path: 'wallet',
           name: 'admin-wallet',
           component: () => import('../views/admin/AdminWallet.vue'),

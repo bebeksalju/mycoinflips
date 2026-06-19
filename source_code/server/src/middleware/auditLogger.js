@@ -84,39 +84,43 @@ const auditLogger = async (req, res, next) => {
         try {
             let action = '';
 
-            // Match path patterns to create detailed English logs
+            // Match path patterns to create layperson-friendly English logs
             if (path.match(/\/api\/admin\/users\/\d+\/balance/)) {
                 if (targetUser) {
-                    action = `Changed balance of user ${targetUser.name || 'Unknown'} (${targetUser.email}) to $${body.balance}`;
+                    action = `Set the balance of ${targetUser.name || 'Unknown'} (${targetUser.email}) to $${body.balance}`;
                 } else {
                     const userId = path.split('/')[4];
-                    action = `Changed balance of user ID ${userId} to $${body.balance}`;
+                    action = `Set the balance of user ID ${userId} to $${body.balance}`;
                 }
             } else if (path.match(/\/api\/admin\/users\/\d+\/password/)) {
                 if (targetUser) {
-                    action = `Updated password of user ${targetUser.name || 'Unknown'} (${targetUser.email})`;
+                    action = `Changed the login password for ${targetUser.name || 'Unknown'} (${targetUser.email})`;
                 } else {
                     const userId = path.split('/')[4];
-                    action = `Updated password of user ID ${userId}`;
+                    action = `Changed the login password for user ID ${userId}`;
                 }
             } else if (path.match(/\/api\/admin\/users\/\d+\/profit-mode/)) {
                 if (targetUser) {
-                    action = `Updated trading result mode of user ${targetUser.name || 'Unknown'} (${targetUser.email}) to "${body.mode}"`;
+                    let modeText = 'win/lose trades randomly';
+                    if (body.mode === 'win') modeText = 'always win trades';
+                    if (body.mode === 'loss') modeText = 'always lose trades';
+                    action = `Set ${targetUser.name || 'Unknown'} (${targetUser.email}) to ${modeText}`;
                 } else {
                     const userId = path.split('/')[4];
-                    action = `Updated trading result mode of user ID ${userId} to "${body.mode}"`;
+                    action = `Set user ID ${userId} trade result mode to "${body.mode}"`;
                 }
             } else if (path.match(/\/api\/admin\/users\/\d+\/ban/)) {
                 if (targetUser) {
                     const actionWord = targetUser.status === 'banned' ? 'Unblocked' : 'Blocked';
-                    action = `${actionWord} user ${targetUser.name || 'Unknown'} (${targetUser.email})`;
+                    const detailWord = targetUser.status === 'banned' ? 'from accessing the site' : 'from logging in and using the site';
+                    action = `${actionWord} ${targetUser.name || 'Unknown'} (${targetUser.email}) ${detailWord}`;
                 } else {
                     const userId = path.split('/')[4];
                     action = `Changed block status of user ID ${userId}`;
                 }
             } else if (path.match(/\/api\/admin\/users\/\d+/) && method === 'DELETE') {
                 if (targetUser) {
-                    action = `Deleted user account: ${targetUser.name || 'Unknown'} (${targetUser.email})`;
+                    action = `Permanently deleted the account of ${targetUser.name || 'Unknown'} (${targetUser.email})`;
                 } else {
                     const userId = path.split('/')[4];
                     action = `Deleted user ID ${userId}`;
@@ -125,7 +129,7 @@ const auditLogger = async (req, res, next) => {
                 if (targetTransaction) {
                     const actionWord = body.status === 'approved' ? 'Approved' : 'Rejected';
                     const typeWord = targetTransaction.type.toLowerCase();
-                    action = `${actionWord} ${typeWord} request of $${targetTransaction.amount} for user ${targetTransaction.user.name || 'Unknown'} (${targetTransaction.user.email})`;
+                    action = `${actionWord} a ${typeWord} of $${targetTransaction.amount} for ${targetTransaction.user.name || 'Unknown'} (${targetTransaction.user.email})`;
                 } else {
                     const txId = path.split('/')[4];
                     action = `Changed status of transaction ID ${txId} to "${body.status}"`;
@@ -133,46 +137,46 @@ const auditLogger = async (req, res, next) => {
             } else if (path.match(/\/api\/admin\/kyc\/\d+\/status/)) {
                 if (targetKyc) {
                     const actionWord = body.status === 'approved' ? 'Approved' : 'Rejected';
-                    action = `${actionWord} KYC verification request for user ${targetKyc.user.name || 'Unknown'} (${targetKyc.user.email})`;
+                    action = `${actionWord} the identity verification (KYC) request for ${targetKyc.user.name || 'Unknown'} (${targetKyc.user.email})`;
                 } else {
                     const kycId = path.split('/')[4];
-                    action = `Changed KYC status of ID ${kycId} to "${body.status}"`;
+                    action = `Changed status of ID verification ID ${kycId} to "${body.status}"`;
                 }
             } else if (path.match(/\/api\/admin\/password/)) {
-                action = 'Updated their own admin password';
+                action = 'Changed their own admin account password';
             } else if (path.match(/\/api\/admin\/admins/) && method === 'POST') {
-                action = `Created a new admin account: ${body.email}`;
+                action = `Created a new admin user account: ${body.email}`;
             } else if (path.match(/\/api\/admin\/admins\/\d+/) && method === 'DELETE') {
                 if (targetAdmin) {
-                    action = `Deleted admin account: ${targetAdmin.name || 'Unknown'} (${targetAdmin.email})`;
+                    action = `Permanently deleted the admin account of ${targetAdmin.name || 'Unknown'} (${targetAdmin.email})`;
                 } else {
                     const adminId = path.split('/')[4];
                     action = `Deleted admin with ID ${adminId}`;
                 }
             } else if (path.match(/\/api\/admin\/wallets/) && method === 'PUT') {
-                action = 'Updated the admin deposit wallet addresses';
+                action = 'Updated the cryptocurrency deposit addresses for the system';
             } else if (path.match(/\/api\/admin\/durations/) && method === 'POST') {
-                action = `Added a new trading duration slot: ${body.seconds} seconds with a ${body.percentage}% payout`;
+                action = `Added a new trade duration option: ${body.seconds} seconds duration with a ${body.percentage}% profit rate`;
             } else if (path.match(/\/api\/admin\/durations\/\d+/) && method === 'DELETE') {
                 if (targetDuration) {
-                    action = `Removed trading duration slot: ${targetDuration.seconds} seconds (${targetDuration.percentage}% payout)`;
+                    action = `Deleted the trade duration option: ${targetDuration.seconds} seconds (${targetDuration.percentage}% profit rate)`;
                 } else {
                     const durationId = path.split('/')[4];
-                    action = `Removed trading duration ID ${durationId}`;
+                    action = `Deleted trade duration option ID ${durationId}`;
                 }
             } else if (path.match(/\/api\/admin\/sessions\/user\/\d+/) && method === 'DELETE') {
                 if (targetUser) {
-                    action = `Terminated all active login sessions for user ${targetUser.name || 'Unknown'} (${targetUser.email})`;
+                    action = `Logged ${targetUser.name || 'Unknown'} (${targetUser.email}) out from all of their devices`;
                 } else {
                     const userId = path.split('/')[5];
-                    action = `Terminated all active login sessions for user ID ${userId}`;
+                    action = `Logged user ID ${userId} out from all devices`;
                 }
             } else if (path.match(/\/api\/admin\/sessions\/\d+/) && method === 'DELETE') {
                 if (targetSessionUser) {
-                    action = `Terminated login session for user ${targetSessionUser.name || 'Unknown'} (${targetSessionUser.email})`;
+                    action = `Logged ${targetSessionUser.name || 'Unknown'} (${targetSessionUser.email}) out from one of their devices`;
                 } else {
                     const sessionId = path.split('/')[4];
-                    action = `Terminated login session ID ${sessionId}`;
+                    action = `Logged out session ID ${sessionId}`;
                 }
             } else {
                 action = `${method} ${originalUrl}`;

@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==============================================================================
-#  MyCoinFlip Weekly Backup to GitHub Script
+#  MyCoinFlip Daily Backup to GitHub Script
 # ==============================================================================
 
 set -e
@@ -56,21 +56,21 @@ mkdir -p source_code
 
 # 2. Dump Database (PostgreSQL)
 echo "1. Exporting Database from Docker container..."
-if docker ps | grep -q mycoinflip-db-1; then
-    docker exec -i mycoinflip-db-1 pg_dump -U "${POSTGRES_USER}" "${POSTGRES_DB}" > "db_backup/db_dump.sql"
+if docker ps | grep -q mycoinflip_db_1; then
+    docker exec -i mycoinflip_db_1 pg_dump -U "${POSTGRES_USER}" "${POSTGRES_DB}" > "db_backup/db_dump.sql"
     echo "   -> Database backup successful."
 else
-    echo "   ❌ ERROR: Container mycoinflip-db-1 is not running!"
+    echo "   ❌ ERROR: Container mycoinflip_db_1 is not running!"
     exit 1
 fi
 
 # 3. Backup Uploads Volume (KYC & Transfer Proof images)
 echo "2. Copying uploads files..."
-if docker ps | grep -q mycoinflip-server-1; then
-    docker run --rm --volumes-from mycoinflip-server-1 -v "$(pwd)/uploads_backup":/backup_host alpine cp -rp /app/uploads/. /backup_host/
+if docker ps | grep -q mycoinflip_server_1; then
+    docker run --rm --volumes-from mycoinflip_server_1 -v "$(pwd)/uploads_backup":/backup_host alpine cp -rp /app/uploads/. /backup_host/
     echo "   -> Uploads directory copy successful."
 else
-    echo "   ❌ ERROR: Container mycoinflip-server-1 is not running!"
+    echo "   ❌ ERROR: Container mycoinflip_server_1 is not running!"
     exit 1
 fi
 
@@ -93,7 +93,7 @@ git config user.email "backup@major-tour.com"
 # Check if there are changes before committing
 if [ -n "$(git status --porcelain)" ]; then
     git add -A
-    git commit -m "Weekly backup: $(date +'%Y-%m-%d %H:%M:%S')"
+    git commit -m "Daily backup: $(date +'%Y-%m-%d %H:%M:%S')"
     # Push to main or master
     git push origin main || git push origin master
     echo "   -> Backup successfully pushed to GitHub!"
