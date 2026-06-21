@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict DzKAJfstXYDvvsl1ddx0aOrudca6ZiG1YfgjyVW09aWZ3UpAJZnUhvBvTAEPNYb
+\restrict 7WXyofL3uqHQpgfLaXr48SwLeQMdRtsOEHMo7N5pGAnQJkElWySBgeq8fGbxNMc
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -613,7 +613,6 @@ COPY public."Kyc" (id, "userId", status, "documentUrl", "documentUrlBack", "full
 
 COPY public."Session" (id, "userId", token, "expiresAt", "createdAt") FROM stdin;
 287	34	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0LCJlbWFpbCI6Im12cGFudGFsbGljYUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgxNzYxNDY4LCJleHAiOjE3ODE4NDc4Njh9.ZXdMo8i2w_f6HuA28lh9kU3_43e81HXD6x-ZPPGTEOo	2026-06-19 05:44:28.493	2026-06-18 05:44:28.493
-288	1	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5AbXlmbGlwY29pbi5jb20iLCJyb2xlIjoiU1VQRVJVU0VSIiwidG9rZW5WZXJzaW9uIjo5LCJpYXQiOjE3ODE4NTkwODYsImV4cCI6MTc4MTk0NTQ4Nn0.bp5hz62UaPcLix1uKeezpFddf3RLK4t1uGK2e-nbiWA	2026-06-20 08:51:26.472	2026-06-19 08:51:26.472
 289	9	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImVtYWlsIjoid2F3b25nNzdAbXljb2luZmxpcHMuY29tIiwicm9sZSI6IkFETUlOIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODE5MTcwMTMsImV4cCI6MTc4MjAwMzQxM30.v7RDydBljOCvo4vrTKMvnW30OiEI9Cs804wzWu5FYRI	2026-06-21 00:56:53.463	2026-06-20 00:56:53.463
 290	1	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5AbXlmbGlwY29pbi5jb20iLCJyb2xlIjoiU1VQRVJVU0VSIiwidG9rZW5WZXJzaW9uIjo5LCJpYXQiOjE3ODE5MzAwOTIsImV4cCI6MTc4MjAxNjQ5Mn0.XI1x_NxNBGokiXTll6ZhgDUhdAAaijQHM1AiVw3vJT4	2026-06-21 04:34:52.976	2026-06-20 04:34:52.976
 291	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODE5NDMxMTAsImV4cCI6MTc4MjAyOTUxMH0.LLbeGfivorNVfqfzDhQVWxtLMjzwOwxv7aT3n2zc70s	2026-06-21 08:11:50.827	2026-06-20 08:11:50.827
@@ -786,7 +785,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 6, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 292, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 293, true);
 
 
 --
@@ -982,5 +981,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict DzKAJfstXYDvvsl1ddx0aOrudca6ZiG1YfgjyVW09aWZ3UpAJZnUhvBvTAEPNYb
+\unrestrict 7WXyofL3uqHQpgfLaXr48SwLeQMdRtsOEHMo7N5pGAnQJkElWySBgeq8fGbxNMc
 
