@@ -14,6 +14,13 @@ const isSidebarOpen = ref(false);
 const unreadChatCount = ref(0);
 
 let chatSocket = null;
+let heartbeatInterval = null;
+let pendingCountsInterval = null;
+let hiddenTimestamp = null;
+let visibilityTimer = null;
+
+const HEARTBEAT_INTERVAL_MS = 60 * 1000;     // 60 seconds
+const VISIBILITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 
 const pendingDeposits = computed(() => {
     return adminStore.transactions.filter(t => t.status === 'pending' && t.type === 'DEPOSIT').length;
@@ -34,10 +41,83 @@ const fetchPendingCounts = async () => {
     }
 };
 
+// --- Session Heartbeat ---
+const sendHeartbeat = async () => {
+    try {
+        await api.post('/auth/heartbeat');
+    } catch (error) {
+        // If session is expired/revoked, force logout
+        if (error.response?.status === 401) {
+            console.warn('Session expired — auto logging out');
+            forceLogout();
+        }
+    }
+};
+
+// --- Force logout & redirect ---
+const forceLogout = () => {
+    authStore.logout();
+    router.push('/admin/login');
+};
+
+// --- Tab close detection (beforeunload) ---
+const handleBeforeUnload = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        // Use sendBeacon for reliable delivery during page unload
+        const url = '/api/auth/logout';
+        const headers = { type: 'application/json' };
+        const body = new Blob([JSON.stringify({})], headers);
+        // sendBeacon doesn't support custom headers, so we pass token in the URL
+        // Instead, we'll use a different approach: send via fetch keepalive
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({}),
+            keepalive: true
+        }).catch(() => {
+            // Silently fail — tab is closing anyway
+        });
+    }
+};
+
+// --- Tab visibility detection ---
+const handleVisibilityChange = () => {
+    if (document.hidden) {
+        // Tab became hidden — start countdown
+        hiddenTimestamp = Date.now();
+        visibilityTimer = setTimeout(() => {
+            // Tab was hidden for too long — auto logout
+            console.warn('Admin tab hidden for too long — auto logging out');
+            forceLogout();
+        }, VISIBILITY_TIMEOUT_MS);
+    } else {
+        // Tab became visible again — cancel countdown
+        if (visibilityTimer) {
+            clearTimeout(visibilityTimer);
+            visibilityTimer = null;
+        }
+        hiddenTimestamp = null;
+        // Send heartbeat immediately when tab becomes visible again
+        sendHeartbeat();
+    }
+};
+
 onMounted(() => {
     fetchPendingCounts();
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchPendingCounts, 30000);
+    // Refresh pending counts every 30 seconds
+    pendingCountsInterval = setInterval(fetchPendingCounts, 30000);
+
+    // --- Start heartbeat ---
+    sendHeartbeat(); // Send immediately
+    heartbeatInterval = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL_MS);
+
+    // --- Register tab close / visibility listeners ---
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     const token = localStorage.getItem('token');
     if (token) {
@@ -59,11 +139,20 @@ onMounted(() => {
             adminStore.addKycRequest(data);
         });
     }
+});
 
-    onUnmounted(() => {
-        clearInterval(interval);
-        if (chatSocket) chatSocket.disconnect();
-    });
+onUnmounted(() => {
+    // Cleanup all intervals
+    if (pendingCountsInterval) clearInterval(pendingCountsInterval);
+    if (heartbeatInterval) clearInterval(heartbeatInterval);
+    if (visibilityTimer) clearTimeout(visibilityTimer);
+
+    // Remove event listeners
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+
+    // Disconnect socket
+    if (chatSocket) chatSocket.disconnect();
 });
 
 // Reset badge when navigating to chat page

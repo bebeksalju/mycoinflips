@@ -139,6 +139,7 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
+    // Support both normal logout and sendBeacon (which may not have JSON body)
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
@@ -152,6 +153,30 @@ const logout = async (req, res) => {
   } catch (error) {
     console.error('Logout Error:', error);
     res.status(500).json({ error: 'Failed to logout' });
+  }
+};
+
+const heartbeat = async (req, res) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) return res.sendStatus(401);
+
+    // Update lastActivity for this session
+    const updated = await prisma.session.updateMany({
+      where: { token: token },
+      data: { lastActivity: new Date() }
+    });
+
+    if (updated.count === 0) {
+      return res.status(401).json({ error: 'Session not found or expired' });
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Heartbeat Error:', error);
+    res.status(500).json({ error: 'Heartbeat failed' });
   }
 };
 
@@ -274,5 +299,5 @@ const changePassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, logout, submitKyc, me, changePassword };
+module.exports = { register, login, logout, heartbeat, submitKyc, me, changePassword };
 

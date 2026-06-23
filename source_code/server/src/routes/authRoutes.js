@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const { register, login, logout, submitKyc, me, changePassword } = require('../controllers/authController');
+const { register, login, logout, heartbeat, submitKyc, me, changePassword } = require('../controllers/authController');
 const { authenticateToken } = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -31,6 +31,7 @@ router.post('/register', register);
 router.post('/login', login);
 router.post('/logout', authenticateToken, logout);
 router.get('/me', authenticateToken, me);
+router.post('/heartbeat', authenticateToken, heartbeat);
 router.post('/kyc', authenticateToken, upload.fields([
     { name: 'front', maxCount: 1 },
     { name: 'back', maxCount: 1 }

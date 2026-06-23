@@ -7,6 +7,7 @@ const { Server } = require('socket.io');
 const MarketService = require('./services/marketService');
 const ChatService = require('./services/chatService');
 const socketEmitter = require('./socketEmitter');
+const { startSessionCleanup } = require('./services/sessionCleanup');
 
 const PORT = process.env.PORT || 3000;
 
@@ -30,4 +31,5 @@ const chatService = new ChatService(io);
 
 server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+  startSessionCleanup();
 });
