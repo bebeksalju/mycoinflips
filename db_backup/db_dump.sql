@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 8sS3dKzPBLPKlzCLom53YPRdD5dOIpvviAGyU0yQjDanfyDeQPt2ne2cCaBXAVv
+\restrict i5Atd9VfXr8FzgCdukkLlSbtN8kk5akjLB5nD7aAeIILhvyY47EcAPe1vdK6rDJ
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -575,10 +575,7 @@ COPY public."AuditLog" (id, "userId", "userEmail", "userName", action, "ipAddres
 
 COPY public."ChatMessage" (id, "userId", sender, message, read, "createdAt") FROM stdin;
 48	34	user	I can’t figure out my bitcoin address	t	2026-06-08 06:39:34.704
-46	30	user	I just have a question about my balance	t	2026-06-05 04:42:00.286
-47	30	user	I had 230 something in my account with 2 successful trades	t	2026-06-05 04:43:59.866
 50	37	user	Ini akun IT digunakan khusus untuk maintenance	t	2026-06-12 06:33:09.222
-49	30	user	I'm trying to withdraw everything but it won't work	t	2026-06-10 01:30:03.943
 52	34	user	I would like to withdraw could I make my account verified?	t	2026-06-23 01:43:20.039
 53	34	admin	Good morning/afternoon/evening Mr.Mark Vogel, We will verify your account; please wait a moment.	f	2026-06-23 01:44:05.543
 \.
@@ -601,12 +598,12 @@ COPY public."Kyc" (id, "userId", status, "documentUrl", "documentUrlBack", "full
 
 COPY public."Session" (id, "userId", token, "expiresAt", "createdAt", "lastActivity") FROM stdin;
 166	21	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIxLCJlbWFpbCI6ImVsYXNzb3dpcG9oQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzcyNTE5MTEsImV4cCI6MTc3NzMzODMxMX0.li7pBGABg2LaHuRfdhobTnlq9WjRbtDVEpEHIzU2_P0	2026-04-28 01:05:11.786	2026-04-27 01:05:11.786	2026-06-23 02:15:56.25
-294	34	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0LCJlbWFpbCI6Im12cGFudGFsbGljYUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgyMTAyNjAyLCJleHAiOjE3ODIxODkwMDJ9.PobKXr0fzRAAuwAyM6h0Wx0756P4xMaa_J_a7cJ8ORU	2026-06-23 04:30:02.486	2026-06-22 04:30:02.486	2026-06-23 02:15:56.25
-298	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODIxNzg3NDYsImV4cCI6MTc4MjI2NTE0Nn0.yFobzzDkXBrrPvLT4JBJaxxEsMS2033oqjhUdkGf7CI	2026-06-24 01:39:06.568	2026-06-23 01:39:06.568	2026-06-23 02:15:56.25
 248	30	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMwLCJlbWFpbCI6Im5pdmVhYnV0dGVyNzc5QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA5NzcxOTMsImV4cCI6MTc4MTA2MzU5M30.PJzTSwFuMNNBtpHPvxVCVyRygRx7vHqC3GKtpNC2HJY	2026-06-10 03:53:13.538	2026-06-09 03:53:13.538	2026-06-23 02:15:56.25
 250	30	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMwLCJlbWFpbCI6Im5pdmVhYnV0dGVyNzc5QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODEwNDk0NTksImV4cCI6MTc4MTEzNTg1OX0.qL88x67VpTefhc0OF3Pq9mTIyP6lPqnGrkfg9tVLi84	2026-06-10 23:57:39.587	2026-06-09 23:57:39.587	2026-06-23 02:15:56.25
 306	34	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0LCJlbWFpbCI6Im12cGFudGFsbGljYUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgyMTc5Njg4LCJleHAiOjE3ODIyNjYwODh9.HRyXMkfsLtM8bMux0A3G9RA1pk8tg9Iu5AKUsCCQ2Zc	2026-06-24 01:54:48.749	2026-06-23 01:54:48.749	2026-06-23 02:15:56.25
 191	26	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI2LCJlbWFpbCI6Im1pa2Vjb2ZmZXkzNTdAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MDQ1Njc0OCwiZXhwIjoxNzgwNTQzMTQ4fQ.LzQwxbQyBgCgo2C4n1dyRoj9YxX7MHgOnFC5b2gQd4k	2026-06-04 03:19:08.18	2026-06-03 03:19:08.181	2026-06-23 02:15:56.25
+309	34	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0LCJlbWFpbCI6Im12cGFudGFsbGljYUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgyMjU4MzQ0LCJleHAiOjE3ODIzNDQ3NDR9.XuXfCOsOYxyjiSVRcubGvWLV2vPqhVOEOa-7skYLWYc	2026-06-24 23:45:44.983	2026-06-23 23:45:44.983	2026-06-23 23:45:44.983
+312	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODIyNzI5MDMsImV4cCI6MTc4MjM1OTMwM30.Gh9_I6jZ0oZLc28urvOHjYVUYuAYmjTm3OEiE8eCPdc	2026-06-25 03:48:23.004	2026-06-24 03:48:23.004	2026-06-24 03:48:23.004
 219	33	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMzLCJlbWFpbCI6ImNoYXNyYWZpdGlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MDgwOTYzOCwiZXhwIjoxNzgwODk2MDM4fQ.26yLxQYlkX-v7IywySQw7OBvLEHEifUrewzRzu7wt4U	2026-06-08 05:20:38.703	2026-06-07 05:20:38.704	2026-06-23 02:15:56.25
 221	28	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI4LCJlbWFpbCI6ImdyaWZmaW5qbzc3QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA4MzgxMjIsImV4cCI6MTc4MDkyNDUyMn0.KdbOEatqdYPUlaNTuzJWM5bxCaNXIdMRLxQy84wXlVo	2026-06-08 13:15:22.349	2026-06-07 13:15:22.349	2026-06-23 02:15:56.25
 282	19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJlbWFpbCI6ImJheWxhbnlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MTU3NzExMiwiZXhwIjoxNzgxNjYzNTEyfQ.QHujgbCA0K6wZyFhitbVdang0vylKRO48pawSQtw8Xk	2026-06-17 02:31:52.91	2026-06-16 02:31:52.91	2026-06-23 02:15:56.25
@@ -650,6 +647,9 @@ COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, stat
 151	13	123	\N	BTC	WITHDRAWAL	FAILED	123123	\N	2026-06-23 02:00:26.53
 152	34	12	\N	BTC	WITHDRAWAL	COMPLETED	bc1qexhcgvj3p2z3vkpd63lpph2tktgjwp2ak2lrjn	\N	2026-06-23 02:01:39.244
 153	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-23 02:41:27.042
+154	34	500	\N	BTC	WITHDRAWAL	PENDING	bc1q38nym202hxcz63lhl4hszwkspr5dz7z44t8txj	\N	2026-06-23 23:48:18.685
+155	34	50	\N	BTC	WITHDRAWAL	PENDING	bc1q38nym202hxcz63lhl4hszwkspr5dz7z44t8txj	\N	2026-06-23 23:48:53.778
+156	13	6000	0	XRP/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-24 03:48:34.033
 93	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-22 09:29:24.365
 94	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-24 00:36:45.093
 95	13	7500	0	BTC/USDT	TRADE_SELL	PENDING	\N	\N	2026-03-24 02:39:02.255
@@ -738,8 +738,8 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 19	19	1284565	{}	2026-03-28 02:09:41.475	2026-06-16 02:42:12.875
 30	30	230	{}	2026-06-05 04:40:07.314	2026-06-06 05:09:16.833
 33	33	0	{}	2026-06-07 05:12:02.874	2026-06-07 05:12:02.874
-34	34	550	{}	2026-06-07 07:25:20.449	2026-06-23 02:01:39.244
-13	13	212200	{}	2026-03-12 02:28:29.356	2026-06-23 02:42:27.964
+34	34	0	{}	2026-06-07 07:25:20.449	2026-06-23 23:48:53.778
+13	13	213400	{}	2026-03-12 02:28:29.356	2026-06-24 03:49:34.281
 28	28	11100	{}	2026-06-04 07:46:03.566	2026-06-07 13:44:02.677
 35	35	0	{}	2026-06-08 05:02:31.801	2026-06-08 05:02:31.801
 37	37	0	{}	2026-06-12 06:31:43.484	2026-06-12 06:31:43.484
@@ -778,7 +778,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 7, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 308, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 312, true);
 
 
 --
@@ -792,7 +792,7 @@ SELECT pg_catalog.setval('public."TradingDuration_id_seq"', 10, true);
 -- Name: Transaction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Transaction_id_seq"', 153, true);
+SELECT pg_catalog.setval('public."Transaction_id_seq"', 156, true);
 
 
 --
@@ -974,5 +974,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 8sS3dKzPBLPKlzCLom53YPRdD5dOIpvviAGyU0yQjDanfyDeQPt2ne2cCaBXAVv
+\unrestrict i5Atd9VfXr8FzgCdukkLlSbtN8kk5akjLB5nD7aAeIILhvyY47EcAPe1vdK6rDJ
 
