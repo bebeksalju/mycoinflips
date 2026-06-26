@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict Lh1iUAgdU5iYL0RuE1y5rrqbJzklIUwHa2GmOCLHNPZzkUyzOPk4DlvGEaTxO2H
+\restrict ryNNudjyXAKeQO1Fd4WQg4lfxtYCE7CFJ4a3sSGM2aWoe67UIG0dFnX0RH8WI06
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -655,6 +655,7 @@ COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, stat
 155	34	50	\N	BTC	WITHDRAWAL	FAILED	bc1q38nym202hxcz63lhl4hszwkspr5dz7z44t8txj	\N	2026-06-23 23:48:53.778
 154	34	500	\N	BTC	WITHDRAWAL	FAILED	bc1q38nym202hxcz63lhl4hszwkspr5dz7z44t8txj	\N	2026-06-23 23:48:18.685
 158	13	6000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-26 02:33:43.55
+159	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-26 12:07:11.473
 93	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-22 09:29:24.365
 94	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-24 00:36:45.093
 95	13	7500	0	BTC/USDT	TRADE_SELL	PENDING	\N	\N	2026-03-24 02:39:02.255
@@ -748,7 +749,7 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 34	34	550	{}	2026-06-07 07:25:20.449	2026-06-25 07:46:26.139
 28	28	11100	{}	2026-06-04 07:46:03.566	2026-06-07 13:44:02.677
 35	35	0	{}	2026-06-08 05:02:31.801	2026-06-08 05:02:31.801
-13	13	218600	{}	2026-03-12 02:28:29.356	2026-06-26 02:34:44.084
+13	13	219600	{}	2026-03-12 02:28:29.356	2026-06-26 12:08:12.538
 37	37	0	{}	2026-06-12 06:31:43.484	2026-06-12 06:31:43.484
 \.
 
@@ -799,7 +800,7 @@ SELECT pg_catalog.setval('public."TradingDuration_id_seq"', 10, true);
 -- Name: Transaction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Transaction_id_seq"', 158, true);
+SELECT pg_catalog.setval('public."Transaction_id_seq"', 159, true);
 
 
 --
@@ -981,5 +982,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Lh1iUAgdU5iYL0RuE1y5rrqbJzklIUwHa2GmOCLHNPZzkUyzOPk4DlvGEaTxO2H
+\unrestrict ryNNudjyXAKeQO1Fd4WQg4lfxtYCE7CFJ4a3sSGM2aWoe67UIG0dFnX0RH8WI06
 
