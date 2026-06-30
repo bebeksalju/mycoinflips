@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict lCG7MsbwSFQwD2n3HngVIxwx80rfudOZafIdcipyytfevieC49vsXLvgS5q44PG
+\restrict bocceSP1v71gKBsqg37lwDMTp8O4iwLuINDL3SMO2uFtVaKqdDnR7vg70FuhoE8
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -570,6 +570,7 @@ COPY public."AuditLog" (id, "userId", "userEmail", "userName", action, "ipAddres
 39	9	wawong77@mycoinflips.com	Admin	Set Mark Vogel (mvpantallica@gmail.com) to always lose trades	59.153.130.242	2026-06-23 01:29:46.523
 44	9	wawong77@mycoinflips.com	Admin	Approved a deposit of $486 for Kai Connally (kai.connally@gmail.com)	59.153.130.242	2026-06-29 11:12:20.787
 45	9	wawong77@mycoinflips.com	Admin	Set Kai Connally (kai.connally@gmail.com) to always win trades	59.153.130.242	2026-06-29 15:13:46.396
+46	9	wawong77@mycoinflips.com	Admin	Set Kai Connally (kai.connally@gmail.com) to always lose trades	59.153.130.242	2026-06-30 00:29:29.57
 \.
 
 
@@ -720,6 +721,7 @@ COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, stat
 169	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-29 12:43:24.831
 170	38	480	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-29 15:24:03.546
 171	38	530	0	SOL/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-29 15:28:50.992
+172	37	100	0	BTC/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-30 02:31:17.243
 \.
 
 
@@ -741,9 +743,9 @@ COPY public."User" (id, email, password, name, role, "profitMode", status, "crea
 28	griffinjo77@gmail.com	91Huskies	Griffin  Johnson	USER	random	active	2026-06-04 07:46:03.566	2026-06-07 13:44:09.922	0
 35	ceslinelau@gmail.com	wawong17	cesline lau	USER	random	active	2026-06-08 05:02:31.801	2026-06-08 05:02:31.801	0
 30	niveabutter779@gmail.com	GideonStone9864$@#	Michael Schultz	USER	loss	active	2026-06-05 04:40:07.314	2026-06-10 03:34:42.61	0
-37	akunit@mycoinflips.com	bokepindoh	Akun IT Mycoinflips	USER	random	active	2026-06-12 06:31:43.484	2026-06-12 06:31:43.484	0
 34	mvpantallica@gmail.com	Zebra@1993	Mark Vogel	USER	loss	active	2026-06-07 07:25:20.449	2026-06-23 01:29:46.52	0
-38	kai.connally@gmail.com	a3SUCrXiMWFKwEG	Kai Connally	USER	win	active	2026-06-25 05:42:20.762	2026-06-29 15:13:46.39	0
+38	kai.connally@gmail.com	a3SUCrXiMWFKwEG	Kai Connally	USER	loss	active	2026-06-25 05:42:20.762	2026-06-30 00:29:29.567	0
+37	akunit@mycoinflips.com	bokepindoh	Akun IT Mycoinflips	USER	loss	active	2026-06-12 06:31:43.484	2026-06-30 02:30:46.844	0
 \.
 
 
@@ -761,12 +763,12 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 21	21	0	{}	2026-04-27 01:05:05.696	2026-04-27 01:05:05.696
 26	26	0	{}	2026-06-03 03:18:56.383	2026-06-03 03:18:56.383
 27	27	0	{}	2026-06-03 14:57:14.12	2026-06-03 14:57:14.12
+37	37	0	{}	2026-06-12 06:31:43.484	2026-06-30 02:32:38.703
 19	19	1284565	{}	2026-03-28 02:09:41.475	2026-06-16 02:42:12.875
 30	30	230	{}	2026-06-05 04:40:07.314	2026-06-06 05:09:16.833
 33	33	0	{}	2026-06-07 05:12:02.874	2026-06-07 05:12:02.874
 28	28	11100	{}	2026-06-04 07:46:03.566	2026-06-07 13:44:02.677
 35	35	0	{}	2026-06-08 05:02:31.801	2026-06-08 05:02:31.801
-37	37	0	{}	2026-06-12 06:31:43.484	2026-06-12 06:31:43.484
 34	34	7.625	{}	2026-06-07 07:25:20.449	2026-06-27 14:02:57.326
 \.
 
@@ -782,7 +784,7 @@ SELECT pg_catalog.setval('public."AdminWallet_id_seq"', 70, true);
 -- Name: AuditLog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."AuditLog_id_seq"', 45, true);
+SELECT pg_catalog.setval('public."AuditLog_id_seq"', 46, true);
 
 
 --
@@ -803,7 +805,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 7, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 335, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 339, true);
 
 
 --
@@ -817,7 +819,7 @@ SELECT pg_catalog.setval('public."TradingDuration_id_seq"', 10, true);
 -- Name: Transaction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Transaction_id_seq"', 171, true);
+SELECT pg_catalog.setval('public."Transaction_id_seq"', 172, true);
 
 
 --
@@ -999,5 +1001,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict lCG7MsbwSFQwD2n3HngVIxwx80rfudOZafIdcipyytfevieC49vsXLvgS5q44PG
+\unrestrict bocceSP1v71gKBsqg37lwDMTp8O4iwLuINDL3SMO2uFtVaKqdDnR7vg70FuhoE8
 
