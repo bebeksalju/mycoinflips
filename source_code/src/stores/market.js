@@ -142,10 +142,14 @@ export const useMarketStore = defineStore('market', () => {
         ws.on('connect', () => {
             connectionStatus.value = 'Connected (Backend)';
             console.log('Connected to Backend Socket.io');
+            
+            if (activeCoin.pair) {
+                ws.emit('market:join', activeCoin.pair.toUpperCase());
+            }
         });
 
-        ws.on('market:update', (trade) => {
-            if (!trade) return;
+        ws.on('market:update:batch', (trades) => {
+            if (!trades || trades.length === 0) return;
 
             // WS is working - stop fallback if active
             if (!wsHasData) {
@@ -154,50 +158,66 @@ export const useMarketStore = defineStore('market', () => {
                 clearTimeout(fallbackTimeout);
             }
 
-            const symbol = trade.s.toUpperCase();
-            const coinKey = Object.keys(COIN_MAP).find(key => COIN_MAP[key].pair.toUpperCase() === symbol);
-            if (!coinKey) return;
+            trades.forEach(trade => {
+                const symbol = trade.s.toUpperCase();
+                const coinKey = Object.keys(COIN_MAP).find(key => COIN_MAP[key].pair.toUpperCase() === symbol);
+                if (!coinKey) return;
 
-            const price = parseFloat(trade.p);
-            const coinId = COIN_MAP[coinKey].id;
+                const price = parseFloat(trade.p);
+                const coinId = COIN_MAP[coinKey].id;
 
-            // 1. GLOBAL UPDATE
-            const overviewIndex = marketOverview.value.findIndex(item => item.id === coinId);
-            if (overviewIndex !== -1) {
-                marketOverview.value[overviewIndex].current_price = price;
-            }
+                // ACTIVE COIN UPDATE
+                if (activeCoin.id === coinId) {
+                    currentPrice.value = price;
 
-            // 2. ACTIVE COIN UPDATE
-            if (activeCoin.id === coinId) {
-                currentPrice.value = price;
+                    const isBuyerMaker = trade.m;
+                    const side = isBuyerMaker ? 'sell' : 'buy';
 
-                const isBuyerMaker = trade.m;
-                const side = isBuyerMaker ? 'sell' : 'buy';
+                    const newTrade = {
+                        id: trade.a,
+                        price: price,
+                        amount: parseFloat(trade.q),
+                        time: trade.T,
+                        side: side
+                    };
 
-                const newTrade = {
-                    id: trade.a,
-                    price: price,
-                    amount: parseFloat(trade.q),
-                    time: trade.T,
-                    side: side
-                };
+                    recentTrades.value.unshift(newTrade);
+                    if (recentTrades.value.length > 50) recentTrades.value.pop();
 
-                recentTrades.value.unshift(newTrade);
-                if (recentTrades.value.length > 50) recentTrades.value.pop();
-
-                // Candle Logic
-                const time = Math.floor(Date.now() / 1000);
-                if (lastCandle && time >= lastCandle.time + 60) {
-                    lastCandle = { time: Math.floor(time / 60) * 60, open: lastCandle.close, high: price, low: price, close: price };
-                } else if (lastCandle) {
-                    lastCandle.close = price;
-                    lastCandle.high = Math.max(lastCandle.high, price);
-                    lastCandle.low = Math.min(lastCandle.low, price);
-                } else {
-                    lastCandle = { time: Math.floor(time / 60) * 60, open: price, high: price, low: price, close: price };
+                    // Candle Logic
+                    const time = Math.floor(Date.now() / 1000);
+                    if (lastCandle && time >= lastCandle.time + 60) {
+                        lastCandle = { time: Math.floor(time / 60) * 60, open: lastCandle.close, high: price, low: price, close: price };
+                    } else if (lastCandle) {
+                        lastCandle.close = price;
+                        lastCandle.high = Math.max(lastCandle.high, price);
+                        lastCandle.low = Math.min(lastCandle.low, price);
+                    } else {
+                        lastCandle = { time: Math.floor(time / 60) * 60, open: price, high: price, low: price, close: price };
+                    }
                 }
-                if (onCandleUpdate) onCandleUpdate(lastCandle);
+            });
+            
+            if (onCandleUpdate && lastCandle) onCandleUpdate(lastCandle);
+        });
+
+        ws.on('market:overview', (overviewUpdates) => {
+            if (!wsHasData) {
+                wsHasData = true;
+                stopFallbackPolling();
+                clearTimeout(fallbackTimeout);
             }
+
+            Object.entries(overviewUpdates).forEach(([symbol, price]) => {
+                const coinKey = Object.keys(COIN_MAP).find(key => COIN_MAP[key].pair.toUpperCase() === symbol);
+                if (coinKey) {
+                    const coinId = COIN_MAP[coinKey].id;
+                    const overviewIndex = marketOverview.value.findIndex(item => item.id === coinId);
+                    if (overviewIndex !== -1) {
+                        marketOverview.value[overviewIndex].current_price = price;
+                    }
+                }
+            });
         });
 
         ws.on('disconnect', () => {

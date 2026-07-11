@@ -22,6 +22,19 @@ const io = new Server(server, {
 // Init socket emitter singleton
 socketEmitter.init(io);
 
+// Handle root connections for Market Rooms
+io.on('connection', (socket) => {
+  socket.on('market:join', (symbol) => {
+    // Leave all previous market rooms
+    socket.rooms.forEach(room => {
+      if (room.startsWith('pair:')) socket.leave(room);
+    });
+    if (symbol) {
+      socket.join(`pair:${symbol}`);
+    }
+  });
+});
+
 // Start Market Service
 const marketService = new MarketService(io);
 marketService.connect();

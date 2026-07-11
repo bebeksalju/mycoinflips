@@ -11,6 +11,12 @@ class MarketService {
             'BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT',
             'DOGEUSDT', 'ADAUSDT', 'AVAXUSDT', 'DOTUSDT', 'LINKUSDT'
         ];
+
+        this.tradeBuffer = {};
+        this.throttleInterval = 500; // ms
+
+        // Start flushing buffer periodically
+        setInterval(() => this.flushBuffer(), this.throttleInterval);
     }
 
     connect() {
@@ -49,7 +55,11 @@ class MarketService {
                         m: trade.S === 'Sell'        // isBuyerMaker (Sell side = maker is buyer)
                     };
 
-                    this.io.emit('market:update', transformed);
+                    const symbol = trade.s;
+                    if (!this.tradeBuffer[symbol]) {
+                        this.tradeBuffer[symbol] = [];
+                    }
+                    this.tradeBuffer[symbol].push(transformed);
                 }
             } catch (error) {
                 console.error('Error parsing Bybit WS message:', error);
@@ -69,6 +79,32 @@ class MarketService {
         });
 
         this._startPingCheck();
+    }
+
+    flushBuffer() {
+        const overviewUpdates = {};
+        let hasUpdates = false;
+        
+        for (const symbol of this.pairs) {
+            const trades = this.tradeBuffer[symbol];
+            if (trades && trades.length > 0) {
+                // Emit detailed trades to the specific room
+                this.io.to(`pair:${symbol}`).emit('market:update:batch', trades);
+                
+                // Track latest price for overview
+                const lastTrade = trades[trades.length - 1];
+                overviewUpdates[symbol] = parseFloat(lastTrade.p);
+                hasUpdates = true;
+                
+                // Clear the buffer
+                this.tradeBuffer[symbol] = [];
+            }
+        }
+        
+        if (hasUpdates) {
+             // Broadcast lightweight overview to all clients
+             this.io.emit('market:overview', overviewUpdates);
+        }
     }
 
     _startPingCheck() {

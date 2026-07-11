@@ -6,7 +6,7 @@
 set -e
 
 # Config
-PROJECT_DIR="/opt/mycoinflip"
+PROJECT_DIR="$(pwd)"
 BACKUP_PARENT_DIR="${PROJECT_DIR}/backups"
 BACKUP_REPO_DIR="${BACKUP_PARENT_DIR}/github-backup-repo"
 
@@ -56,21 +56,21 @@ mkdir -p source_code
 
 # 2. Dump Database (PostgreSQL)
 echo "1. Exporting Database from Docker container..."
-if docker ps | grep -q mycoinflip_db_1; then
-    docker exec -i mycoinflip_db_1 pg_dump -U "${POSTGRES_USER}" "${POSTGRES_DB}" > "db_backup/db_dump.sql"
+if docker ps | grep -q mycoinflip-db-1; then
+    docker exec -i mycoinflip-db-1 pg_dump -U "${POSTGRES_USER}" "${POSTGRES_DB}" > "db_backup/db_dump.sql"
     echo "   -> Database backup successful."
 else
-    echo "   ❌ ERROR: Container mycoinflip_db_1 is not running!"
+    echo "   ❌ ERROR: Container mycoinflip-db-1 is not running!"
     exit 1
 fi
 
 # 3. Backup Uploads Volume (KYC & Transfer Proof images)
 echo "2. Copying uploads files..."
-if docker ps | grep -q mycoinflip_server_1; then
-    docker run --rm --volumes-from mycoinflip_server_1 -v "$(pwd)/uploads_backup":/backup_host alpine cp -rp /app/uploads/. /backup_host/
+if docker ps | grep -q mycoinflip-server-1; then
+    docker run --rm --volumes-from mycoinflip-server-1 -v "$(pwd)/uploads_backup":/backup_host alpine cp -rp /app/uploads/. /backup_host/
     echo "   -> Uploads directory copy successful."
 else
-    echo "   ❌ ERROR: Container mycoinflip_server_1 is not running!"
+    echo "   ❌ ERROR: Container mycoinflip-server-1 is not running!"
     exit 1
 fi
 
