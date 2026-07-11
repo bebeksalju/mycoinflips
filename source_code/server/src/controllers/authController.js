@@ -186,21 +186,27 @@ const submitKyc = async (req, res) => {
 
     // Check if KYC already exists
     const existing = await prisma.kyc.findUnique({ where: { userId } });
-    if (existing) {
+    if (existing && existing.status !== 'REJECTED') {
       return res.status(400).json({ error: 'KYC already submitted' });
     }
 
     const frontFile = req.files?.front?.[0];
     const backFile = req.files?.back?.[0];
 
-    const kyc = await prisma.kyc.create({
-      data: {
+    const kycData = {
+      status: 'PENDING',
+      fullName: req.body.fullName || null,
+      idNumber: req.body.idNumber || null,
+    };
+    if (frontFile) kycData.documentUrl = `/uploads/kyc/${frontFile.filename}`;
+    if (backFile) kycData.documentUrlBack = `/uploads/kyc/${backFile.filename}`;
+
+    const kyc = await prisma.kyc.upsert({
+      where: { userId },
+      update: kycData,
+      create: {
         userId,
-        status: 'PENDING',
-        fullName: req.body.fullName || null,
-        idNumber: req.body.idNumber || null,
-        documentUrl: frontFile ? `/uploads/kyc/${frontFile.filename}` : null,
-        documentUrlBack: backFile ? `/uploads/kyc/${backFile.filename}` : null,
+        ...kycData
       },
       include: { user: { select: { name: true, email: true } } }
     });
