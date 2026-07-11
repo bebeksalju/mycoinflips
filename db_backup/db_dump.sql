@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict JPf3qAcqWQrJNDJ0QUtNdVWVdtAeHgPeDtg7oQBmgS1zCRHaEyN7aUVZzhAfpCT
+\restrict FOyolnKpzSK10ijcLxrLVEehL7XR3IBRbfSN9GMfa7cE7VgP4itz63c9sX6ue0E
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -585,6 +585,7 @@ COPY public."ChatMessage" (id, "userId", sender, message, read, "createdAt") FRO
 53	34	admin	Good morning/afternoon/evening Mr.Mark Vogel, We will verify your account; please wait a moment.	t	2026-06-23 01:44:05.543
 54	34	user	I attempted to withdraw on Sunday how long should I wait till the withdrawal goes through?	f	2026-06-29 19:06:44.271
 55	34	user	Why is my withdrawal taking so long?	f	2026-06-30 14:47:43.396
+56	37	user	tes	f	2026-07-11 00:28:30.527
 \.
 
 
@@ -791,7 +792,7 @@ SELECT pg_catalog.setval('public."AuditLog_id_seq"', 46, true);
 -- Name: ChatMessage_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."ChatMessage_id_seq"', 55, true);
+SELECT pg_catalog.setval('public."ChatMessage_id_seq"', 56, true);
 
 
 --
@@ -805,7 +806,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 7, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 341, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 343, true);
 
 
 --
@@ -1001,5 +1002,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict JPf3qAcqWQrJNDJ0QUtNdVWVdtAeHgPeDtg7oQBmgS1zCRHaEyN7aUVZzhAfpCT
+\unrestrict FOyolnKpzSK10ijcLxrLVEehL7XR3IBRbfSN9GMfa7cE7VgP4itz63c9sX6ue0E
 
