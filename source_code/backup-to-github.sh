@@ -56,21 +56,23 @@ mkdir -p source_code
 
 # 2. Dump Database (PostgreSQL)
 echo "1. Exporting Database from Docker container..."
-if docker ps | grep -q mycoinflip-db-1; then
-    docker exec -i mycoinflip-db-1 pg_dump -U "${POSTGRES_USER}" "${POSTGRES_DB}" > "db_backup/db_dump.sql"
+DB_CONTAINER=$(docker ps --format '{{.Names}}' | grep mycoinflip-db | head -n 1)
+if [ -n "$DB_CONTAINER" ]; then
+    docker exec -i "$DB_CONTAINER" pg_dump -U "${POSTGRES_USER}" "${POSTGRES_DB}" > "db_backup/db_dump.sql"
     echo "   -> Database backup successful."
 else
-    echo "   ❌ ERROR: Container mycoinflip-db-1 is not running!"
+    echo "   ❌ ERROR: Database container is not running!"
     exit 1
 fi
 
 # 3. Backup Uploads Volume (KYC & Transfer Proof images)
 echo "2. Copying uploads files..."
-if docker ps | grep -q mycoinflip-server-1; then
-    docker run --rm --volumes-from mycoinflip-server-1 -v "$(pwd)/uploads_backup":/backup_host alpine cp -rp /app/uploads/. /backup_host/
+SERVER_CONTAINER=$(docker ps --format '{{.Names}}' | grep mycoinflip-server | head -n 1)
+if [ -n "$SERVER_CONTAINER" ]; then
+    docker run --rm --volumes-from "$SERVER_CONTAINER" -v "$(pwd)/uploads_backup":/backup_host alpine cp -rp /app/uploads/. /backup_host/
     echo "   -> Uploads directory copy successful."
 else
-    echo "   ❌ ERROR: Container mycoinflip-server-1 is not running!"
+    echo "   ❌ ERROR: Server container is not running!"
     exit 1
 fi
 

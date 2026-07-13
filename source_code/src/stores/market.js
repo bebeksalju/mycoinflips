@@ -129,7 +129,7 @@ export const useMarketStore = defineStore('market', () => {
         wsHasData = false;
 
         console.log('Connecting to Backend Socket.io...');
-        ws = io();
+        ws = io({ transports: ['websocket', 'polling'] });
 
         // If no WS data after 10 seconds, start fallback polling
         const fallbackTimeout = setTimeout(() => {

@@ -19,7 +19,8 @@ function connect() {
     if (socket) socket.disconnect();
 
     socket = io('/chat', {
-        auth: { token: authStore.user.token }
+        auth: { token: authStore.user.token },
+        transports: ['websocket', 'polling']
     });
 
     socket.on('connect', () => {
