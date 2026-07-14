@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict angpSsm3Jvs8NWa5nc1Ffg3GIIDuI4a0C2MawN23J90BcgCcDqFvkB38YbnqLFt
+\restrict VTdATAqzffCWWoaYpCXgmJWVaJ0O0zrBRGl5vVxZwn9Zfvd6SToAjS8hDSexqCN
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -630,6 +630,7 @@ COPY public."Session" (id, "userId", token, "expiresAt", "createdAt", "lastActiv
 354	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODM3NDE0MzksImV4cCI6MTc4MzgyNzgzOX0.wgUooBsGIgyVLynuy1wefc_yOaKkp_Vc_hS8OzJzCg0	2026-07-12 03:43:59.218	2026-07-11 03:43:59.219	2026-07-11 03:43:59.219
 358	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODM3NDE4OTIsImV4cCI6MTc4MzgyODI5Mn0.fK-w1EtogoWIAPX6YDtcOmxoi2HAmQad55M-TSXZ-9g	2026-07-12 03:51:32.537	2026-07-11 03:51:32.537	2026-07-11 03:51:32.537
 382	38	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM4LCJlbWFpbCI6ImthaS5jb25uYWxseUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgzOTc5NDU2LCJleHAiOjE3ODQwNjU4NTZ9.SuTQuSaS3CqyMvluFWCRxVy1Ot5SeJmbHA2D0RGcFdE	2026-07-14 21:50:56.591	2026-07-13 21:50:56.591	2026-07-13 21:50:56.591
+383	38	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM4LCJlbWFpbCI6ImthaS5jb25uYWxseUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgzOTkwNTI4LCJleHAiOjE3ODQwNzY5Mjh9.WMAkp24KAIKECuCzIWv8kVVWnuF-S4nIQMMbPnWLQEs	2026-07-15 00:55:28.177	2026-07-14 00:55:28.177	2026-07-14 00:55:28.177
 \.
 
 
@@ -834,7 +835,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 382, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 383, true);
 
 
 --
@@ -1030,5 +1031,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict angpSsm3Jvs8NWa5nc1Ffg3GIIDuI4a0C2MawN23J90BcgCcDqFvkB38YbnqLFt
+\unrestrict VTdATAqzffCWWoaYpCXgmJWVaJ0O0zrBRGl5vVxZwn9Zfvd6SToAjS8hDSexqCN
 
