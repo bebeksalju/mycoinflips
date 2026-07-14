@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict Kv8TKc09fBkubgxeapCj77eniyJPkIWqlFHBC1FOseghu0HtbAa5PVIMwx4otSu
+\restrict angpSsm3Jvs8NWa5nc1Ffg3GIIDuI4a0C2MawN23J90BcgCcDqFvkB38YbnqLFt
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -593,6 +593,8 @@ COPY public."ChatMessage" (id, "userId", sender, message, read, "createdAt") FRO
 54	34	user	I attempted to withdraw on Sunday how long should I wait till the withdrawal goes through?	f	2026-06-29 19:06:44.271
 55	34	user	Why is my withdrawal taking so long?	f	2026-06-30 14:47:43.396
 56	37	user	tes	f	2026-07-11 00:28:30.527
+57	38	user	hello	f	2026-07-13 21:51:15.4
+58	38	user	is it possible to export transactions?	f	2026-07-13 21:51:28.726
 \.
 
 
@@ -627,7 +629,7 @@ COPY public."Session" (id, "userId", token, "expiresAt", "createdAt", "lastActiv
 283	19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJlbWFpbCI6ImJheWxhbnlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MTU3NzYzOCwiZXhwIjoxNzgxNjY0MDM4fQ.vg91RRrqZifQblM48_hRbAJ9wx6YGm4Arg191WgBaIw	2026-06-17 02:40:38.475	2026-06-16 02:40:38.475	2026-06-23 02:15:56.25
 354	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODM3NDE0MzksImV4cCI6MTc4MzgyNzgzOX0.wgUooBsGIgyVLynuy1wefc_yOaKkp_Vc_hS8OzJzCg0	2026-07-12 03:43:59.218	2026-07-11 03:43:59.219	2026-07-11 03:43:59.219
 358	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODM3NDE4OTIsImV4cCI6MTc4MzgyODI5Mn0.fK-w1EtogoWIAPX6YDtcOmxoi2HAmQad55M-TSXZ-9g	2026-07-12 03:51:32.537	2026-07-11 03:51:32.537	2026-07-11 03:51:32.537
-380	38	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM4LCJlbWFpbCI6ImthaS5jb25uYWxseUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgzODgyNTMxLCJleHAiOjE3ODM5Njg5MzF9.UWIqBeMUTLwgT-WDKIaquxD5U_1m0ve79vg4A9WUsWM	2026-07-13 18:55:31.849	2026-07-12 18:55:31.849	2026-07-12 18:55:31.849
+382	38	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM4LCJlbWFpbCI6ImthaS5jb25uYWxseUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgzOTc5NDU2LCJleHAiOjE3ODQwNjU4NTZ9.SuTQuSaS3CqyMvluFWCRxVy1Ot5SeJmbHA2D0RGcFdE	2026-07-14 21:50:56.591	2026-07-13 21:50:56.591	2026-07-13 21:50:56.591
 \.
 
 
@@ -818,7 +820,7 @@ SELECT pg_catalog.setval('public."AuditLog_id_seq"', 53, true);
 -- Name: ChatMessage_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."ChatMessage_id_seq"', 56, true);
+SELECT pg_catalog.setval('public."ChatMessage_id_seq"', 58, true);
 
 
 --
@@ -832,7 +834,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 380, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 382, true);
 
 
 --
@@ -1028,5 +1030,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Kv8TKc09fBkubgxeapCj77eniyJPkIWqlFHBC1FOseghu0HtbAa5PVIMwx4otSu
+\unrestrict angpSsm3Jvs8NWa5nc1Ffg3GIIDuI4a0C2MawN23J90BcgCcDqFvkB38YbnqLFt
 
