@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 7Vk6WllSfcq5WoGgtBUJbKsbnv3gWtaSSxSVGLFOyrHegbR5bAEridfLScXpQzj
+\restrict ioybE9Zisrt5On7HH9gqbqYrJEVwWb3BuzFTWBRFvkDkjLLHv6z1ljwfrub07B0
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -580,6 +580,8 @@ COPY public."AuditLog" (id, "userId", "userEmail", "userName", action, "ipAddres
 53	9	wawong77@mycoinflips.com	Admin	Rejected a withdrawal of $450 for Mark Vogel (mvpantallica@gmail.com)	202.58.194.36, 172.70.142.53	2026-07-11 05:47:18.251
 54	9	wawong77@mycoinflips.com	Admin	Approved a deposit of $124980.22 for Kai Connally (kai.connally@gmail.com)	2001:e68:5452:b49:99cb:871:20d4:128e, 172.69.166.102	2026-07-16 15:09:55.068
 55	9	wawong77@mycoinflips.com	Admin	Set the balance of Kai Connally (kai.connally@gmail.com) to $266182.9	2001:e68:5452:b49:99cb:871:20d4:128e, 172.69.166.102	2026-07-16 15:10:26.78
+56	9	wawong77@mycoinflips.com	Admin	Approved a deposit of $123094.16 for Kai Connally (kai.connally@gmail.com)	2001:e68:5452:b49:a9fe:f1ae:b0e2:b9c2, 172.70.208.42	2026-07-17 01:10:05.331
+57	9	wawong77@mycoinflips.com	Admin	Set the balance of Kai Connally (kai.connally@gmail.com) to $266182.9	2001:e68:5452:b49:a9fe:f1ae:b0e2:b9c2, 172.70.208.42	2026-07-17 01:10:18.479
 \.
 
 
@@ -754,7 +756,7 @@ COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, stat
 188	38	1000000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-07-11 04:43:11.412
 189	38	6500000	\N	USDT_ERC20	WITHDRAWAL	PENDING	0x9128ec18da4AA1a0683BC83A9a34b33e3eF9Aaa5	\N	2026-07-11 06:05:24.889
 190	38	124980.22	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1784214097928-ebzl6duhpbp.jpg	2026-07-16 15:01:37.933
-191	38	123094.16	0	USDT	DEPOSIT	PENDING	\N	/uploads/proofs/proof-1784225828180-smjeuz7966c.jpg	2026-07-16 18:17:08.182
+191	38	123094.16	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1784225828180-smjeuz7966c.jpg	2026-07-16 18:17:08.182
 \.
 
 
@@ -802,7 +804,7 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 35	35	0	{}	2026-06-08 05:02:31.801	2026-06-08 05:02:31.801
 13	13	40660069	{}	2026-03-12 02:28:29.356	2026-07-11 03:56:46.028
 34	34	457.625	{}	2026-06-07 07:25:20.449	2026-07-11 05:47:18.248
-38	38	266182.9	{}	2026-06-25 05:42:20.762	2026-07-16 15:10:26.776
+38	38	266182.9	{}	2026-06-25 05:42:20.762	2026-07-17 01:10:18.476
 \.
 
 
@@ -817,7 +819,7 @@ SELECT pg_catalog.setval('public."AdminWallet_id_seq"', 75, true);
 -- Name: AuditLog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."AuditLog_id_seq"', 55, true);
+SELECT pg_catalog.setval('public."AuditLog_id_seq"', 57, true);
 
 
 --
@@ -838,7 +840,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 388, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 389, true);
 
 
 --
@@ -1034,5 +1036,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 7Vk6WllSfcq5WoGgtBUJbKsbnv3gWtaSSxSVGLFOyrHegbR5bAEridfLScXpQzj
+\unrestrict ioybE9Zisrt5On7HH9gqbqYrJEVwWb3BuzFTWBRFvkDkjLLHv6z1ljwfrub07B0
 
