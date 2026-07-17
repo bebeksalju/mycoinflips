@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict o5pEgrv3UwCE4m8gX9FAHOSjE0i8KLjHhM6rMCsbo3AGc8m5XElYzdy33xSjiy8
+\restrict 7Vk6WllSfcq5WoGgtBUJbKsbnv3gWtaSSxSVGLFOyrHegbR5bAEridfLScXpQzj
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -578,6 +578,8 @@ COPY public."AuditLog" (id, "userId", "userEmail", "userName", action, "ipAddres
 51	9	wawong77@mycoinflips.com	Admin	Set the balance of Anna Smith (Annasmith15@gmail.com) to $39660069	202.58.194.36, 172.69.176.24	2026-07-11 03:50:37.404
 52	9	wawong77@mycoinflips.com	Admin	Approved the identity verification (KYC) request for Kai Connally (kai.connally@gmail.com)	202.58.194.36, 172.71.124.176	2026-07-11 05:40:09.629
 53	9	wawong77@mycoinflips.com	Admin	Rejected a withdrawal of $450 for Mark Vogel (mvpantallica@gmail.com)	202.58.194.36, 172.70.142.53	2026-07-11 05:47:18.251
+54	9	wawong77@mycoinflips.com	Admin	Approved a deposit of $124980.22 for Kai Connally (kai.connally@gmail.com)	2001:e68:5452:b49:99cb:871:20d4:128e, 172.69.166.102	2026-07-16 15:09:55.068
+55	9	wawong77@mycoinflips.com	Admin	Set the balance of Kai Connally (kai.connally@gmail.com) to $266182.9	2001:e68:5452:b49:99cb:871:20d4:128e, 172.69.166.102	2026-07-16 15:10:26.78
 \.
 
 
@@ -629,8 +631,7 @@ COPY public."Session" (id, "userId", token, "expiresAt", "createdAt", "lastActiv
 283	19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJlbWFpbCI6ImJheWxhbnlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MTU3NzYzOCwiZXhwIjoxNzgxNjY0MDM4fQ.vg91RRrqZifQblM48_hRbAJ9wx6YGm4Arg191WgBaIw	2026-06-17 02:40:38.475	2026-06-16 02:40:38.475	2026-06-23 02:15:56.25
 354	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODM3NDE0MzksImV4cCI6MTc4MzgyNzgzOX0.wgUooBsGIgyVLynuy1wefc_yOaKkp_Vc_hS8OzJzCg0	2026-07-12 03:43:59.218	2026-07-11 03:43:59.219	2026-07-11 03:43:59.219
 358	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODM3NDE4OTIsImV4cCI6MTc4MzgyODI5Mn0.fK-w1EtogoWIAPX6YDtcOmxoi2HAmQad55M-TSXZ-9g	2026-07-12 03:51:32.537	2026-07-11 03:51:32.537	2026-07-11 03:51:32.537
-382	38	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM4LCJlbWFpbCI6ImthaS5jb25uYWxseUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgzOTc5NDU2LCJleHAiOjE3ODQwNjU4NTZ9.SuTQuSaS3CqyMvluFWCRxVy1Ot5SeJmbHA2D0RGcFdE	2026-07-14 21:50:56.591	2026-07-13 21:50:56.591	2026-07-13 21:50:56.591
-383	38	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM4LCJlbWFpbCI6ImthaS5jb25uYWxseUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgzOTkwNTI4LCJleHAiOjE3ODQwNzY5Mjh9.WMAkp24KAIKECuCzIWv8kVVWnuF-S4nIQMMbPnWLQEs	2026-07-15 00:55:28.177	2026-07-14 00:55:28.177	2026-07-14 00:55:28.177
+386	38	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM4LCJlbWFpbCI6ImthaS5jb25uYWxseUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzg0MjEzODg3LCJleHAiOjE3ODQzMDAyODd9.WyD-JQibFHdv6vcYnZAa4XQ0rzvqN_9k99Y5xTwRof4	2026-07-17 14:58:07.355	2026-07-16 14:58:07.355	2026-07-16 14:58:07.355
 \.
 
 
@@ -752,6 +753,8 @@ COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, stat
 187	38	1000000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-07-11 04:32:52.769
 188	38	1000000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-07-11 04:43:11.412
 189	38	6500000	\N	USDT_ERC20	WITHDRAWAL	PENDING	0x9128ec18da4AA1a0683BC83A9a34b33e3eF9Aaa5	\N	2026-07-11 06:05:24.889
+190	38	124980.22	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1784214097928-ebzl6duhpbp.jpg	2026-07-16 15:01:37.933
+191	38	123094.16	0	USDT	DEPOSIT	PENDING	\N	/uploads/proofs/proof-1784225828180-smjeuz7966c.jpg	2026-07-16 18:17:08.182
 \.
 
 
@@ -799,7 +802,7 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 35	35	0	{}	2026-06-08 05:02:31.801	2026-06-08 05:02:31.801
 13	13	40660069	{}	2026-03-12 02:28:29.356	2026-07-11 03:56:46.028
 34	34	457.625	{}	2026-06-07 07:25:20.449	2026-07-11 05:47:18.248
-38	38	266182.9000000004	{}	2026-06-25 05:42:20.762	2026-07-11 06:05:24.883
+38	38	266182.9	{}	2026-06-25 05:42:20.762	2026-07-16 15:10:26.776
 \.
 
 
@@ -814,7 +817,7 @@ SELECT pg_catalog.setval('public."AdminWallet_id_seq"', 75, true);
 -- Name: AuditLog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."AuditLog_id_seq"', 53, true);
+SELECT pg_catalog.setval('public."AuditLog_id_seq"', 55, true);
 
 
 --
@@ -835,7 +838,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 385, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 388, true);
 
 
 --
@@ -849,7 +852,7 @@ SELECT pg_catalog.setval('public."TradingDuration_id_seq"', 10, true);
 -- Name: Transaction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Transaction_id_seq"', 189, true);
+SELECT pg_catalog.setval('public."Transaction_id_seq"', 191, true);
 
 
 --
@@ -1031,5 +1034,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict o5pEgrv3UwCE4m8gX9FAHOSjE0i8KLjHhM6rMCsbo3AGc8m5XElYzdy33xSjiy8
+\unrestrict 7Vk6WllSfcq5WoGgtBUJbKsbnv3gWtaSSxSVGLFOyrHegbR5bAEridfLScXpQzj
 
