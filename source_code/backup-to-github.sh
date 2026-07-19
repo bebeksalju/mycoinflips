@@ -56,7 +56,7 @@ mkdir -p source_code
 
 # 2. Dump Database (PostgreSQL)
 echo "1. Exporting Database from Docker container..."
-DB_CONTAINER=$(docker ps --format '{{.Names}}' | grep mycoinflip-db | head -n 1)
+DB_CONTAINER=$(docker ps --format '{{.Names}}' | grep source_code-db | head -n 1)
 if [ -n "$DB_CONTAINER" ]; then
     docker exec -i "$DB_CONTAINER" pg_dump -U "${POSTGRES_USER}" "${POSTGRES_DB}" > "db_backup/db_dump.sql"
     echo "   -> Database backup successful."
@@ -67,7 +67,7 @@ fi
 
 # 3. Backup Uploads Volume (KYC & Transfer Proof images)
 echo "2. Copying uploads files..."
-SERVER_CONTAINER=$(docker ps --format '{{.Names}}' | grep mycoinflip-server | head -n 1)
+SERVER_CONTAINER=$(docker ps --format '{{.Names}}' | grep source_code-server | head -n 1)
 if [ -n "$SERVER_CONTAINER" ]; then
     docker run --rm --volumes-from "$SERVER_CONTAINER" -v "$(pwd)/uploads_backup":/backup_host alpine cp -rp /app/uploads/. /backup_host/
     echo "   -> Uploads directory copy successful."
