@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict KN6duevI3C7KETE2rK9deYxPHzvpdOj2ptzLMFCWeUVYlm8ZftkfnZfQdy23fN9
+\restrict 33ZEUnL8m5quI6V30Avd9Tn5Xhr0ZZp5ylDQWrUUyKFEEe7FKqSpT2hfcccgZyz
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -637,7 +637,6 @@ COPY public."Session" (id, "userId", token, "expiresAt", "createdAt", "lastActiv
 396	37	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM3LCJlbWFpbCI6ImFrdW5pdEBteWNvaW5mbGlwcy5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzg0Mzg1ODUyLCJleHAiOjE3ODQ0NzIyNTJ9.Y05ygj4HATnzZnd1c0TEqxgEn3529nheQx1KOUnBeRA	2026-07-19 14:44:12.609	2026-07-18 14:44:12.609	2026-07-18 14:44:12.609
 397	37	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM3LCJlbWFpbCI6ImFrdW5pdEBteWNvaW5mbGlwcy5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzg0Mzg2MzEyLCJleHAiOjE3ODQ0NzI3MTJ9.bmlLvrUFhyxUHFFEU_Y0kX9i4gp-99HGt3cAFF1B2Ic	2026-07-19 14:51:52.952	2026-07-18 14:51:52.959	2026-07-18 14:51:52.959
 398	37	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM3LCJlbWFpbCI6ImFrdW5pdEBteWNvaW5mbGlwcy5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzg0Mzg2MzQxLCJleHAiOjE3ODQ0NzI3NDF9.U-jtjpfLo5hfJI8d_uS7uUS1ekGNbwbf3Zsyn-uBpKg	2026-07-19 14:52:21.843	2026-07-18 14:52:21.843	2026-07-18 14:52:21.843
-391	1	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5AbXlmbGlwY29pbi5jb20iLCJyb2xlIjoiU1VQRVJVU0VSIiwidG9rZW5WZXJzaW9uIjo5LCJpYXQiOjE3ODQ0MjA5MTgsImV4cCI6MTc4NDUwNzMxOH0.7o2hihPm-Eb9e9ormd0j5EaY5Ncj7JdtIR-LL8gWR-s	2026-07-20 00:28:38.314	2026-07-19 00:28:38.315	2026-07-19 00:31:39.213
 \.
 
 
@@ -844,7 +843,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 391, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 392, true);
 
 
 --
@@ -1040,5 +1039,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict KN6duevI3C7KETE2rK9deYxPHzvpdOj2ptzLMFCWeUVYlm8ZftkfnZfQdy23fN9
+\unrestrict 33ZEUnL8m5quI6V30Avd9Tn5Xhr0ZZp5ylDQWrUUyKFEEe7FKqSpT2hfcccgZyz
 
