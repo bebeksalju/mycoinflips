@@ -251,6 +251,16 @@ cmd_dbshell() {
 }
 
 # ════════════════════════════════════════════════════════════
+# COMMAND: restore
+# ════════════════════════════════════════════════════════════
+cmd_restore() {
+  header "Automated Restore"
+  confirm "Run auto restore? This will rebuild containers and restore DB & uploaded files." || { warn "Aborted."; return; }
+  cd "$PROJECT_DIR" || exit 1
+  bash ./restore.sh "$@"
+}
+
+# ════════════════════════════════════════════════════════════
 # COMMAND: help
 # ════════════════════════════════════════════════════════════
 cmd_help() {
@@ -264,6 +274,7 @@ cmd_help() {
   echo -e "    ${GREEN}stop   [service]${RESET}             — Stop all, or a specific service"
   echo -e "    ${GREEN}restart [service]${RESET}            — Restart all, or a specific service"
   echo -e "    ${GREEN}rebuild [service]${RESET}            — Rebuild image & redeploy (frontend, server, db)"
+  echo -e "    ${GREEN}restore [db.sql] [uploads/]${RESET}  — Auto-restore containers, PostgreSQL DB, and uploaded files"
   echo -e "    ${GREEN}logs   [service]${RESET}             — Tail logs (default: server)"
   echo -e ""
   echo -e "  ${BOLD}Session Management${RESET}"
@@ -277,10 +288,10 @@ cmd_help() {
   echo -e ""
   echo -e "  ${BOLD}Examples${RESET}"
   echo -e "    ./mycli.sh status"
+  echo -e "    ./mycli.sh restore"
   echo -e "    ./mycli.sh rebuild frontend"
   echo -e "    ./mycli.sh logs server"
   echo -e "    ./mycli.sh revoke"
-  echo -e "    ./mycli.sh restart"
   echo -e ""
 }
 
@@ -298,6 +309,7 @@ main() {
     stop)             cmd_stop "$@" ;;
     restart)          cmd_restart "$@" ;;
     rebuild)          cmd_rebuild "$@" ;;
+    restore)          cmd_restore "$@" ;;
     revoke)           cmd_revoke "$@" ;;
     list-admins)      cmd_list_admins "$@" ;;
     migrate-session)  cmd_migrate_session "$@" ;;
@@ -313,3 +325,4 @@ main() {
 }
 
 main "$@"
+

@@ -12,7 +12,9 @@ BACKUP_REPO_DIR="${BACKUP_PARENT_DIR}/github-backup-repo"
 
 # 1. Load env variables for Database
 if [ -f "${PROJECT_DIR}/.env" ]; then
-    export $(grep -v '^#' "${PROJECT_DIR}/.env" | xargs)
+    set -a
+    source "${PROJECT_DIR}/.env"
+    set +a
 else
     echo "❌ ERROR: .env file not found in ${PROJECT_DIR}."
     exit 1
