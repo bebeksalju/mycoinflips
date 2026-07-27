@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 47Tzd7OhM26priPDLLob9HRL5e8IIdw01bFMMab9a6JayD6XBxSMNWhN8BJgfcD
+\restrict yZa1fs8xMzTAEiJVmW24wllDk2IkyRbgFatGhXry2PMiyEz7pcdEirV8LrGp3EV
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -634,7 +634,6 @@ COPY public."Session" (id, "userId", token, "expiresAt", "createdAt", "lastActiv
 354	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODM3NDE0MzksImV4cCI6MTc4MzgyNzgzOX0.wgUooBsGIgyVLynuy1wefc_yOaKkp_Vc_hS8OzJzCg0	2026-07-12 03:43:59.218	2026-07-11 03:43:59.219	2026-07-11 03:43:59.219
 358	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODM3NDE4OTIsImV4cCI6MTc4MzgyODI5Mn0.fK-w1EtogoWIAPX6YDtcOmxoi2HAmQad55M-TSXZ-9g	2026-07-12 03:51:32.537	2026-07-11 03:51:32.537	2026-07-11 03:51:32.537
 386	38	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM4LCJlbWFpbCI6ImthaS5jb25uYWxseUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzg0MjEzODg3LCJleHAiOjE3ODQzMDAyODd9.WyD-JQibFHdv6vcYnZAa4XQ0rzvqN_9k99Y5xTwRof4	2026-07-17 14:58:07.355	2026-07-16 14:58:07.355	2026-07-16 14:58:07.355
-393	37	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM3LCJlbWFpbCI6ImFrdW5pdEBteWNvaW5mbGlwcy5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzg0NjgzNTczLCJleHAiOjE3ODQ3Njk5NzN9._WU_HYHSv9tDL60fLqJe6xUQIT4YT5VzHQBgyhM6D9M	2026-07-23 01:26:13.613	2026-07-22 01:26:13.621	2026-07-22 01:26:13.621
 \.
 
 
@@ -841,7 +840,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 393, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 396, true);
 
 
 --
@@ -1037,5 +1036,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 47Tzd7OhM26priPDLLob9HRL5e8IIdw01bFMMab9a6JayD6XBxSMNWhN8BJgfcD
+\unrestrict yZa1fs8xMzTAEiJVmW24wllDk2IkyRbgFatGhXry2PMiyEz7pcdEirV8LrGp3EV
 
