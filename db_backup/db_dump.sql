@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict rI3VhiXuXxlKazg9ytjf41n5k2vwNzDME27ref7VKWJ6BWFJVraWorXMKGy7mqH
+\restrict 5f1K9drBnHe26gp5CzeqceJbCu3bFd4wqSoarzOZbXd80e0K8FpIXd9hzj4zh2Y
 
 -- Dumped from database version 16.14
 -- Dumped by pg_dump version 16.14
@@ -757,6 +757,8 @@ COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, stat
 189	38	6500000	\N	USDT_ERC20	WITHDRAWAL	PENDING	0x9128ec18da4AA1a0683BC83A9a34b33e3eF9Aaa5	\N	2026-07-11 06:05:24.889
 190	38	124980.22	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1784214097928-ebzl6duhpbp.jpg	2026-07-16 15:01:37.933
 191	38	123094.16	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1784225828180-smjeuz7966c.jpg	2026-07-16 18:17:08.182
+192	37	1000	0	BTC/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-07-30 04:12:19.422
+193	37	900	0	BTC/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-07-30 04:15:01.043
 \.
 
 
@@ -796,7 +798,6 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 21	21	0	{}	2026-04-27 01:05:05.696	2026-04-27 01:05:05.696
 26	26	0	{}	2026-06-03 03:18:56.383	2026-06-03 03:18:56.383
 27	27	0	{}	2026-06-03 14:57:14.12	2026-06-03 14:57:14.12
-37	37	0	{}	2026-06-12 06:31:43.484	2026-06-30 02:32:38.703
 19	19	1284565	{}	2026-03-28 02:09:41.475	2026-06-16 02:42:12.875
 30	30	230	{}	2026-06-05 04:40:07.314	2026-06-06 05:09:16.833
 33	33	0	{}	2026-06-07 05:12:02.874	2026-06-07 05:12:02.874
@@ -805,6 +806,7 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 13	13	40660069	{}	2026-03-12 02:28:29.356	2026-07-11 03:56:46.028
 34	34	457.625	{}	2026-06-07 07:25:20.449	2026-07-11 05:47:18.248
 38	38	266182.9	{}	2026-06-25 05:42:20.762	2026-07-17 01:10:18.476
+37	37	0	{}	2026-06-12 06:31:43.484	2026-07-30 04:22:28.615
 \.
 
 
@@ -840,7 +842,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 405, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 409, true);
 
 
 --
@@ -854,7 +856,7 @@ SELECT pg_catalog.setval('public."TradingDuration_id_seq"', 10, true);
 -- Name: Transaction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Transaction_id_seq"', 191, true);
+SELECT pg_catalog.setval('public."Transaction_id_seq"', 193, true);
 
 
 --
@@ -1036,5 +1038,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict rI3VhiXuXxlKazg9ytjf41n5k2vwNzDME27ref7VKWJ6BWFJVraWorXMKGy7mqH
+\unrestrict 5f1K9drBnHe26gp5CzeqceJbCu3bFd4wqSoarzOZbXd80e0K8FpIXd9hzj4zh2Y
 
