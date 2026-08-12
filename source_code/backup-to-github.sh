@@ -3,6 +3,7 @@
 #  MyCoinFlip Daily Backup to GitHub Script
 # ==============================================================================
 
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 set -e
 
 # Config
