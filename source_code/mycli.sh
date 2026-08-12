@@ -4,8 +4,8 @@
 #  Usage: ./mycli.sh [command]
 # ============================================================
 
-COMPOSE_FILE="/opt/mycoinflip/docker-compose.prod.yml"
-PROJECT_DIR="/opt/mycoinflip"
+COMPOSE_FILE="/opt/mycoinflips/source_code/docker-compose.prod.yml"
+PROJECT_DIR="/opt/mycoinflips/source_code"
 DB_CONTAINER="mycoinflip-db-1"
 SERVER_CONTAINER="mycoinflip-server-1"
 FRONTEND_CONTAINER="mycoinflip-frontend-1"

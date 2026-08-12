@@ -86,6 +86,7 @@ rsync -avq --delete \
     --exclude='.git' \
     --exclude='backups' \
     --exclude='*.tar.gz' \
+    --exclude='.env' \
     "${PROJECT_DIR}/" "source_code/"
 echo "   -> Source code copy successful."
 
