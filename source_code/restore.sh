@@ -91,6 +91,35 @@ else
     success "SSL certificates found."
 fi
 
+# 4.5. Verify Docker and Docker Compose installation
+info "Checking Docker and Docker Compose installation..."
+if ! command -v docker &> /dev/null || ! docker compose version &> /dev/null; then
+    warn "Docker or Docker Compose is missing. Installing Docker..."
+    
+    # Configure apt to use ForceIPv4 globally to avoid connection hanging
+    mkdir -p /etc/apt/apt.conf.d
+    echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4
+    
+    # Update package lists
+    info "Updating system packages..."
+    apt-get update -qq
+    
+    # Download and run get.docker.com script
+    info "Downloading and running official Docker installation script..."
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sh get-docker.sh
+    rm -f get-docker.sh
+    
+    if command -v docker &> /dev/null && docker compose version &> /dev/null; then
+        success "Docker and Docker Compose installed successfully."
+    else
+        error "Failed to install Docker! Please install it manually."
+        exit 1
+    fi
+else
+    success "Docker and Docker Compose are already installed."
+fi
+
 # 5. Build and launch Docker containers
 header "Phase 1: Starting Docker Production Containers"
 cd "${PROJECT_DIR}"
@@ -155,6 +184,22 @@ echo ""
 info "Verifying restored data count in Database:"
 docker compose -f "${COMPOSE_FILE}" exec -T db psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" \
     -c "SELECT 'User' as table, count(*) FROM \"User\" UNION ALL SELECT 'Transaction', count(*) FROM \"Transaction\" UNION ALL SELECT 'Kyc', count(*) FROM \"Kyc\";"
+
+# 10. Configure Cronjob for GitHub Backup
+header "Phase 5: Configuring Automated Backup Cronjob"
+if [ -f "${PROJECT_DIR}/backup-to-github.sh" ]; then
+    chmod +x "${PROJECT_DIR}/backup-to-github.sh"
+    CRON_JOB="0 * * * * /bin/bash ${PROJECT_DIR}/backup-to-github.sh >> ${PROJECT_DIR}/backups/backup.log 2>&1"
+    if crontab -l 2>/dev/null | grep -q "backup-to-github.sh"; then
+        info "Cronjob for backup-to-github.sh already exists."
+    else
+        info "Adding backup-to-github.sh to crontab (hourly)..."
+        (crontab -l 2>/dev/null; echo "${CRON_JOB}") | crontab -
+        success "Cronjob added successfully!"
+    fi
+else
+    warn "backup-to-github.sh not found. Skipping cronjob setup."
+fi
 
 echo ""
 success "=============================================================="
