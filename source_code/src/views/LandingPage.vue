@@ -45,7 +45,7 @@ const announcements = [
 // ── Transaction Popups ──────────────────────────────────────────────
 const popups = ref([]);
 let popupId = 0;
-const cities      = ['San Antonio', 'Los Angeles', 'New York', 'Chicago', 'Miami', 'London', 'Tokyo', 'Singapore', 'Dubai', 'Jakarta'];
+const cities      = ['San Antonio', 'Los Angeles', 'New York', 'Chicago', 'Miami', 'Houston', 'Phoenix', 'Philadelphia', 'San Diego', 'Dallas', 'Austin', 'Seattle', 'Denver', 'Las Vegas', 'Portland', 'Nashville', 'Atlanta', 'Boston', 'Detroit', 'Minneapolis'];
 const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'ADA', 'DOGE', 'AVAX'];
 
 const createPopup = () => {
@@ -508,7 +508,7 @@ const formatVolume = (num) => {
                         </span>
                     </div>
                     <div class="popup-body">
-                        <p class="popup-user">{{ popup.user }} <span class="popup-from">from {{ popup.city }}</span></p>
+                        <p class="popup-user">{{ popup.user }} <span class="popup-from">from {{ popup.city }}, USA</span></p>
                         <p class="popup-msg">
                             {{ popup.action }}
                             <strong :class="popup.type === 'WIN' ? 'text-green-win' : 'text-gold-win'">{{ popup.amount }}</strong>
