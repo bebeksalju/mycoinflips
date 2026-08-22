@@ -326,11 +326,12 @@ const closeMenu = () => {
 :global(*) { box-sizing: border-box; }
 
 .landing-page {
-    min-height: 100vh;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
     background: #07080b;
     color: #f4f4f2;
     font-family: Inter, system-ui, sans-serif;
-    overflow: hidden;
 }
 .container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
 
