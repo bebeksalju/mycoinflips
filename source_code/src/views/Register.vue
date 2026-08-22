@@ -138,10 +138,12 @@ const handleRegister = async () => {
 :global(body.mcf-register-route #app > div > header) { display: none !important; }
 .register-page {
     min-height: 100vh;
+    height: 100%;
     color: #f6f5f2;
     padding: 76px 20px 48px;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
     font-family: Inter, system-ui, sans-serif;
     background-color: #050608;
     background-image: linear-gradient(180deg, rgba(5, 6, 8, 0.72) 0%, rgba(5, 6, 8, 0.85) 100%), url('/crypto-bg.png');
@@ -157,34 +159,45 @@ const handleRegister = async () => {
     pointer-events: none;
 }
 .register-glow { position: absolute; width: 560px; height: 560px; border-radius: 50%; background: rgba(204,155,35,.13); filter: blur(115px); top: -250px; left: 50%; transform: translateX(-50%); }
-.back-home { position: absolute; top: 24px; left: 28px; color: #b8bbc2; text-decoration: none; font-size: 13px; font-weight: 700; z-index: 3; text-shadow: 0 2px 8px rgba(0,0,0,.8); }
-.back-home:hover { color: #e1b748; }
-.register-card { position: relative; z-index: 2; width: min(780px, 100%); margin: 0 auto; border: 1px solid rgba(226,182,67,.24); border-radius: 26px; background: linear-gradient(155deg, rgba(15,16,20,.92), rgba(7,8,11,.94)); backdrop-filter: blur(18px); box-shadow: 0 35px 110px rgba(0,0,0,.66); padding: 44px; }
+.back-home {
+    position: absolute; top: 24px; left: 28px; z-index: 10; display: inline-flex; align-items: center; gap: 9px;
+    color: #8f9299; text-decoration: none; font-size: 13px; font-weight: 600; transition: color .2s ease;
+    background: rgba(14, 15, 19, 0.6); padding: 8px 14px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px);
+}
+.back-home:hover { color: #e1b748; border-color: rgba(225, 183, 72, 0.3); }
+.register-card { position: relative; z-index: 2; width: min(780px, 100%); margin: 0 auto; border: 1px solid rgba(226,182,67,.24); border-radius: 26px; background: linear-gradient(155deg, rgba(15,16,20,.92), rgba(7,8,11,.94)); backdrop-filter: blur(18px); box-shadow: 0 35px 110px rgba(0,0,0,.66); padding: 44px; box-sizing: border-box; }
 .register-header { text-align: center; margin-bottom: 34px; }
 .brand-wordmark { display: inline-flex; align-items: baseline; justify-content: center; gap: 0; margin: 0 auto 14px; font-family: Manrope, Inter, sans-serif; font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: .08em; line-height: 1; }
 .brand-wordmark span { color: #e4b94b; }
 .brand-wordmark strong { color: #f2f2f2; font: inherit; }
 .eyebrow { color: #c89b31; font-size: 10px; letter-spacing: .2em; font-weight: 850; margin: 4px 0 12px; }
-.register-header h1 { font-family: Manrope, Inter, sans-serif; font-size: 34px; letter-spacing: -.035em; margin: 0; }
+.register-header h1 { font-family: Manrope, Inter, sans-serif; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.035em; margin: 0; }
 .register-header > p:last-child { color: #8f9299; font-size: 13px; margin-top: 10px; }
 .register-form { display: grid; gap: 20px; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .field { display: grid; gap: 8px; }
 .field > span { color: #c2c4c9; font-size: 11px; font-weight: 750; }
-.field input, .field textarea { width: 100%; box-sizing: border-box; border-radius: 11px; border: 1px solid #2f3137; background: rgba(20,22,27,.88); color: #f5f4f0; padding: 0 14px; font: inherit; outline: none; transition: border-color .2s, box-shadow .2s, background .2s; }
+.field input, .field textarea { width: 100%; box-sizing: border-box; border-radius: 11px; border: 1px solid #2f3137; background: rgba(20,22,27,.88); color: #f5f4f0; padding: 0 14px; font-size: 14px; font-family: inherit; outline: none; transition: border-color .2s, box-shadow .2s, background .2s; }
 .field input { height: 50px; }.field textarea { padding-top: 13px; resize: vertical; min-height: 88px; }
 .field input:focus, .field textarea:focus { border-color: #c99b31; box-shadow: 0 0 0 3px rgba(201,155,49,.1); background: rgba(23,25,30,.96); }
 .field input::placeholder, .field textarea::placeholder { color: #62656d; }
-.register-btn { min-height: 54px; margin-top: 4px; border: 0; border-radius: 11px; background: linear-gradient(135deg, #f5ce5e, #b67a17); color: #12100a; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
+.register-btn { min-height: 54px; margin-top: 4px; border: 0; border-radius: 11px; background: linear-gradient(135deg, #f5ce5e, #b67a17); color: #12100a; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; font-size: 15px; }
 .register-btn:disabled { opacity: .7; cursor: wait; }.spinner { width: 18px; height: 18px; animation: spin .8s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
 .signin-copy { text-align: center; color: #858890; font-size: 13px; margin: 24px 0 0; }.signin-copy a { color: #d7ac43; font-weight: 800; text-decoration: none; }
-@media (max-width: 620px) {
-    .register-page { padding: 68px 14px 24px; background-position: 42% center; background-attachment: scroll; }
-    .background-overlay { background: linear-gradient(180deg, rgba(3,4,6,.52), rgba(3,4,6,.66)); }
-    .back-home { left: 18px; top: 20px; }
-    .register-card { padding: 30px 20px; border-radius: 20px; background: linear-gradient(155deg, rgba(15,16,20,.95), rgba(7,8,11,.96)); }
+
+@media (max-width: 768px) {
+    .register-page { padding: 76px 16px 32px; background-attachment: scroll; }
     .form-grid { grid-template-columns: 1fr; gap: 16px; }
-    .register-header h1 { font-size: 28px; }
-    .brand-wordmark { font-size: 31px; }
+    .field input, .field textarea { font-size: 16px; }
+}
+
+@media (max-width: 620px) {
+    .register-page { padding: 68px 12px 24px; }
+    .background-overlay { background: linear-gradient(180deg, rgba(3,4,6,.52), rgba(3,4,6,.66)); }
+    .back-home { left: 14px; top: 18px; font-size: 12px; padding: 6px 12px; }
+    .register-card { padding: 28px 18px; border-radius: 20px; background: linear-gradient(155deg, rgba(15,16,20,.95), rgba(7,8,11,.96)); }
+    .register-header h1 { font-size: 26px; }
+    .brand-wordmark { font-size: 28px; }
+    .register-btn { min-height: 48px; }
 }
 </style>
