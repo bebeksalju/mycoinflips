@@ -139,9 +139,12 @@ const handleRegister = async () => {
 .register-page {
     min-height: 100vh;
     height: 100%;
+    width: 100%;
+    max-width: 100vw;
     color: #f6f5f2;
     padding: 76px 20px 48px;
     position: relative;
+    overflow-x: hidden;
     overflow-y: auto;
     box-sizing: border-box;
     font-family: Inter, system-ui, sans-serif;

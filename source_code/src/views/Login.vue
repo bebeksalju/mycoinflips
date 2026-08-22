@@ -159,6 +159,8 @@ const handleLogin = async () => {
 .login-page {
     min-height: 100vh;
     height: 100%;
+    width: 100%;
+    max-width: 100vw;
     background-color: #07080b;
     background-image: linear-gradient(180deg, rgba(7, 8, 11, 0.72) 0%, rgba(7, 8, 11, 0.85) 100%), url('/crypto-bg.png');
     background-size: cover;
@@ -167,6 +169,7 @@ const handleLogin = async () => {
     background-attachment: fixed;
     color: #f7f7f5;
     position: relative;
+    overflow-x: hidden;
     overflow-y: auto;
     display: flex;
     align-items: center;

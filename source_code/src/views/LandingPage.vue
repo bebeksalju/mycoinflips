@@ -328,6 +328,8 @@ const closeMenu = () => {
 .landing-page {
     height: 100%;
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
     overflow-y: auto;
     background-color: #07080b;
     background-image: linear-gradient(180deg, rgba(7, 8, 11, 0.82) 0%, rgba(7, 8, 11, 0.88) 100%), url('/crypto-bg.png');
@@ -338,7 +340,7 @@ const closeMenu = () => {
     color: #f4f4f2;
     font-family: Inter, system-ui, sans-serif;
 }
-.container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+.container { width: min(1180px, calc(100% - 40px)); max-width: 100%; margin: 0 auto; box-sizing: border-box; }
 
 .site-header {
     position: fixed;
@@ -520,15 +522,15 @@ const closeMenu = () => {
 @media (max-width: 620px) {
     .container { width: calc(100% - 28px); }
     .section-pad { padding: 78px 0; }
-    .hero-section { min-height: 0; padding: 114px 0 70px; }.hero-mark { width: 250px; margin-left: -12px; }.hero-copy h1 { font-size: clamp(43px, 13vw, 58px); }.hero-lead { font-size: 14px; }.hero-actions { display: grid; grid-template-columns: 1fr; }.btn-large { width: 100%; }
-    .trust-strip { gap: 13px; justify-content: space-between; }.trust-strip i { height: 29px; }.trust-strip strong { font-size: 15px; }.trust-strip span { font-size: 8px; }
+    .hero-section { min-height: 0; padding: 114px 0 70px; }.hero-mark { width: 220px; max-width: 100%; margin-left: 0; }.hero-copy h1 { font-size: clamp(36px, 11vw, 58px); }.hero-lead { font-size: 14px; }.hero-actions { display: grid; grid-template-columns: 1fr; }.btn-large { width: 100%; }
+    .trust-strip { gap: 13px; justify-content: space-between; flex-wrap: wrap; }.trust-strip i { height: 29px; }.trust-strip strong { font-size: 15px; }.trust-strip span { font-size: 8px; }
     .terminal-card { padding: 16px; border-radius: 18px; }.terminal-symbol { align-items: flex-end; }.chart-panel { height: 215px; }.chart-panel svg { height: 185px; }.terminal-footer span { display: none; }
     .heading-row { align-items: start; flex-direction: column; }.section-heading h2, .feature-copy h2, .final-card h2 { font-size: 34px; }
     .market-head { display: none; }.market-row { grid-template-columns: 1.5fr 1fr; min-height: 86px; padding: 12px 16px; gap: 8px 12px; }.asset-cell { grid-row: 1 / 3; }.price-cell { text-align: right; }.change-pill { justify-self: end; }.mini-trade { display: none; }
     .pillar-card { padding: 28px; }.feature-grid { grid-template-columns: 1fr; }.feature-grid article { min-height: 190px; border-right: 0 !important; border-bottom: 1px solid #24262b; }.feature-grid article:last-child { border-bottom: 0; }
     .security-card { grid-template-columns: 1fr; padding: 27px; }.security-emblem { width: 65px; height: 65px; }.security-points { grid-column: 1; grid-template-columns: 1fr; }.security-copy h2 { font-size: 29px; }
     .support-inner { grid-template-columns: 1fr; gap: 18px; padding: 35px 0; }.support-inner > p { grid-column: 1; grid-row: auto; }.support-inner .btn { justify-self: start; }
-    .final-card { min-height: 430px; padding: 32px 20px; }.final-actions { width: calc(100% - 24px); }
+    .final-card { min-height: 430px; padding: 32px 20px; }.final-actions { width: 100%; max-width: 100%; }
     .footer-links { gap: 18px; }
 }
 </style>
