@@ -158,7 +158,12 @@ const handleLogin = async () => {
 <style scoped>
 .login-page {
     min-height: 100vh;
-    background: #07080b;
+    background-color: #07080b;
+    background-image: linear-gradient(180deg, rgba(7, 8, 11, 0.72) 0%, rgba(7, 8, 11, 0.85) 100%), url('/crypto-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     color: #f7f7f5;
     position: relative;
     overflow: hidden;

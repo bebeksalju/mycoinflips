@@ -329,7 +329,12 @@ const closeMenu = () => {
     height: 100%;
     width: 100%;
     overflow-y: auto;
-    background: #07080b;
+    background-color: #07080b;
+    background-image: linear-gradient(180deg, rgba(7, 8, 11, 0.82) 0%, rgba(7, 8, 11, 0.88) 100%), url('/crypto-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     color: #f4f4f2;
     font-family: Inter, system-ui, sans-serif;
 }

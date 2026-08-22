@@ -144,7 +144,7 @@ const handleRegister = async () => {
     overflow: hidden;
     font-family: Inter, system-ui, sans-serif;
     background-color: #050608;
-    background-image: url('../assets/mcfoption-crypto-bg.svg');
+    background-image: linear-gradient(180deg, rgba(5, 6, 8, 0.72) 0%, rgba(5, 6, 8, 0.85) 100%), url('/crypto-bg.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
