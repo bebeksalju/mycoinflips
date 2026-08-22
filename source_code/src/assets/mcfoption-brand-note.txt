@@ -1,0 +1,1 @@
+MCFOPTION visual direction: black, metallic gold, silver, candlestick chart, rising arrow, and the tagline TRADE • FLIP • GROW. This note documents the intended frontend brand language for the rebrand branch.
