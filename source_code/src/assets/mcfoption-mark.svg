@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 120" role="img" aria-labelledby="title desc">
+  <title id="title">MCFOPTION</title>
+  <desc id="desc">MCFOPTION text wordmark.</desc>
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff0a3"/>
+      <stop offset="0.28" stop-color="#f1c54f"/>
+      <stop offset="0.68" stop-color="#c99124"/>
+      <stop offset="1" stop-color="#f5d36e"/>
+    </linearGradient>
+    <linearGradient id="silver" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f5f5f5"/>
+      <stop offset="0.5" stop-color="#aeb0b4"/>
+      <stop offset="1" stop-color="#f0f0f0"/>
+    </linearGradient>
+  </defs>
+  <text x="310" y="78" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="66" font-weight="800" letter-spacing="5">
+    <tspan fill="url(#gold)">MCF</tspan><tspan fill="url(#silver)">OPTION</tspan>
+  </text>
+</svg>

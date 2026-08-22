@@ -2,7 +2,7 @@ server {
     listen 80;
     listen [::]:80;
 
-    server_name mycoinflips.com www.mycoinflips.com;
+    server_name mcfoption.com www.mcfoption.com;
     server_tokens off;
 
     location /.well-known/acme-challenge/ {
