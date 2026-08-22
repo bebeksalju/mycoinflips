@@ -363,11 +363,11 @@ const closeMenu = () => {
 
         <footer class="site-footer">
             <div class="container footer-grid">
-                <div class="footer-brand"><img :src="logoUrl" alt="MCFOPTION" /><p>Trade • Flip • Grow</p></div>
+                <div class="footer-brand"><img :src="logoUrl" alt="MCFOPTION" /><p>Trade • Flip • Grow • New York, NY, USA</p></div>
                 <div class="footer-links">
                     <a href="#markets">Markets</a><a href="#features">Features</a><a href="#security">Security</a><RouterLink to="/login">Log In</RouterLink>
                 </div>
-                <p class="copyright">© {{ new Date().getFullYear() }} MCFOPTION. All rights reserved.</p>
+                <p class="copyright">© 2024 MCFOPTION. All rights reserved. • New York, NY, USA</p>
             </div>
         </footer>
 
