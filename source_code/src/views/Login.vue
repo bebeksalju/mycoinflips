@@ -132,7 +132,7 @@ const handleLogin = async () => {
 
                         <div class="form-meta">
                             <span>Protected account access</span>
-                            <a href="mailto:admin@mycoinflips.com">Forgot password?</a>
+                            <a href="mailto:admin@mcfoption.com">Forgot password?</a>
                         </div>
 
                         <button type="submit" class="submit-btn" :disabled="isLoading">
