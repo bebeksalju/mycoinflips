@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useMarketStore } from '../stores/market';
 import logoUrl from '../assets/mcfoption-logo.svg';
 import markUrl from '../assets/mcfoption-mark.svg';
@@ -8,11 +8,92 @@ import markUrl from '../assets/mcfoption-mark.svg';
 const marketStore = useMarketStore();
 const isMobileMenuOpen = ref(false);
 
+// Profit calculator — ported from main branch.
+const depositAmount = ref(500);
+const selectedPreset = ref(500);
+const presets = [100, 500, 1000, 5000];
+
+const setPreset = (amount) => {
+    selectedPreset.value = amount;
+    depositAmount.value = amount;
+};
+
+const dailyProfit = computed(() => {
+    const amount = Number(depositAmount.value) || 0;
+    const stake = amount * 0.1;
+    return (3 * 0.70 * stake * 0.85) - (3 * 0.30 * stake);
+});
+const weeklyProfit = computed(() => dailyProfit.value * 7);
+const monthlyProfit = computed(() => dailyProfit.value * 30);
+const monthlyROI = computed(() => {
+    const amount = Number(depositAmount.value) || 0;
+    return amount > 0 ? (monthlyProfit.value / amount) * 100 : 0;
+});
+
+const formatProfit = (value) => {
+    const val = Number(value) || 0;
+    return val >= 1000 ? `$${(val / 1000).toFixed(2)}K` : `$${val.toFixed(2)}`;
+};
+
+// Transaction notification popups — ported from main branch.
+const popups = ref([]);
+let popupId = 0;
+let popupInterval = null;
+let popupStartTimer = null;
+
+const cities = [
+    'San Antonio', 'Los Angeles', 'New York', 'Chicago', 'Miami', 'Houston',
+    'Phoenix', 'Philadelphia', 'San Diego', 'Dallas', 'Austin', 'Seattle',
+    'Denver', 'Las Vegas', 'Portland', 'Nashville', 'Atlanta', 'Boston',
+    'Detroit', 'Minneapolis'
+];
+const coinSymbols = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'ADA', 'DOGE', 'AVAX'];
+
+const createPopup = () => {
+    if (popups.value.length >= 2) popups.value.shift();
+
+    const coin = coinSymbols[Math.floor(Math.random() * coinSymbols.length)];
+    const hash = Math.random().toString(36).substring(2, 6).toUpperCase();
+    const city = cities[Math.floor(Math.random() * cities.length)];
+    const isWin = Math.random() > 0.35;
+    const amount = isWin
+        ? `+$${(Math.random() * 2000 + 50).toFixed(0)}`
+        : `$${(Math.random() * 1.5 + 0.3).toFixed(1)}K`;
+
+    const popup = {
+        id: popupId++,
+        type: isWin ? 'WIN' : 'WITHDRAW',
+        user: `trader***${hash}`,
+        city,
+        amount,
+        coin,
+        action: isWin ? 'just earned' : 'withdrew'
+    };
+
+    popups.value.push(popup);
+    setTimeout(() => {
+        popups.value = popups.value.filter((item) => item.id !== popup.id);
+    }, 4500);
+};
+
 onMounted(() => {
     marketStore.fetchMarketOverview();
+
+    popupStartTimer = setTimeout(() => {
+        createPopup();
+        popupInterval = setInterval(() => {
+            if (Math.random() > 0.3) createPopup();
+        }, 7000);
+    }, 2000);
+});
+
+onUnmounted(() => {
+    if (popupStartTimer) clearTimeout(popupStartTimer);
+    if (popupInterval) clearInterval(popupInterval);
 });
 
 const topCoins = computed(() => marketStore.marketOverview || []);
+const marketRows = computed(() => topCoins.value.slice(0, 6));
 
 const formatPrice = (value) => {
     if (value === null || value === undefined) return '—';
@@ -21,11 +102,9 @@ const formatPrice = (value) => {
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: digits,
-        maximumFractionDigits: digits,
+        maximumFractionDigits: digits
     });
 };
-
-const marketRows = computed(() => topCoins.value.slice(0, 6));
 
 const closeMenu = () => {
     isMobileMenuOpen.value = false;
@@ -94,7 +173,7 @@ const closeMenu = () => {
                             LIVE MARKET ACCESS
                         </div>
 
-                        <img :src="markUrl" alt="MCFOPTION mark" class="hero-mark" />
+                        <img :src="markUrl" alt="MCFOPTION" class="hero-mark" />
                         <p class="hero-kicker">TRADE • FLIP • GROW</p>
                         <h1>Trade smarter.<br /><span>Move with the market.</span></h1>
                         <p class="hero-lead">
@@ -102,10 +181,7 @@ const closeMenu = () => {
                         </p>
 
                         <div class="hero-actions">
-                            <RouterLink to="/register" class="btn btn-gold btn-large">
-                                Start Trading
-                                <span>→</span>
-                            </RouterLink>
+                            <RouterLink to="/register" class="btn btn-gold btn-large">Start Trading <span>→</span></RouterLink>
                             <RouterLink to="/dashboard" class="btn btn-ghost btn-large">Explore Markets</RouterLink>
                         </div>
 
@@ -118,61 +194,62 @@ const closeMenu = () => {
                         </div>
                     </div>
 
-                    <div class="hero-terminal-wrap">
-                        <div class="terminal-card">
-                            <div class="terminal-topline">
+                    <!-- Replaces the old Live Market terminal card from the screenshot. -->
+                    <div class="calculator-wrap">
+                        <div class="calc-card">
+                            <div class="calc-header">
                                 <div>
-                                    <p>MCFOPTION TERMINAL</p>
-                                    <strong>Live Market</strong>
+                                    <p class="calc-brand">MCFOPTION</p>
+                                    <h2>Profit Calculator</h2>
                                 </div>
-                                <span class="market-status"><i></i> Online</span>
+                                <span class="payout-badge"><i></i>85% Payout</span>
                             </div>
 
-                            <div class="terminal-symbol">
-                                <div class="symbol-name">
-                                    <span class="coin-orb">₿</span>
-                                    <div><strong>BTC / USDT</strong><small>Bitcoin</small></div>
+                            <label class="field-label" for="deposit-input">DEPOSIT AMOUNT (USDT)</label>
+                            <div class="calc-input-wrap">
+                                <span>$</span>
+                                <input
+                                    id="deposit-input"
+                                    v-model="depositAmount"
+                                    type="number"
+                                    min="10"
+                                    @input="selectedPreset = null"
+                                />
+                            </div>
+
+                            <div class="calc-presets">
+                                <button
+                                    v-for="preset in presets"
+                                    :key="preset"
+                                    type="button"
+                                    :class="{ active: selectedPreset === preset }"
+                                    @click="setPreset(preset)"
+                                >
+                                    {{ preset >= 1000 ? '$' + preset / 1000 + 'K' : '$' + preset }}
+                                </button>
+                            </div>
+
+                            <div class="earnings-row">
+                                <div><strong>{{ formatProfit(dailyProfit) }}</strong><span>DAILY</span></div>
+                                <div><strong>{{ formatProfit(weeklyProfit) }}</strong><span>WEEKLY</span></div>
+                                <div><strong>{{ formatProfit(monthlyProfit) }}</strong><span>MONTHLY</span></div>
+                            </div>
+
+                            <div class="roi-section">
+                                <div class="roi-header">
+                                    <span>EST. MONTHLY ROI</span>
+                                    <strong>+{{ monthlyROI.toFixed(1) }}%</strong>
                                 </div>
-                                <div class="symbol-price">
-                                    <strong>{{ marketRows[0] ? formatPrice(marketRows[0].current_price) : '$—' }}</strong>
-                                    <span v-if="marketRows[0]" :class="marketRows[0].price_change_percentage_24h >= 0 ? 'positive' : 'negative'">
-                                        {{ marketRows[0].price_change_percentage_24h >= 0 ? '+' : '' }}{{ marketRows[0].price_change_percentage_24h?.toFixed(2) }}%
-                                    </span>
+                                <div class="roi-track">
+                                    <div class="roi-fill" :style="{ width: Math.min(100, monthlyROI / 10) + '%' }"></div>
                                 </div>
                             </div>
 
-                            <div class="chart-panel" aria-hidden="true">
-                                <div class="chart-grid"></div>
-                                <svg viewBox="0 0 620 250" preserveAspectRatio="none">
-                                    <defs>
-                                        <linearGradient id="chartGold" x1="0" y1="0" x2="1" y2="0">
-                                            <stop offset="0" stop-color="#8c5d12" />
-                                            <stop offset="0.45" stop-color="#e8b93f" />
-                                            <stop offset="1" stop-color="#ffe177" />
-                                        </linearGradient>
-                                        <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0" stop-color="#e8b93f" stop-opacity=".25" />
-                                            <stop offset="1" stop-color="#e8b93f" stop-opacity="0" />
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="M0 216 C40 202 63 214 98 180 S157 191 194 152 S252 168 291 125 S356 145 397 98 S456 112 494 76 S552 65 620 31 L620 250 L0 250 Z" fill="url(#chartFill)" />
-                                    <path d="M0 216 C40 202 63 214 98 180 S157 191 194 152 S252 168 291 125 S356 145 397 98 S456 112 494 76 S552 65 620 31" fill="none" stroke="url(#chartGold)" stroke-width="4" stroke-linecap="round" />
-                                </svg>
-                                <div class="candle candle-a"><span></span></div>
-                                <div class="candle candle-b"><span></span></div>
-                                <div class="candle candle-c"><span></span></div>
-                                <div class="candle candle-d"><span></span></div>
-                            </div>
+                            <p class="calc-disclaimer">
+                                * Estimation based on 85% payout rate & 70% win rate. Results may vary.
+                            </p>
 
-                            <div class="terminal-actions">
-                                <RouterLink to="/register" class="trade-button up">CALL <span>↗</span></RouterLink>
-                                <RouterLink to="/register" class="trade-button down">PUT <span>↘</span></RouterLink>
-                            </div>
-
-                            <div class="terminal-footer">
-                                <span>Powered by real-time market data</span>
-                                <strong>MCFOPTION</strong>
-                            </div>
+                            <RouterLink to="/register" class="calc-cta">Start Trading Now <span>→</span></RouterLink>
                         </div>
                     </div>
                 </div>
@@ -192,7 +269,7 @@ const closeMenu = () => {
                         <div class="market-head">
                             <span>Asset</span><span>Price</span><span>24H Change</span><span>Market</span>
                         </div>
-                        <div v-if="marketRows.length" v-for="coin in marketRows" :key="coin.id" class="market-row">
+                        <div v-for="coin in marketRows" :key="coin.id" class="market-row">
                             <div class="asset-cell">
                                 <img :src="coin.image" :alt="coin.name" />
                                 <div><strong>{{ coin.symbol.toUpperCase() }}</strong><small>{{ coin.name }}</small></div>
@@ -203,7 +280,7 @@ const closeMenu = () => {
                             </span>
                             <RouterLink to="/dashboard" class="mini-trade">Trade</RouterLink>
                         </div>
-                        <div v-else class="market-loading">Loading live markets…</div>
+                        <div v-if="!marketRows.length" class="market-loading">Loading live markets…</div>
                     </div>
                 </div>
             </section>
@@ -218,24 +295,16 @@ const closeMenu = () => {
 
                     <div class="pillar-grid">
                         <article class="pillar-card">
-                            <div class="pillar-icon trade-icon">
-                                <span></span><span></span><span></span><span></span>
-                            </div>
-                            <p>01</p>
-                            <h3>TRADE</h3>
-                            <span>Smart market tools for faster, more informed decisions.</span>
+                            <div class="pillar-icon trade-icon"><span></span><span></span><span></span><span></span></div>
+                            <p>01</p><h3>TRADE</h3><span>Smart market tools for faster, more informed decisions.</span>
                         </article>
                         <article class="pillar-card featured">
                             <div class="pillar-icon flip-icon">↻</div>
-                            <p>02</p>
-                            <h3>FLIP</h3>
-                            <span>Act on timed market opportunities from a clean trading workflow.</span>
+                            <p>02</p><h3>FLIP</h3><span>Act on timed market opportunities from a clean trading workflow.</span>
                         </article>
                         <article class="pillar-card">
                             <div class="pillar-icon grow-icon">↗</div>
-                            <p>03</p>
-                            <h3>GROW</h3>
-                            <span>Track your account and build your strategy with confidence.</span>
+                            <p>03</p><h3>GROW</h3><span>Track your account and build your strategy with confidence.</span>
                         </article>
                     </div>
                 </div>
@@ -246,12 +315,9 @@ const closeMenu = () => {
                     <div class="feature-copy">
                         <p class="section-kicker">ONE WORKSPACE</p>
                         <h2>Everything important stays within reach.</h2>
-                        <p>
-                            MCFOPTION brings live trading, wallet operations, account verification, and support into one coherent interface across desktop and mobile.
-                        </p>
+                        <p>MCFOPTION brings live trading, wallet operations, account verification, and support into one coherent interface across desktop and mobile.</p>
                         <RouterLink to="/register" class="btn btn-gold">Create Account</RouterLink>
                     </div>
-
                     <div class="feature-grid">
                         <article><span>01</span><h3>Real-time Market</h3><p>Live market pricing and movement for supported digital assets.</p></article>
                         <article><span>02</span><h3>Timed Trading</h3><p>Structured CALL and PUT trading durations from the main terminal.</p></article>
@@ -269,20 +335,13 @@ const closeMenu = () => {
                         <h2>Built around controlled account access.</h2>
                         <p>Role-based access, account sessions, identity verification workflows, and managed transaction approvals support the MCFOPTION trading experience.</p>
                     </div>
-                    <div class="security-points">
-                        <span>Account Sessions</span>
-                        <span>KYC Workflow</span>
-                        <span>Transaction Approval</span>
-                    </div>
+                    <div class="security-points"><span>Account Sessions</span><span>KYC Workflow</span><span>Transaction Approval</span></div>
                 </div>
             </section>
 
             <section class="support-section">
                 <div class="container support-inner">
-                    <div>
-                        <p class="section-kicker">REAL-TIME SUPPORT</p>
-                        <h2>Here when you need us.</h2>
-                    </div>
+                    <div><p class="section-kicker">REAL-TIME SUPPORT</p><h2>Here when you need us.</h2></div>
                     <p>Get account and transaction assistance through MCFOPTION support.</p>
                     <RouterLink to="/login" class="btn btn-ghost">Access Your Account</RouterLink>
                 </div>
@@ -304,19 +363,25 @@ const closeMenu = () => {
 
         <footer class="site-footer">
             <div class="container footer-grid">
-                <div class="footer-brand">
-                    <img :src="logoUrl" alt="MCFOPTION" />
-                    <p>Trade • Flip • Grow</p>
-                </div>
+                <div class="footer-brand"><img :src="logoUrl" alt="MCFOPTION" /><p>Trade • Flip • Grow</p></div>
                 <div class="footer-links">
-                    <a href="#markets">Markets</a>
-                    <a href="#features">Features</a>
-                    <a href="#security">Security</a>
-                    <RouterLink to="/login">Log In</RouterLink>
+                    <a href="#markets">Markets</a><a href="#features">Features</a><a href="#security">Security</a><RouterLink to="/login">Log In</RouterLink>
                 </div>
                 <p class="copyright">© {{ new Date().getFullYear() }} MCFOPTION. All rights reserved.</p>
             </div>
         </footer>
+
+        <div class="popup-area" aria-live="polite">
+            <TransitionGroup name="popup">
+                <div v-for="popup in popups" :key="popup.id" class="popup-card">
+                    <div class="popup-icon" :class="popup.type === 'WIN' ? 'win' : 'withdraw'">{{ popup.type }}</div>
+                    <div class="popup-body">
+                        <p><strong>{{ popup.user }}</strong> <span>from {{ popup.city }}, USA</span></p>
+                        <p>{{ popup.action }} <b :class="popup.type === 'WIN' ? 'green' : 'gold'">{{ popup.amount }}</b> on {{ popup.coin }} trade</p>
+                    </div>
+                </div>
+            </TransitionGroup>
+        </div>
     </div>
 </template>
 
@@ -326,54 +391,35 @@ const closeMenu = () => {
 :global(*) { box-sizing: border-box; }
 
 .landing-page {
-    height: 100%;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
+    height: 100%; width: 100%; max-width: 100%; overflow-x: hidden; overflow-y: auto;
     background-color: #07080b;
-    background-image: linear-gradient(180deg, rgba(7, 8, 11, 0.82) 0%, rgba(7, 8, 11, 0.88) 100%), url('/crypto-bg.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: #f4f4f2;
-    font-family: Inter, system-ui, sans-serif;
+    background-image: linear-gradient(180deg, rgba(7,8,11,.82), rgba(7,8,11,.9)), url('/crypto-bg.png');
+    background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;
+    color: #f4f4f2; font-family: Inter, system-ui, sans-serif;
 }
 .container { width: min(1180px, calc(100% - 40px)); max-width: 100%; margin: 0 auto; box-sizing: border-box; }
 
-.site-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    background: rgba(7, 8, 11, .78);
-    backdrop-filter: blur(18px);
-    border-bottom: 1px solid rgba(255,255,255,.07);
-}
+.site-header { position: fixed; inset: 0 0 auto; z-index: 50; background: rgba(7,8,11,.78); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(255,255,255,.07); }
 .header-inner { height: 78px; display: flex; align-items: center; gap: 28px; }
 .brand-link { display: flex; align-items: center; flex: 0 0 auto; }
 .brand-link img { width: 230px; height: auto; display: block; }
 .desktop-nav { margin-left: auto; display: flex; align-items: center; gap: 27px; }
-.desktop-nav a { color: #8f9299; text-decoration: none; font-size: 13px; font-weight: 650; transition: color .2s; white-space: nowrap; }
+.desktop-nav a { color: #8f9299; text-decoration: none; font-size: 13px; font-weight: 650; white-space: nowrap; }
 .desktop-nav a:hover { color: #f0c654; }
 .desktop-actions { display: flex; gap: 9px; }
-.btn { min-height: 42px; padding: 0 18px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; font-size: 13px; font-weight: 800; border: 1px solid transparent; transition: transform .2s, border-color .2s, color .2s, filter .2s, background .2s; }
+.btn { min-height: 42px; padding: 0 18px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; font-size: 13px; font-weight: 800; border: 1px solid transparent; transition: .2s ease; }
 .btn:hover { transform: translateY(-1px); }
-.btn-gold { color: #15120a; background: linear-gradient(135deg, #f5ce5e 0%, #b77816 100%); box-shadow: 0 10px 28px rgba(183,120,22,.14); }
-.btn-gold:hover { filter: brightness(1.08); }
+.btn-gold { color: #15120a; background: linear-gradient(135deg,#f5ce5e,#b77816); box-shadow: 0 10px 28px rgba(183,120,22,.14); }
 .btn-ghost { color: #d4d5d7; border-color: #303238; background: rgba(255,255,255,.025); }
-.btn-ghost:hover { border-color: #8a6b24; color: #f0ca5b; }
 .btn-large { min-height: 54px; padding: 0 24px; font-size: 14px; }
 .menu-button { display: none; margin-left: auto; width: 44px; height: 44px; border: 1px solid #2b2d31; background: #111216; border-radius: 10px; padding: 11px; }
 .menu-button span { display: block; height: 2px; background: #d9d9d6; margin: 4px 0; border-radius: 2px; }
 .mobile-menu { display: none; }
-.menu-fade-enter-active, .menu-fade-leave-active { transition: opacity .2s ease; }
-.menu-fade-enter-from, .menu-fade-leave-to { opacity: 0; }
+.menu-fade-enter-active,.menu-fade-leave-active { transition: opacity .2s ease; }
+.menu-fade-enter-from,.menu-fade-leave-to { opacity: 0; }
 
 .hero-section { position: relative; min-height: 810px; padding: 150px 0 88px; display: flex; align-items: center; }
-.hero-grid-overlay { position: absolute; inset: 0; opacity: .36; background-image: linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px); background-size: 52px 52px; mask-image: linear-gradient(to bottom, #000 0, rgba(0,0,0,.8) 60%, transparent 100%); }
+.hero-grid-overlay { position: absolute; inset: 0; opacity: .36; background-image: linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px); background-size: 52px 52px; mask-image: linear-gradient(to bottom,#000 0,rgba(0,0,0,.8) 60%,transparent 100%); }
 .hero-glow { position: absolute; border-radius: 999px; filter: blur(120px); pointer-events: none; }
 .hero-glow-a { width: 520px; height: 520px; background: rgba(203,149,27,.12); left: -190px; top: 40px; }
 .hero-glow-b { width: 470px; height: 470px; background: rgba(181,139,40,.10); right: -180px; top: 180px; }
@@ -382,155 +428,100 @@ const closeMenu = () => {
 .live-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 11px; border: 1px solid rgba(206,162,53,.24); border-radius: 999px; color: #aa8a3d; background: rgba(202,151,31,.055); font-size: 10px; font-weight: 850; letter-spacing: .13em; }
 .live-dot { width: 6px; height: 6px; background: #47c982; border-radius: 50%; box-shadow: 0 0 0 5px rgba(71,201,130,.09); }
 .hero-mark { width: 300px; max-width: 72%; margin: 29px 0 0 -14px; }
-.hero-kicker, .section-kicker { margin: 5px 0 14px; color: #c99e36; font-size: 11px; letter-spacing: .22em; font-weight: 850; }
-.hero-copy h1 { font-family: Manrope, Inter, sans-serif; font-size: clamp(48px, 5vw, 74px); line-height: .99; letter-spacing: -.055em; margin: 0; color: #f7f6f3; }
+.hero-kicker,.section-kicker { margin: 5px 0 14px; color: #c99e36; font-size: 11px; letter-spacing: .22em; font-weight: 850; }
+.hero-copy h1 { font-family: Manrope,Inter,sans-serif; font-size: clamp(48px,5vw,74px); line-height: .99; letter-spacing: -.055em; margin: 0; color: #f7f6f3; }
 .hero-copy h1 span { color: #a8a9ad; }
 .hero-lead { max-width: 545px; margin: 25px 0 0; color: #8d9098; font-size: 16px; line-height: 1.75; }
 .hero-actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 11px; }
 .trust-strip { margin-top: 44px; display: flex; align-items: center; gap: 22px; }
 .trust-strip > div { display: grid; gap: 4px; }
-.trust-strip strong { font-family: Manrope, Inter, sans-serif; color: #e8e8e5; font-size: 18px; }
+.trust-strip strong { color: #e8e8e5; font-size: 18px; }
 .trust-strip span { color: #5f6269; font-size: 10px; letter-spacing: .05em; text-transform: uppercase; }
 .trust-strip i { width: 1px; height: 34px; background: #292b30; }
 
-.hero-terminal-wrap { position: relative; }
-.hero-terminal-wrap::before { content: ''; position: absolute; inset: 10% -8% -7% 15%; background: radial-gradient(circle, rgba(212,164,42,.16), transparent 62%); filter: blur(35px); }
-.terminal-card { position: relative; background: linear-gradient(155deg, rgba(20,21,25,.97), rgba(10,11,14,.98)); border: 1px solid rgba(228,185,70,.24); border-radius: 24px; padding: 26px; box-shadow: 0 40px 110px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.04); }
-.terminal-topline { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 20px; border-bottom: 1px solid #22242a; }
-.terminal-topline p { margin: 0 0 7px; color: #6b6e75; font-size: 9px; font-weight: 850; letter-spacing: .18em; }
-.terminal-topline strong { font-family: Manrope, Inter, sans-serif; font-size: 20px; }
-.market-status { display: inline-flex; align-items: center; gap: 7px; color: #8f9398; border: 1px solid #292b30; background: #111318; border-radius: 999px; padding: 7px 10px; font-size: 10px; }
-.market-status i { width: 6px; height: 6px; border-radius: 50%; background: #40c77d; }
-.terminal-symbol { display: flex; justify-content: space-between; align-items: center; padding: 22px 0 13px; }
-.symbol-name { display: flex; align-items: center; gap: 12px; }
-.coin-orb { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffe585, #c38218 72%); color: #17120a; font-weight: 900; font-size: 22px; }
-.symbol-name div { display: grid; gap: 3px; }
-.symbol-name strong { font-size: 13px; }
-.symbol-name small { color: #63666d; font-size: 10px; }
-.symbol-price { text-align: right; display: grid; gap: 5px; }
-.symbol-price strong { font-family: Manrope, Inter, sans-serif; font-size: 20px; }
-.symbol-price span { font-size: 11px; font-weight: 800; }
-.positive { color: #45c982 !important; }
-.negative { color: #ed6671 !important; }
-.chart-panel { height: 270px; border: 1px solid #24262b; border-radius: 14px; overflow: hidden; position: relative; background: #0b0d11; }
-.chart-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 46px 46px; }
-.chart-panel svg { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 235px; }
-.candle { position: absolute; width: 8px; border-radius: 2px; background: linear-gradient(#ffe475, #b17414); }
-.candle::before, .candle::after { content: ''; position: absolute; left: 3.5px; width: 1px; height: 13px; background: #dfb43d; }
-.candle::before { top: -13px; } .candle::after { bottom: -13px; }
-.candle-a { left: 31%; top: 133px; height: 34px; }.candle-b { left: 49%; top: 103px; height: 41px; }.candle-c { left: 67%; top: 81px; height: 31px; }.candle-d { left: 82%; top: 56px; height: 42px; }
-.terminal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-.trade-button { min-height: 48px; border-radius: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 9px; font-size: 12px; font-weight: 900; letter-spacing: .08em; }
-.trade-button.up { color: #d9f8e7; border: 1px solid rgba(65,199,126,.22); background: rgba(65,199,126,.09); }
-.trade-button.down { color: #ffdce0; border: 1px solid rgba(237,102,113,.2); background: rgba(237,102,113,.075); }
-.terminal-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding-top: 18px; border-top: 1px solid #202227; color: #55585f; font-size: 9px; text-transform: uppercase; letter-spacing: .09em; }
-.terminal-footer strong { color: #ac8937; }
+.calculator-wrap { position: relative; }
+.calculator-wrap::before { content: ''; position: absolute; inset: 10% -8% -7% 15%; background: radial-gradient(circle,rgba(212,164,42,.16),transparent 62%); filter: blur(35px); }
+.calc-card { position: relative; background: linear-gradient(155deg,rgba(20,21,25,.98),rgba(10,11,14,.99)); border: 1px solid rgba(228,185,70,.24); border-radius: 24px; padding: 28px; box-shadow: 0 40px 110px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.04); }
+.calc-header { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; padding-bottom: 20px; border-bottom: 1px solid #22242a; }
+.calc-brand { margin: 0 0 6px; color: #c99e36; font-size: 10px; font-weight: 900; letter-spacing: .18em; }
+.calc-header h2 { margin: 0; font-size: 24px; }
+.payout-badge { display: inline-flex; align-items: center; gap: 7px; color: #52d592; border: 1px solid rgba(82,213,146,.22); background: rgba(82,213,146,.08); border-radius: 999px; padding: 8px 11px; font-size: 11px; font-weight: 800; }
+.payout-badge i { width: 7px; height: 7px; border-radius: 50%; background: #47c982; }
+.field-label { display: block; margin: 22px 0 8px; color: #777b83; font-size: 10px; font-weight: 800; letter-spacing: .14em; }
+.calc-input-wrap { display: flex; align-items: center; gap: 8px; border: 1px solid #2a2c31; background: #14161b; border-radius: 11px; padding: 0 14px; height: 54px; }
+.calc-input-wrap > span { color: #888b91; font-weight: 800; }
+.calc-input-wrap input { width: 100%; border: 0; outline: 0; background: transparent; color: #f5f4f0; font: inherit; font-size: 18px; font-weight: 800; }
+.calc-presets { display: grid; grid-template-columns: repeat(4,1fr); gap: 9px; margin-top: 10px; }
+.calc-presets button { height: 40px; border: 1px solid #2a2c31; background: #111318; color: #8d9098; border-radius: 9px; font-weight: 800; cursor: pointer; }
+.calc-presets button.active { color: #161208; border-color: transparent; background: linear-gradient(135deg,#f5ce5e,#b77816); }
+.earnings-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 24px; }
+.earnings-row > div { text-align: center; padding: 14px 8px; border: 1px solid #22242a; border-radius: 11px; background: rgba(255,255,255,.018); }
+.earnings-row strong { display: block; color: #4fd18a; font-size: 17px; }
+.earnings-row span { display: block; margin-top: 5px; color: #666970; font-size: 9px; letter-spacing: .12em; }
+.roi-section { margin-top: 22px; }
+.roi-header { display: flex; justify-content: space-between; gap: 10px; color: #74777e; font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+.roi-header strong { color: #4fd18a; font-size: 13px; letter-spacing: 0; }
+.roi-track { height: 7px; background: #202227; border-radius: 999px; overflow: hidden; margin-top: 9px; }
+.roi-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg,#4fd18a,#258e59); transition: width .4s ease; }
+.calc-disclaimer { color: #5f6269; font-size: 10px; line-height: 1.5; margin: 16px 0; }
+.calc-cta { min-height: 52px; display: flex; align-items: center; justify-content: center; gap: 9px; color: #161208; text-decoration: none; font-size: 13px; font-weight: 900; border-radius: 11px; background: linear-gradient(135deg,#f5ce5e,#b77816); }
 
 .section-pad { padding: 105px 0; }
 .market-section { background: #0a0b0e; border-top: 1px solid #17191d; border-bottom: 1px solid #17191d; }
 .section-heading { margin-bottom: 38px; }
-.heading-row { display: flex; justify-content: space-between; gap: 24px; align-items: end; }
-.section-heading h2, .feature-copy h2, .security-copy h2, .support-inner h2, .final-card h2 { font-family: Manrope, Inter, sans-serif; font-size: clamp(34px, 4vw, 50px); line-height: 1.08; letter-spacing: -.045em; margin: 0; }
-.section-heading > p:last-child, .feature-copy > p, .security-copy > p, .support-inner > p, .final-card > p { color: #80838a; line-height: 1.7; }
-.centered { text-align: center; max-width: 650px; margin-left: auto; margin-right: auto; }
-.text-link { color: #cda23d; text-decoration: none; font-size: 12px; font-weight: 800; }
-.market-table { border: 1px solid #24262c; border-radius: 18px; overflow: hidden; background: #0d0f13; }
-.market-head, .market-row { display: grid; grid-template-columns: 2fr 1.25fr 1fr .6fr; align-items: center; gap: 16px; padding: 0 24px; }
-.market-head { min-height: 44px; color: #555860; font-size: 9px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; background: #111318; }
-.market-row { min-height: 78px; border-top: 1px solid #202228; }
-.asset-cell { display: flex; align-items: center; gap: 13px; min-width: 0; }
+.section-heading h2,.feature-copy h2,.security-copy h2,.support-inner h2,.final-card h2 { margin: 0; font-family: Manrope,Inter,sans-serif; font-size: 42px; letter-spacing: -.035em; }
+.section-heading > p,.section-heading div > p:last-child { color: #73767e; }
+.heading-row { display: flex; align-items: end; justify-content: space-between; gap: 24px; }
+.centered { text-align: center; }
+.text-link { color: #caa13d; text-decoration: none; font-size: 13px; font-weight: 800; }
+.market-table { border: 1px solid #24262b; border-radius: 18px; overflow: hidden; background: rgba(12,13,16,.9); }
+.market-head,.market-row { display: grid; grid-template-columns: 1.6fr 1fr 1fr .65fr; align-items: center; gap: 18px; padding: 0 22px; }
+.market-head { height: 46px; color: #5f6269; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; border-bottom: 1px solid #24262b; }
+.market-row { min-height: 78px; border-bottom: 1px solid #202227; }
+.market-row:last-child { border-bottom: 0; }
+.asset-cell { display: flex; align-items: center; gap: 12px; }
 .asset-cell img { width: 34px; height: 34px; border-radius: 50%; }
-.asset-cell div { display: grid; gap: 3px; min-width: 0; }
-.asset-cell strong { font-size: 13px; }.asset-cell small { color: #64676e; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.price-cell { font-size: 13px; }
-.change-pill { justify-self: start; font-size: 11px; font-weight: 850; }
-.mini-trade { justify-self: end; color: #d5ae4a; text-decoration: none; font-size: 11px; font-weight: 850; }
-.market-loading { padding: 34px; color: #686b72; text-align: center; }
+.asset-cell div { display: grid; gap: 4px; }.asset-cell small { color: #666970; }.price-cell { font-size: 14px; }.change-pill { font-size: 12px; font-weight: 850; }.positive { color: #45c982 !important; }.negative { color: #ed6671 !important; }
+.mini-trade { justify-self: end; color: #c69b35; text-decoration: none; border: 1px solid #3a3020; border-radius: 8px; padding: 8px 12px; font-size: 11px; font-weight: 800; }
+.market-loading { padding: 26px; text-align: center; color: #777b83; }
 
-.pillars-section { background: #07080b; }
-.pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 42px; }
-.pillar-card { min-height: 335px; padding: 34px; border-radius: 20px; border: 1px solid #23252a; background: linear-gradient(155deg, #101216, #0b0c10); position: relative; overflow: hidden; }
-.pillar-card.featured { border-color: rgba(215,171,60,.3); background: radial-gradient(circle at 50% 10%, rgba(212,166,47,.12), transparent 36%), linear-gradient(155deg, #12120f, #0c0d10); }
-.pillar-card > p { color: #5e6168; font-size: 10px; font-weight: 850; letter-spacing: .15em; margin: 42px 0 13px; }
-.pillar-card h3 { font-family: Manrope, Inter, sans-serif; color: #eac659; letter-spacing: .08em; margin: 0 0 12px; font-size: 24px; }
-.pillar-card > span { display: block; color: #777a81; font-size: 13px; line-height: 1.65; max-width: 280px; }
-.pillar-icon { width: 74px; height: 74px; border-radius: 18px; border: 1px solid rgba(208,164,49,.22); background: rgba(208,164,49,.055); display: flex; align-items: center; justify-content: center; color: #e9bd4d; font-size: 38px; }
-.trade-icon { gap: 5px; align-items: end; padding: 16px; }
-.trade-icon span { width: 7px; border-radius: 2px; background: linear-gradient(#f2cf69, #9c6410); }.trade-icon span:nth-child(1){height:22px}.trade-icon span:nth-child(2){height:34px}.trade-icon span:nth-child(3){height:27px}.trade-icon span:nth-child(4){height:43px}
+.pillars-section { background: #08090c; }
+.pillar-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 42px; }
+.pillar-card { min-height: 300px; border: 1px solid #25272c; border-radius: 18px; background: #0f1014; padding: 34px; }
+.pillar-card.featured { border-color: rgba(213,171,61,.3); background: linear-gradient(160deg,rgba(211,164,45,.07),#0f1014 48%); }
+.pillar-card > p { color: #66552a; font-size: 10px; font-weight: 900; }.pillar-card h3 { font-size: 24px; margin: 14px 0 10px; }.pillar-card > span { color: #777b83; line-height: 1.65; }
+.pillar-icon { width: 52px; height: 52px; border: 1px solid #35312a; border-radius: 13px; display: grid; place-items: center; color: #d5a937; font-size: 26px; }
+.trade-icon { display: flex; align-items: end; justify-content: center; gap: 3px; padding: 12px; }.trade-icon span { width: 5px; background: #cda23a; }.trade-icon span:nth-child(1){height:15px}.trade-icon span:nth-child(2){height:27px}.trade-icon span:nth-child(3){height:20px}.trade-icon span:nth-child(4){height:32px}
 
-.features-section { background: #0a0b0e; border-top: 1px solid #17191d; border-bottom: 1px solid #17191d; }
-.feature-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 82px; align-items: start; }
-.feature-copy { position: sticky; top: 120px; }
-.feature-copy > p { margin: 23px 0 28px; max-width: 430px; }
-.feature-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #24262b; border-radius: 20px; overflow: hidden; }
-.feature-grid article { min-height: 230px; padding: 30px; background: #0e1014; }
-.feature-grid article:nth-child(1), .feature-grid article:nth-child(2) { border-bottom: 1px solid #24262b; }
-.feature-grid article:nth-child(odd) { border-right: 1px solid #24262b; }
-.feature-grid article > span { color: #735d27; font-size: 10px; font-weight: 850; letter-spacing: .15em; }
-.feature-grid h3 { margin: 38px 0 11px; font-family: Manrope, Inter, sans-serif; font-size: 18px; }
-.feature-grid p { margin: 0; color: #72757c; font-size: 12px; line-height: 1.65; }
+.features-section { background: #0b0c0f; }.feature-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 70px; align-items: center; }.feature-copy > p:not(.section-kicker) { color: #777b83; line-height: 1.75; margin: 22px 0 27px; }.feature-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #25272c; border-radius: 19px; overflow: hidden; }.feature-grid article { padding: 29px; min-height: 220px; background: #101115; border-right: 1px solid #25272c; border-bottom: 1px solid #25272c; }.feature-grid article:nth-child(2n){border-right:0}.feature-grid article:nth-last-child(-n+2){border-bottom:0}.feature-grid article > span { color: #796129; font-size: 10px; font-weight: 900; }.feature-grid h3 { margin: 48px 0 10px; font-size: 17px; }.feature-grid p { color: #6f7279; line-height: 1.6; font-size: 13px; }
+.security-section { background: #08090c; }.security-card { display: grid; grid-template-columns: 90px 1fr; gap: 27px 35px; border: 1px solid rgba(206,165,57,.2); border-radius: 22px; padding: 43px; background: radial-gradient(circle at 10% 10%,rgba(205,158,38,.08),transparent 32%),#0e0f12; }.security-emblem { width: 82px; height: 82px; border-radius: 50%; border: 1px solid #4a3a18; display: grid; place-items: center; color: #ddb54a; font-size: 37px; }.security-copy p:last-child { color: #777b83; line-height: 1.7; max-width: 690px; }.security-points { grid-column: 2; display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; }.security-points span { border-top: 1px solid #27292e; padding-top: 14px; color: #979aa1; font-size: 11px; }
+.support-section { border-top: 1px solid #1b1d21; border-bottom: 1px solid #1b1d21; background: #0b0c0f; }.support-inner { min-height: 200px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 30px; align-items: center; }.support-inner > p { color: #777b83; line-height: 1.65; }.final-cta { background: #07080b; }.final-card { min-height: 460px; border: 1px solid rgba(218,176,65,.2); border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px; background: radial-gradient(circle at 50% 0,rgba(202,155,42,.13),transparent 40%),#0d0e11; }.final-card img { width: 160px; margin-bottom: 4px; }.final-card > p:not(.section-kicker) { color: #74777e; }.final-actions { justify-content: center; }
+.site-footer { background: #08090b; border-top: 1px solid #1c1e22; padding: 35px 0; }.footer-grid { display: grid; grid-template-columns: auto 1fr auto; gap: 35px; align-items: center; }.footer-brand img { width: 180px; }.footer-brand p,.copyright { color: #5f6269; font-size: 10px; }.footer-links { display: flex; justify-content: center; gap: 28px; }.footer-links a { color: #757880; text-decoration: none; font-size: 11px; }
 
-.security-section { background: #07080b; }
-.security-card { border: 1px solid rgba(211,166,49,.23); border-radius: 24px; padding: 50px; display: grid; grid-template-columns: auto 1fr auto; gap: 36px; align-items: center; background: radial-gradient(circle at 0 50%, rgba(208,163,46,.1), transparent 25%), linear-gradient(135deg, #101115, #0b0c0f); }
-.security-emblem { width: 82px; height: 82px; display: grid; place-items: center; border-radius: 20px; color: #e5bb4e; border: 1px solid rgba(210,166,52,.24); background: rgba(210,166,52,.05); font-size: 42px; }
-.security-copy h2 { font-size: 34px; }
-.security-copy > p { margin: 14px 0 0; max-width: 650px; font-size: 13px; }
-.security-points { display: grid; gap: 9px; }
-.security-points span { color: #96999f; font-size: 11px; padding: 9px 12px; border: 1px solid #292b30; border-radius: 9px; background: #111317; white-space: nowrap; }
+.popup-area { position: fixed; left: 18px; bottom: 18px; z-index: 9999; display: flex; flex-direction: column; gap: 9px; pointer-events: none; }
+.popup-card { display: flex; align-items: flex-start; gap: 11px; width: min(310px, calc(100vw - 36px)); padding: 12px 14px; border-radius: 13px; border: 1px solid #2b2d32; background: rgba(14,15,19,.93); backdrop-filter: blur(16px); box-shadow: 0 12px 36px rgba(0,0,0,.42); }
+.popup-icon { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 8px; font-weight: 900; letter-spacing: .04em; }
+.popup-icon.win { background: rgba(69,201,130,.12); color: #45c982; }.popup-icon.withdraw { background: rgba(213,169,55,.12); color: #d5a937; }
+.popup-body p { margin: 0; color: #8d9098; font-size: 11px; line-height: 1.45; }.popup-body p + p { margin-top: 3px; }.popup-body strong { color: #eee; }.popup-body span { color: #666970; }.popup-body .green { color: #45c982; }.popup-body .gold { color: #d5a937; }
+.popup-enter-active,.popup-leave-active { transition: all .4s cubic-bezier(.16,1,.3,1); }.popup-enter-from { opacity: 0; transform: translateX(-36px) scale(.96); }.popup-leave-to { opacity: 0; transform: translateX(-36px) scale(.92); }
 
-.support-section { border-top: 1px solid #1b1d22; border-bottom: 1px solid #1b1d22; background: #0b0c10; }
-.support-inner { min-height: 170px; display: grid; grid-template-columns: 1.2fr 1fr auto; align-items: center; gap: 35px; }
-.support-inner h2 { font-size: 31px; }
-.support-inner > p { font-size: 13px; margin: 0; }
-.final-cta { background: #07080b; }
-.final-card { min-height: 470px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 1px solid #24262b; border-radius: 26px; background: radial-gradient(circle at 50% 20%, rgba(209,164,48,.13), transparent 33%), linear-gradient(#0e1014, #090a0d); }
-.final-card img { width: 230px; max-width: 56%; margin-bottom: 5px; }
-.final-card h2 { max-width: 650px; }
-.final-card > p { max-width: 600px; margin: 16px auto 0; }
-.final-actions { justify-content: center; }
-
-.site-footer { border-top: 1px solid #191b1f; background: #08090c; }
-.footer-grid { min-height: 190px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; position: relative; padding-bottom: 40px; }
-.footer-brand img { width: 230px; }.footer-brand p { margin: 8px 0 0; color: #5b5e65; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
-.footer-links { display: flex; gap: 25px; }.footer-links a { color: #7c7f86; text-decoration: none; font-size: 12px; }.footer-links a:hover { color: #d8ad45; }
-.copyright { position: absolute; left: 0; bottom: 28px; margin: 0; color: #3f4249; font-size: 10px; }
-
-@media (max-width: 1050px) {
-    .brand-link img { width: 200px; }
-    .desktop-nav { gap: 18px; }.desktop-nav a { font-size: 12px; }
-    .desktop-actions .btn { padding: 0 13px; }
-    .hero-grid { gap: 36px; }.hero-copy h1 { font-size: clamp(45px, 6vw, 64px); }
-    .feature-layout { gap: 45px; }.security-card { grid-template-columns: auto 1fr; }.security-points { grid-column: 2; grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 860px) {
-    .container { width: min(100% - 30px, 700px); }
-    .header-inner { height: 70px; }.brand-link img { width: 205px; }
-    .desktop-nav, .desktop-actions { display: none; }.menu-button { display: block; }
-    .mobile-menu { display: block; border-top: 1px solid #1e2025; background: rgba(9,10,13,.98); }
-    .mobile-menu-inner { padding-top: 16px; padding-bottom: 22px; display: grid; gap: 2px; }
-    .mobile-menu-inner > a { color: #a3a5aa; text-decoration: none; font-weight: 700; padding: 13px 4px; border-bottom: 1px solid #17191d; }
-    .mobile-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 16px; }
-    .hero-section { padding-top: 125px; }.hero-grid { grid-template-columns: 1fr; gap: 55px; }.hero-copy { max-width: 660px; }.hero-terminal-wrap { max-width: 650px; }
-    .pillar-grid { grid-template-columns: 1fr; }.pillar-card { min-height: 250px; }
-    .feature-layout { grid-template-columns: 1fr; }.feature-copy { position: static; }.feature-copy > p { max-width: 600px; }.feature-grid { margin-top: 8px; }
-    .security-card { grid-template-columns: auto 1fr; padding: 35px; }.security-points { grid-column: 1 / -1; grid-template-columns: repeat(3, 1fr); }
-    .support-inner { grid-template-columns: 1fr auto; padding: 30px 0; }.support-inner > p { grid-column: 1 / -1; grid-row: 2; }
-    .footer-grid { grid-template-columns: 1fr; padding-top: 45px; padding-bottom: 65px; }.footer-links { flex-wrap: wrap; }
+@media (max-width: 980px) {
+    .desktop-nav { display: none; }.desktop-actions { display: none; }.menu-button { display: block; }.mobile-menu { display: block; border-top: 1px solid #1e2024; background: rgba(8,9,12,.98); }.mobile-menu-inner { padding: 16px 0 20px; display: grid; gap: 15px; }.mobile-menu a { color: #b8babf; text-decoration: none; font-weight: 750; }.mobile-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 7px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }.hero-copy { max-width: 700px; }.calculator-wrap { max-width: 700px; width: 100%; }
+    .feature-layout { grid-template-columns: 1fr; }.support-inner { grid-template-columns: 1fr 1fr; }.support-inner .btn { justify-self: end; }.footer-grid { grid-template-columns: 1fr; text-align: center; }.footer-links { flex-wrap: wrap; }.footer-brand img { margin: 0 auto; }
 }
 
 @media (max-width: 620px) {
-    .container { width: calc(100% - 28px); }
-    .section-pad { padding: 78px 0; }
-    .hero-section { min-height: 0; padding: 114px 0 70px; }.hero-mark { width: 220px; max-width: 100%; margin-left: 0; }.hero-copy h1 { font-size: clamp(36px, 11vw, 58px); }.hero-lead { font-size: 14px; }.hero-actions { display: grid; grid-template-columns: 1fr; }.btn-large { width: 100%; }
+    .container { width: calc(100% - 28px); }.section-pad { padding: 78px 0; }
+    .hero-section { min-height: 0; padding: 114px 0 70px; }.hero-mark { width: 220px; max-width: 100%; margin-left: 0; }.hero-copy h1 { font-size: clamp(36px,11vw,58px); }.hero-lead { font-size: 14px; }.hero-actions { display: grid; grid-template-columns: 1fr; }.btn-large { width: 100%; }
     .trust-strip { gap: 13px; justify-content: space-between; flex-wrap: wrap; }.trust-strip i { height: 29px; }.trust-strip strong { font-size: 15px; }.trust-strip span { font-size: 8px; }
-    .terminal-card { padding: 16px; border-radius: 18px; }.terminal-symbol { align-items: flex-end; }.chart-panel { height: 215px; }.chart-panel svg { height: 185px; }.terminal-footer span { display: none; }
-    .heading-row { align-items: start; flex-direction: column; }.section-heading h2, .feature-copy h2, .final-card h2 { font-size: 34px; }
+    .calc-card { padding: 18px; border-radius: 18px; }.calc-header { align-items: center; }.calc-header h2 { font-size: 21px; }.payout-badge { font-size: 9px; padding: 7px 9px; }.calc-presets { grid-template-columns: repeat(2,1fr); }.earnings-row { grid-template-columns: 1fr; }
+    .heading-row { align-items: start; flex-direction: column; }.section-heading h2,.feature-copy h2,.final-card h2 { font-size: 34px; }
     .market-head { display: none; }.market-row { grid-template-columns: 1.5fr 1fr; min-height: 86px; padding: 12px 16px; gap: 8px 12px; }.asset-cell { grid-row: 1 / 3; }.price-cell { text-align: right; }.change-pill { justify-self: end; }.mini-trade { display: none; }
-    .pillar-card { padding: 28px; }.feature-grid { grid-template-columns: 1fr; }.feature-grid article { min-height: 190px; border-right: 0 !important; border-bottom: 1px solid #24262b; }.feature-grid article:last-child { border-bottom: 0; }
+    .pillar-grid { grid-template-columns: 1fr; }.pillar-card { padding: 28px; }.feature-grid { grid-template-columns: 1fr; }.feature-grid article { min-height: 190px; border-right: 0 !important; border-bottom: 1px solid #24262b; }.feature-grid article:last-child { border-bottom: 0; }
     .security-card { grid-template-columns: 1fr; padding: 27px; }.security-emblem { width: 65px; height: 65px; }.security-points { grid-column: 1; grid-template-columns: 1fr; }.security-copy h2 { font-size: 29px; }
-    .support-inner { grid-template-columns: 1fr; gap: 18px; padding: 35px 0; }.support-inner > p { grid-column: 1; grid-row: auto; }.support-inner .btn { justify-self: start; }
+    .support-inner { grid-template-columns: 1fr; gap: 18px; padding: 35px 0; }.support-inner .btn { justify-self: start; }
     .final-card { min-height: 430px; padding: 32px 20px; }.final-actions { width: 100%; max-width: 100%; }
-    .footer-links { gap: 18px; }
+    .popup-area { left: 12px; bottom: 12px; }.popup-card { width: min(300px, calc(100vw - 24px)); }
 }
 </style>
