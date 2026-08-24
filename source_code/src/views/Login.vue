@@ -3,7 +3,8 @@ import { ref } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { useRouter } from 'vue-router';
 import { useMarketStore } from '../stores/market';
-import logoUrl from '../assets/mcfoption-logo.svg';
+import logoUrl from '../assets/branding/mcfoption-logo-horizontal.png';
+import wordmarkUrl from '../assets/branding/trade-flip-grow-wordmark.png';
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -52,7 +53,7 @@ const handleLogin = async () => {
                     <img :src="logoUrl" alt="MCFOPTION" class="brand-logo" />
 
                     <div class="brand-copy">
-                        <p class="eyebrow">TRADE • FLIP • GROW</p>
+                        <img :src="wordmarkUrl" alt="TRADE • FLIP • GROW" class="brand-wordmark-img" />
                         <h1>Built for decisions that move at market speed.</h1>
                         <p>
                             Access live markets, timed trading, wallet management, and real-time support from one secure workspace.
@@ -215,6 +216,7 @@ const handleLogin = async () => {
 .brand-panel-inner { min-height: 100%; padding: 48px; display: flex; flex-direction: column; box-sizing: border-box; }
 .brand-logo { width: 280px; max-width: 86%; height: auto; }
 .brand-copy { margin-top: 48px; max-width: 500px; }
+.brand-wordmark-img { width: 190px; max-width: 70%; height: auto; display: block; margin-bottom: 14px; }
 .eyebrow { color: #d7ad3f; font-size: 11px; font-weight: 800; letter-spacing: .22em; margin: 0 0 14px; }
 .brand-copy h1 { font-family: Manrope, Inter, sans-serif; font-size: clamp(28px, 3.5vw, 48px); line-height: 1.08; letter-spacing: -.045em; margin: 0; color: #f5f4f0; }
 .brand-copy > p:last-child { color: #9699a1; line-height: 1.75; font-size: 14px; max-width: 440px; margin-top: 18px; }

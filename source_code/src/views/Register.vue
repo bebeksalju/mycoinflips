@@ -3,6 +3,8 @@ import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { useMarketStore } from '../stores/market';
+import logoUrl from '../assets/branding/mcfoption-logo-horizontal.png';
+import wordmarkUrl from '../assets/branding/trade-flip-grow-wordmark.png';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -67,10 +69,8 @@ const handleRegister = async () => {
 
         <section class="register-card">
             <header class="register-header">
-                <div class="brand-wordmark" aria-label="MCFOPTION">
-                    <span>MCF</span><strong>OPTION</strong>
-                </div>
-                <p class="eyebrow">TRADE • FLIP • GROW</p>
+                <img :src="logoUrl" alt="MCFOPTION" class="register-brand-logo" />
+                <img :src="wordmarkUrl" alt="TRADE • FLIP • GROW" class="register-wordmark" />
                 <h1>Create your MCFOPTION account</h1>
                 <p>Set up your profile and continue to the trading workspace.</p>
             </header>
@@ -169,11 +169,8 @@ const handleRegister = async () => {
 }
 .back-home:hover { color: #e1b748; border-color: rgba(225, 183, 72, 0.3); }
 .register-card { position: relative; z-index: 2; width: min(780px, 100%); margin: 0 auto; border: 1px solid rgba(226,182,67,.24); border-radius: 26px; background: linear-gradient(155deg, rgba(15,16,20,.92), rgba(7,8,11,.94)); backdrop-filter: blur(18px); box-shadow: 0 35px 110px rgba(0,0,0,.66); padding: 44px; box-sizing: border-box; }
-.register-header { text-align: center; margin-bottom: 34px; }
-.brand-wordmark { display: inline-flex; align-items: baseline; justify-content: center; gap: 0; margin: 0 auto 14px; font-family: Manrope, Inter, sans-serif; font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: .08em; line-height: 1; }
-.brand-wordmark span { color: #e4b94b; }
-.brand-wordmark strong { color: #f2f2f2; font: inherit; }
-.eyebrow { color: #c89b31; font-size: 10px; letter-spacing: .2em; font-weight: 850; margin: 4px 0 12px; }
+.register-brand-logo { width: 260px; max-width: 80%; height: auto; display: block; margin: 0 auto 12px; }
+.register-wordmark { width: 190px; max-width: 65%; height: auto; display: block; margin: 0 auto 18px; }
 .register-header h1 { font-family: Manrope, Inter, sans-serif; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.035em; margin: 0; }
 .register-header > p:last-child { color: #8f9299; font-size: 13px; margin-top: 10px; }
 .register-form { display: grid; gap: 20px; }

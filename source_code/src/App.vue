@@ -90,7 +90,7 @@ const goToChat = () => {
       class="h-12 bg-gray-900 border-b border-gray-800 flex-none flex items-center justify-between px-3 md:px-4 z-20">
       <div class="flex items-center gap-3 md:gap-6 min-w-0">
         <RouterLink :to="authStore.isAuthenticated ? '/home' : '/'" class="flex items-center gap-2 flex-none hover:opacity-80 transition-opacity">
-          <img src="./assets/logo.png" alt="MyCOINFLIP" class="h-7 sm:h-8 md:h-9 w-auto object-contain brightness-200" />
+          <img src="./assets/branding/mcfoption-logo-horizontal.png" alt="MCFOPTION" class="h-7 sm:h-8 md:h-9 w-auto object-contain" />
         </RouterLink>
 
         <!-- Navigation Links (Protected) -->

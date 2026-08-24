@@ -2,8 +2,9 @@
 import { RouterLink } from 'vue-router';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useMarketStore } from '../stores/market';
-import logoUrl from '../assets/mcfoption-logo.svg';
-import markUrl from '../assets/mcfoption-mark.svg';
+import logoUrl from '../assets/branding/mcfoption-logo-horizontal.png';
+import markUrl from '../assets/branding/mcfoption-logo-mark.png';
+import wordmarkUrl from '../assets/branding/trade-flip-grow-wordmark.png';
 
 const marketStore = useMarketStore();
 const isMobileMenuOpen = ref(false);
@@ -174,7 +175,7 @@ const closeMenu = () => {
                         </div>
 
                         <img :src="markUrl" alt="MCFOPTION" class="hero-mark" />
-                        <p class="hero-kicker">TRADE • FLIP • GROW</p>
+                        <img :src="wordmarkUrl" alt="TRADE • FLIP • GROW" class="hero-wordmark" />
                         <h1>Trade smarter.<br /><span>Move with the market.</span></h1>
                         <p class="hero-lead">
                             A focused trading experience for live crypto markets, timed opportunities, wallet management, and real-time account support.
@@ -349,8 +350,8 @@ const closeMenu = () => {
 
             <section class="final-cta section-pad">
                 <div class="container final-card">
-                    <img :src="markUrl" alt="MCFOPTION" />
-                    <p class="section-kicker">TRADE • FLIP • GROW</p>
+                    <img :src="markUrl" alt="MCFOPTION" class="final-mark" />
+                    <img :src="wordmarkUrl" alt="TRADE • FLIP • GROW" class="final-wordmark" />
                     <h2>Your next market move starts here.</h2>
                     <p>Enter the MCFOPTION trading workspace and follow the market from any device.</p>
                     <div class="hero-actions final-actions">
@@ -428,6 +429,7 @@ const closeMenu = () => {
 .live-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 11px; border: 1px solid rgba(206,162,53,.24); border-radius: 999px; color: #aa8a3d; background: rgba(202,151,31,.055); font-size: 10px; font-weight: 850; letter-spacing: .13em; }
 .live-dot { width: 6px; height: 6px; background: #47c982; border-radius: 50%; box-shadow: 0 0 0 5px rgba(71,201,130,.09); }
 .hero-mark { width: 300px; max-width: 72%; margin: 29px 0 0 -14px; }
+.hero-wordmark { width: 220px; max-width: 60%; height: auto; display: block; margin: 10px 0 16px; }
 .hero-kicker,.section-kicker { margin: 5px 0 14px; color: #c99e36; font-size: 11px; letter-spacing: .22em; font-weight: 850; }
 .hero-copy h1 { font-family: Manrope,Inter,sans-serif; font-size: clamp(48px,5vw,74px); line-height: .99; letter-spacing: -.055em; margin: 0; color: #f7f6f3; }
 .hero-copy h1 span { color: #a8a9ad; }
@@ -495,7 +497,9 @@ const closeMenu = () => {
 
 .features-section { background: #0b0c0f; }.feature-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 70px; align-items: center; }.feature-copy > p:not(.section-kicker) { color: #777b83; line-height: 1.75; margin: 22px 0 27px; }.feature-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #25272c; border-radius: 19px; overflow: hidden; }.feature-grid article { padding: 29px; min-height: 220px; background: #101115; border-right: 1px solid #25272c; border-bottom: 1px solid #25272c; }.feature-grid article:nth-child(2n){border-right:0}.feature-grid article:nth-last-child(-n+2){border-bottom:0}.feature-grid article > span { color: #796129; font-size: 10px; font-weight: 900; }.feature-grid h3 { margin: 48px 0 10px; font-size: 17px; }.feature-grid p { color: #6f7279; line-height: 1.6; font-size: 13px; }
 .security-section { background: #08090c; }.security-card { display: grid; grid-template-columns: 90px 1fr; gap: 27px 35px; border: 1px solid rgba(206,165,57,.2); border-radius: 22px; padding: 43px; background: radial-gradient(circle at 10% 10%,rgba(205,158,38,.08),transparent 32%),#0e0f12; }.security-emblem { width: 82px; height: 82px; border-radius: 50%; border: 1px solid #4a3a18; display: grid; place-items: center; color: #ddb54a; font-size: 37px; }.security-copy p:last-child { color: #777b83; line-height: 1.7; max-width: 690px; }.security-points { grid-column: 2; display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; }.security-points span { border-top: 1px solid #27292e; padding-top: 14px; color: #979aa1; font-size: 11px; }
-.support-section { border-top: 1px solid #1b1d21; border-bottom: 1px solid #1b1d21; background: #0b0c0f; }.support-inner { min-height: 200px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 30px; align-items: center; }.support-inner > p { color: #777b83; line-height: 1.65; }.final-cta { background: #07080b; }.final-card { min-height: 460px; border: 1px solid rgba(218,176,65,.2); border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px; background: radial-gradient(circle at 50% 0,rgba(202,155,42,.13),transparent 40%),#0d0e11; }.final-card img { width: 160px; margin-bottom: 4px; }.final-card > p:not(.section-kicker) { color: #74777e; }.final-actions { justify-content: center; }
+.support-section { border-top: 1px solid #1b1d21; border-bottom: 1px solid #1b1d21; background: #0b0c0f; }.support-inner { min-height: 200px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 30px; align-items: center; }.support-inner > p { color: #777b83; line-height: 1.65; }.final-cta { background: #07080b; }.final-card { min-height: 460px; border: 1px solid rgba(218,176,65,.2); border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px; background: radial-gradient(circle at 50% 0,rgba(202,155,42,.13),transparent 40%),#0d0e11; }.final-card img.final-mark { width: 160px; margin-bottom: 8px; }
+.final-card img.final-wordmark { width: 180px; max-width: 80%; margin-bottom: 16px; }
+.final-card > p:not(.section-kicker) { color: #74777e; }.final-actions { justify-content: center; }
 .site-footer { background: #08090b; border-top: 1px solid #1c1e22; padding: 35px 0; }.footer-grid { display: grid; grid-template-columns: auto 1fr auto; gap: 35px; align-items: center; }.footer-brand img { width: 180px; }.footer-brand p,.copyright { color: #5f6269; font-size: 10px; }.footer-links { display: flex; justify-content: center; gap: 28px; }.footer-links a { color: #757880; text-decoration: none; font-size: 11px; }
 
 .popup-area { position: fixed; left: 18px; bottom: 18px; z-index: 9999; display: flex; flex-direction: column; gap: 9px; pointer-events: none; }
