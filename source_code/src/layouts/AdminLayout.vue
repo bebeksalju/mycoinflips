@@ -16,11 +16,12 @@ const unreadChatCount = ref(0);
 let chatSocket = null;
 let heartbeatInterval = null;
 let pendingCountsInterval = null;
-let hiddenTimestamp = null;
 let visibilityTimer = null;
 
-const HEARTBEAT_INTERVAL_MS = 60 * 1000;     // 60 seconds
-const VISIBILITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+const HEARTBEAT_INTERVAL_MS = 60 * 1000;
+const VISIBILITY_TIMEOUT_MS = 5 * 60 * 1000;
+
+const isSuperuser = computed(() => authStore.user.role === 'SUPERUSER');
 
 const pendingDeposits = computed(() => {
     return adminStore.transactions.filter(t => t.status === 'pending' && t.type === 'DEPOSIT').length;
@@ -29,6 +30,37 @@ const pendingDeposits = computed(() => {
 const pendingKyc = computed(() => {
     return adminStore.kycRequests.filter(k => k.status === 'pending').length;
 });
+
+const primaryNav = computed(() => {
+    const items = [
+        { key: 'dashboard', label: 'Dashboard', to: '/admin/dashboard', superuserOnly: true },
+        { key: 'users', label: 'Users', to: '/admin/users' },
+        { key: 'finance', label: 'Finance', to: '/admin/finance', superuserOnly: true },
+        { key: 'kyc', label: 'KYC', to: '/admin/kyc', superuserOnly: true },
+        { key: 'wallet', label: 'Wallet', to: '/admin/wallet', superuserOnly: true },
+        { key: 'chat', label: 'Chat', to: '/admin/chat', superuserOnly: true },
+        { key: 'email', label: 'Email', to: '/admin/email' }
+    ];
+    return items.filter(item => !item.superuserOnly || isSuperuser.value);
+});
+
+const systemNav = computed(() => {
+    const items = [
+        { key: 'admins', label: 'Admins', to: '/admin/admins', superuserOnly: true },
+        { key: 'activity', label: 'User Activity', to: '/admin/user-activity', superuserOnly: true },
+        { key: 'logs', label: 'Activity Logs', to: '/admin/logs', superuserOnly: true },
+        { key: 'settings', label: 'Settings', to: '/admin/settings', superuserOnly: true },
+        { key: 'profile', label: 'Profile', to: '/admin/profile' }
+    ];
+    return items.filter(item => !item.superuserOnly || isSuperuser.value);
+});
+
+const badgeFor = (key) => {
+    if (key === 'finance') return pendingDeposits.value;
+    if (key === 'kyc') return pendingKyc.value;
+    if (key === 'chat') return unreadChatCount.value;
+    return 0;
+};
 
 const fetchPendingCounts = async () => {
     try {
@@ -41,81 +73,63 @@ const fetchPendingCounts = async () => {
     }
 };
 
-// --- Session Heartbeat ---
-const sendHeartbeat = async () => {
-    try {
-        await api.post('/auth/heartbeat');
-    } catch (error) {
-        // If session is expired/revoked, force logout
-        if (error.response?.status === 401) {
-            console.warn('Session expired — auto logging out');
-            forceLogout();
-        }
-    }
-};
-
-// --- Force logout & redirect ---
 const forceLogout = () => {
     authStore.logout();
     router.push('/admin/login');
 };
 
-// --- Tab close detection (beforeunload) ---
-const handleBeforeUnload = () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        // Use sendBeacon for reliable delivery during page unload
-        const url = '/api/auth/logout';
-        const headers = { type: 'application/json' };
-        const body = new Blob([JSON.stringify({})], headers);
-        // sendBeacon doesn't support custom headers, so we pass token in the URL
-        // Instead, we'll use a different approach: send via fetch keepalive
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({}),
-            keepalive: true
-        }).catch(() => {
-            // Silently fail — tab is closing anyway
-        });
+const sendHeartbeat = async () => {
+    try {
+        await api.post('/auth/heartbeat');
+    } catch (error) {
+        if (error.response?.status === 401) {
+            forceLogout();
+        }
     }
 };
 
-// --- Tab visibility detection ---
+const handleBeforeUnload = () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({}),
+        keepalive: true
+    }).catch(() => {});
+};
+
 const handleVisibilityChange = () => {
     if (document.hidden) {
-        // Tab became hidden — start countdown
-        hiddenTimestamp = Date.now();
         visibilityTimer = setTimeout(() => {
-            // Tab was hidden for too long — auto logout
-            console.warn('Admin tab hidden for too long — auto logging out');
             forceLogout();
         }, VISIBILITY_TIMEOUT_MS);
     } else {
-        // Tab became visible again — cancel countdown
         if (visibilityTimer) {
             clearTimeout(visibilityTimer);
             visibilityTimer = null;
         }
-        hiddenTimestamp = null;
-        // Send heartbeat immediately when tab becomes visible again
         sendHeartbeat();
     }
 };
 
+const logout = async () => {
+    isSidebarOpen.value = false;
+    await authStore.logout();
+    router.push('/login');
+};
+
 onMounted(() => {
     fetchPendingCounts();
-    // Refresh pending counts every 30 seconds
     pendingCountsInterval = setInterval(fetchPendingCounts, 30000);
 
-    // --- Start heartbeat ---
-    sendHeartbeat(); // Send immediately
+    sendHeartbeat();
     heartbeatInterval = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL_MS);
 
-    // --- Register tab close / visibility listeners ---
     window.addEventListener('beforeunload', handleBeforeUnload);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
@@ -125,14 +139,11 @@ onMounted(() => {
             auth: { token },
             transports: ['websocket', 'polling']
         });
+
         chatSocket.on('chat:new-message', () => {
-            // Don't increment if already on chat page
-            if (route.path !== '/admin/chat') {
-                unreadChatCount.value++;
-            }
+            if (route.path !== '/admin/chat') unreadChatCount.value++;
         });
-        // Real-time list updates for Finance and KYC
-        chatSocket.on('finance:new-transaction', (data) => {
+        chatSocket.on('finance:new-transaction', () => {
             adminStore.fetchTransactions();
         });
         chatSocket.on('kyc:new-request', (data) => {
@@ -142,157 +153,135 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    // Cleanup all intervals
     if (pendingCountsInterval) clearInterval(pendingCountsInterval);
     if (heartbeatInterval) clearInterval(heartbeatInterval);
     if (visibilityTimer) clearTimeout(visibilityTimer);
 
-    // Remove event listeners
     window.removeEventListener('beforeunload', handleBeforeUnload);
     document.removeEventListener('visibilitychange', handleVisibilityChange);
 
-    // Disconnect socket
     if (chatSocket) chatSocket.disconnect();
 });
 
-// Reset badge when navigating to chat page
 watch(() => route.path, (newPath) => {
-    if (newPath === '/admin/chat') {
-        unreadChatCount.value = 0;
-    }
+    isSidebarOpen.value = false;
+    if (newPath === '/admin/chat') unreadChatCount.value = 0;
 });
-
-const logout = () => {
-    authStore.logout();
-    router.push('/login');
-};
 </script>
 
 <template>
     <div class="flex h-screen bg-gray-900 text-white font-sans">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-gray-800 border-r border-gray-700 flex flex-col hidden md:flex">
+        <aside class="hidden md:flex w-64 shrink-0 bg-gray-800 border-r border-gray-700 flex-col">
             <div class="h-16 flex items-center px-6 border-b border-gray-700">
                 <span class="text-xl font-bold text-yellow-500 tracking-wider">ADMIN PANEL</span>
             </div>
-            
-            <nav class="flex-1 py-4 space-y-1">
-                <router-link v-if="authStore.user.role === 'SUPERUSER'" to="/admin" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-2.25-2.25V15.75z" />
-                    </svg>
-                    Dashboard
-                </router-link>
 
-                <router-link to="/admin/users" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                    </svg>
-                    Users
-                </router-link>
-
-                <router-link v-if="authStore.user.role === 'SUPERUSER'" to="/admin/finance" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors relative" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Finance
-                    <span v-if="pendingDeposits > 0" class="absolute right-3 bg-orange-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
-                        {{ pendingDeposits > 9 ? '9+' : pendingDeposits }}
+            <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                <router-link
+                    v-for="item in primaryNav"
+                    :key="item.key"
+                    :to="item.to"
+                    class="flex items-center justify-between gap-3 px-3 py-3 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-colors"
+                    active-class="bg-gray-700 text-white ring-1 ring-yellow-500/30"
+                >
+                    <span class="flex items-center gap-3">
+                        <span class="w-2 h-2 rounded-full bg-gray-600"></span>
+                        {{ item.label }}
                     </span>
+                    <span
+                        v-if="badgeFor(item.key) > 0"
+                        class="min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center"
+                    >{{ badgeFor(item.key) > 9 ? '9+' : badgeFor(item.key) }}</span>
                 </router-link>
 
-                <router-link v-if="authStore.user.role === 'SUPERUSER'" to="/admin/kyc" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors relative" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z" />
-                    </svg>
-                    KYC
-                    <span v-if="pendingKyc > 0" class="absolute right-3 bg-blue-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
-                        {{ pendingKyc > 9 ? '9+' : pendingKyc }}
-                    </span>
-                </router-link>
-
-                <router-link v-if="authStore.user.role === 'SUPERUSER'" to="/admin/wallet" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
-                    </svg>
-                    Wallet
-                </router-link>
-
-                <router-link v-if="authStore.user.role === 'SUPERUSER'" to="/admin/chat" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors relative" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-                    </svg>
-                    Chat
-                    <span v-if="unreadChatCount > 0" class="absolute right-3 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
-                        {{ unreadChatCount > 9 ? '9+' : unreadChatCount }}
-                    </span>
-                </router-link>
-
-                <router-link to="/admin/email" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5A2.25 2.25 0 0119.5 19.5h-15a2.25 2.25 0 01-2.25-2.25V6.75M21.75 6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25M21.75 6.75l-8.69 5.793a2.25 2.25 0 01-2.12 0L2.25 6.75" />
-                    </svg>
-                    Email
-                </router-link>
-
-                <div class="border-t border-gray-700 my-2 pt-2">
-                    <p class="px-6 text-xs font-bold text-gray-500 uppercase mb-2">System</p>
-                    
-                    <router-link v-if="authStore.user.role === 'SUPERUSER'" to="/admin/admins" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                        </svg>
-                        Admins
-                    </router-link>
-
-                    <router-link v-if="authStore.user.role === 'SUPERUSER'" to="/admin/logs" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Activity Logs
-                    </router-link>
-
-
-                    <router-link v-if="authStore.user.role === 'SUPERUSER'" to="/admin/settings" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        Settings
-                    </router-link>
-
-                    <router-link to="/admin/profile" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors" active-class="bg-gray-700 text-white border-r-4 border-yellow-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                        </svg>
-                        Profile
+                <div class="border-t border-gray-700 mt-4 pt-4">
+                    <p class="px-3 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">System</p>
+                    <router-link
+                        v-for="item in systemNav"
+                        :key="item.key"
+                        :to="item.to"
+                        class="flex items-center gap-3 px-3 py-3 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-colors"
+                        active-class="bg-gray-700 text-white ring-1 ring-yellow-500/30"
+                    >
+                        <span class="w-2 h-2 rounded-full bg-gray-600"></span>
+                        {{ item.label }}
                     </router-link>
                 </div>
             </nav>
 
             <div class="p-4 border-t border-gray-700">
-                <button @click="logout" class="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                    </svg>
+                <button @click="logout" class="w-full px-4 py-2 text-left text-sm text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-colors">
                     Logout
                 </button>
             </div>
         </aside>
 
-        <!-- Main Content -->
+        <div v-if="isSidebarOpen" class="fixed inset-0 z-50 md:hidden">
+            <button
+                class="absolute inset-0 w-full h-full bg-black/70"
+                aria-label="Close admin menu"
+                @click="isSidebarOpen = false"
+            ></button>
+
+            <aside class="absolute inset-y-0 left-0 w-[min(82vw,320px)] bg-gray-800 border-r border-gray-700 shadow-2xl flex flex-col">
+                <div class="h-16 flex items-center justify-between px-5 border-b border-gray-700">
+                    <span class="font-bold text-yellow-500 tracking-wider">MCFOPTION ADMIN</span>
+                    <button @click="isSidebarOpen = false" class="w-10 h-10 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white" aria-label="Close menu">✕</button>
+                </div>
+
+                <nav class="flex-1 overflow-y-auto p-3 space-y-1">
+                    <router-link
+                        v-for="item in primaryNav"
+                        :key="item.key"
+                        :to="item.to"
+                        class="flex items-center justify-between gap-3 px-4 py-3.5 rounded-xl text-gray-300 hover:bg-gray-700 transition-colors"
+                        active-class="bg-gray-700 text-white ring-1 ring-yellow-500/30"
+                    >
+                        <span>{{ item.label }}</span>
+                        <span
+                            v-if="badgeFor(item.key) > 0"
+                            class="min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center"
+                        >{{ badgeFor(item.key) > 9 ? '9+' : badgeFor(item.key) }}</span>
+                    </router-link>
+
+                    <div class="border-t border-gray-700 mt-4 pt-4">
+                        <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">System</p>
+                        <router-link
+                            v-for="item in systemNav"
+                            :key="item.key"
+                            :to="item.to"
+                            class="block px-4 py-3.5 rounded-xl text-gray-300 hover:bg-gray-700 transition-colors"
+                            active-class="bg-gray-700 text-white ring-1 ring-yellow-500/30"
+                        >{{ item.label }}</router-link>
+                    </div>
+                </nav>
+
+                <div class="p-4 border-t border-gray-700">
+                    <button @click="logout" class="w-full px-4 py-3 rounded-xl bg-red-500/10 text-red-400 font-semibold text-left">
+                        Logout
+                    </button>
+                </div>
+            </aside>
+        </div>
+
         <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
-            <!-- Mobile Header -->
-            <header class="md:hidden h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4">
-                <span class="text-lg font-bold text-yellow-500">ADMIN</span>
-                <button @click="isSidebarOpen = !isSidebarOpen" class="text-gray-400">
+            <header class="md:hidden h-16 shrink-0 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4">
+                <div>
+                    <span class="text-lg font-bold text-yellow-500">MCFOPTION</span>
+                    <span class="text-xs text-gray-500 ml-2">ADMIN</span>
+                </div>
+                <button
+                    @click="isSidebarOpen = true"
+                    class="w-11 h-11 rounded-xl border border-gray-700 flex items-center justify-center text-gray-300 hover:bg-gray-700"
+                    aria-label="Open admin menu"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                     </svg>
                 </button>
             </header>
 
-            <div class="flex-1 overflow-auto p-6 md:p-8">
+            <div class="flex-1 overflow-auto p-4 sm:p-6 md:p-8">
                 <router-view />
             </div>
         </main>
