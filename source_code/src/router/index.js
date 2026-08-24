@@ -21,6 +21,16 @@ const router = createRouter({
       component: Login
     },
     {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: () => import('../views/ForgotPassword.vue')
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: () => import('../views/ResetPassword.vue')
+    },
+    {
       path: '/register',
       name: 'register',
       component: () => import('../views/Register.vue')
@@ -100,7 +110,7 @@ const router = createRouter({
       meta: { requiresAdmin: true },
       children: [
         {
-          path: '', // Default to dashboard
+          path: '',
           redirect: '/admin/dashboard'
         },
         {
@@ -165,7 +175,6 @@ const router = createRouter({
     {
       path: '/:pathMatch(.*)*',
       redirect: '/'
-
     }
   ]
 })
@@ -173,27 +182,20 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
 
-  // Auth Guard
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login');
   }
-  // Admin Guard
   else if (to.meta.requiresAdmin || to.meta.requiresSuperuser) {
     if (!authStore.isAuthenticated) {
-      next('/admin/login'); // Redirect to Admin Login
+      next('/admin/login');
     } else if (!authStore.user.isAdmin) {
-      next('/dashboard'); // Authorized but not admin
+      next('/dashboard');
     } else if (to.meta.requiresSuperuser && authStore.user.role !== 'SUPERUSER') {
-      next('/admin/dashboard'); // Admin but not superuser, redirect to admin dashboard
+      next('/admin/dashboard');
     } else {
       next();
     }
   }
-  // Prevent Login access if already logged in -> DISABLED as per user request
-  // else if ((to.path === '/login' || to.path === '/register') && authStore.isAuthenticated) {
-  //    if (authStore.user.isAdmin) next('/admin');
-  //    else next('/dashboard');
-  // }
   else {
     next();
   }
