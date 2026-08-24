@@ -11,6 +11,7 @@ import Withdrawal from '../views/Withdrawal.vue'
 import KYC from '../views/KYC.vue'
 import Banned from '../views/Banned.vue'
 import { useAuthStore } from '../stores/auth'
+import api from '../api/axios'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -184,8 +185,29 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+
+  // A full page refresh restores the token before the rest of the user object.
+  // Hydrate the current account before evaluating admin/superuser guards.
+  if (authStore.isAuthenticated && authStore.user.token && !authStore.user.id) {
+    try {
+      const response = await api.get('/auth/me');
+      const currentUser = response.data?.user;
+      if (currentUser) {
+        authStore.user.id = currentUser.id;
+        authStore.user.email = currentUser.email || '';
+        authStore.user.name = currentUser.name || '';
+        authStore.user.role = currentUser.role || 'USER';
+        authStore.user.status = currentUser.status || 'active';
+        authStore.user.profitMode = currentUser.profitMode || 'random';
+        authStore.user.kycStatus = response.data?.kycStatus || currentUser.kyc?.status?.toLowerCase() || 'unverified';
+        authStore.user.isAdmin = currentUser.role === 'ADMIN' || currentUser.role === 'SUPERUSER';
+      }
+    } catch (error) {
+      await authStore.logout();
+    }
+  }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login');
