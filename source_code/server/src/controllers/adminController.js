@@ -91,6 +91,7 @@ const updateUserPassword = async (req, res) => {
 };
 
 const updateUserProfitMode = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const userId = parseInt(req.params.id);
         const { mode } = req.body;
@@ -112,6 +113,7 @@ const updateUserProfitMode = async (req, res) => {
 };
 
 const toggleUserBan = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const userId = parseInt(req.params.id);
 
@@ -163,6 +165,7 @@ const deleteUser = async (req, res) => {
 // ==================== FINANCE (TRANSACTIONS) ====================
 
 const getTransactions = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const transactions = await prisma.transaction.findMany({
             where: { type: { in: ['DEPOSIT', 'WITHDRAWAL'] } },
@@ -195,6 +198,7 @@ const getTransactions = async (req, res) => {
 };
 
 const updateTransactionStatus = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const txId = parseInt(req.params.id);
         const { status } = req.body;
@@ -246,6 +250,7 @@ const updateTransactionStatus = async (req, res) => {
 // ==================== KYC ====================
 
 const getKycRequests = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const requests = await prisma.kyc.findMany({
             include: { user: { select: { name: true, email: true } } },
@@ -272,6 +277,7 @@ const getKycRequests = async (req, res) => {
 };
 
 const updateKycStatus = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const kycId = parseInt(req.params.id);
         const { status } = req.body;
@@ -490,6 +496,7 @@ const getPublicWallets = async (req, res) => {
 // ==================== TRADING DURATIONS ====================
 
 const getDurations = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const durations = await prisma.tradingDuration.findMany({
             orderBy: { seconds: 'asc' }
@@ -502,6 +509,7 @@ const getDurations = async (req, res) => {
 };
 
 const addDuration = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const { seconds, percentage, minBalance } = req.body;
 
@@ -534,6 +542,7 @@ const addDuration = async (req, res) => {
 };
 
 const deleteDuration = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const id = parseInt(req.params.id);
         await prisma.tradingDuration.delete({ where: { id } });
@@ -622,6 +631,7 @@ const deleteUserSessions = async (req, res) => {
 // ==================== USER ACTIVITY ====================
 
 const getAllUserActivity = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const { type, status, search, page = 1, limit = 50 } = req.query;
         const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -680,6 +690,7 @@ const getAllUserActivity = async (req, res) => {
 
 
 const getAuditLogs = async (req, res) => {
+    if (!requireSuperuser(req, res)) return;
     try {
         const logs = await prisma.auditLog.findMany({
             orderBy: { createdAt: 'desc' }

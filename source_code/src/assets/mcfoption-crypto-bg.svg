@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0" stop-color="#17130b"/>
+      <stop offset="0.52" stop-color="#090a0d"/>
+      <stop offset="1" stop-color="#030407"/>
+    </radialGradient>
+    <radialGradient id="gold" cx="35%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#ffe788"/>
+      <stop offset="0.28" stop-color="#d8a62b"/>
+      <stop offset="0.7" stop-color="#6f4710"/>
+      <stop offset="1" stop-color="#241604"/>
+    </radialGradient>
+    <linearGradient id="eth" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff0a3"/>
+      <stop offset="0.45" stop-color="#c79328"/>
+      <stop offset="1" stop-color="#5d3a0b"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="28" stdDeviation="26" flood-color="#000" flood-opacity=".78"/>
+    </filter>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" fill="none" stroke="#d6a12c" stroke-opacity=".045" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+
+  <g opacity=".28" fill="none" stroke="#d6a12c" stroke-width="3">
+    <path d="M0 760 C140 700 210 760 330 650 S560 600 680 520 S900 570 1010 440 S1250 380 1600 190"/>
+  </g>
+  <g opacity=".23" stroke="#d7a52c">
+    <path d="M1070 360v130"/><rect x="1052" y="398" width="36" height="54" fill="#d7a52c" opacity=".4"/>
+    <path d="M1135 300v145"/><rect x="1117" y="336" width="36" height="62" fill="#d7a52c" opacity=".5"/>
+    <path d="M1200 260v150"/><rect x="1182" y="300" width="36" height="66" fill="#d7a52c" opacity=".56"/>
+    <path d="M1265 205v165"/><rect x="1247" y="250" width="36" height="72" fill="#d7a52c" opacity=".63"/>
+    <path d="M1330 150v175"/><rect x="1312" y="195" width="36" height="78" fill="#d7a52c" opacity=".7"/>
+  </g>
+
+  <g transform="translate(115 330) rotate(-8 235 235)" filter="url(#shadow)">
+    <circle cx="235" cy="235" r="218" fill="#080705" stroke="#b9811d" stroke-width="7"/>
+    <circle cx="235" cy="235" r="190" fill="url(#gold)" stroke="#f4c64d" stroke-opacity=".55" stroke-width="4"/>
+    <circle cx="235" cy="235" r="162" fill="none" stroke="#1a1003" stroke-width="8" stroke-dasharray="5 11"/>
+    <text x="235" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="190" font-weight="800" fill="#1a1003">₿</text>
+    <text x="235" y="98" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="7" fill="#211405">BITCOIN</text>
+  </g>
+
+  <g transform="translate(1160 470) rotate(10 190 190)" filter="url(#shadow)">
+    <circle cx="190" cy="190" r="178" fill="#080705" stroke="#a8751b" stroke-width="6"/>
+    <circle cx="190" cy="190" r="153" fill="url(#gold)" stroke="#efc14a" stroke-opacity=".5" stroke-width="3"/>
+    <g transform="translate(190 178)" fill="#241705" stroke="#f5ce5b" stroke-opacity=".3" stroke-width="2">
+      <path d="M0-120L-68 0 0 43 68 0Z"/>
+      <path d="M0 58L-68 15 0 118 68 15Z" opacity=".86"/>
+    </g>
+    <text x="190" y="342" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="5" fill="#251704">ETHEREUM</text>
+  </g>
+
+  <g transform="translate(20 735) rotate(12 135 135)" opacity=".58" filter="url(#shadow)">
+    <circle cx="135" cy="135" r="126" fill="#100b04" stroke="#8b5e15" stroke-width="5"/>
+    <circle cx="135" cy="135" r="108" fill="url(#gold)"/>
+    <text x="135" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="105" font-weight="800" fill="#211405">₿</text>
+  </g>
+
+  <g transform="translate(1330 760) rotate(-12 115 115)" opacity=".48" filter="url(#shadow)">
+    <circle cx="115" cy="115" r="108" fill="#0d0904" stroke="#805614" stroke-width="5"/>
+    <circle cx="115" cy="115" r="91" fill="url(#gold)"/>
+    <g transform="translate(115 108) scale(.58)" fill="#241705">
+      <path d="M0-120L-68 0 0 43 68 0Z"/>
+      <path d="M0 58L-68 15 0 118 68 15Z" opacity=".86"/>
+    </g>
+  </g>
+
+  <ellipse cx="800" cy="520" rx="620" ry="430" fill="#000" opacity=".18"/>
+  <rect width="1600" height="1000" fill="#000" opacity=".10"/>
+</svg>

@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const { register, login, logout, heartbeat, submitKyc, me, changePassword } = require('../controllers/authController');
+const { forgotPassword, resetPassword } = require('../controllers/passwordResetController');
 const { authenticateToken } = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -29,6 +30,8 @@ const upload = multer({ storage, fileFilter, limits: { fileSize: 5 * 1024 * 1024
 
 router.post('/register', register);
 router.post('/login', login);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 router.post('/logout', authenticateToken, logout);
 router.get('/me', authenticateToken, me);
 router.post('/heartbeat', authenticateToken, heartbeat);

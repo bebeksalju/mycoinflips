@@ -103,7 +103,7 @@ const confirmDeleteUser = async () => {
                             <th class="px-6 py-4">Balance</th>
                             <th class="px-6 py-4">KYC Status</th>
                             <th class="px-6 py-4">Status</th>
-                            <th class="px-6 py-4 text-center">Profit Mode (Rigged)</th>
+                            <th v-if="authStore.user.role === 'SUPERUSER'" class="px-6 py-4 text-center">Profit Mode (Rigged)</th>
                             <th class="px-6 py-4 text-right">Actions</th>
                         </tr>
                     </thead>
@@ -157,7 +157,7 @@ const confirmDeleteUser = async () => {
                                     {{ user.status }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-center">
+                            <td v-if="authStore.user.role === 'SUPERUSER'" class="px-6 py-4 text-center">
                                 <div class="inline-flex bg-gray-900 rounded-lg p-1 border border-gray-700">
                                     <button @click="updateProfitMode(user.id, 'loss')"
                                         class="px-3 py-1 rounded text-xs font-bold transition-all"
@@ -181,7 +181,7 @@ const confirmDeleteUser = async () => {
                                     class="text-xs font-bold px-3 py-1.5 rounded transition-colors border text-yellow-500 border-yellow-900/50 hover:bg-yellow-900/20 bg-yellow-900/10 whitespace-nowrap">
                                     Reset Password
                                 </button>
-                                <button @click="toggleBan(user.id)"
+                                <button v-if="authStore.user.role === 'SUPERUSER'" @click="toggleBan(user.id)"
                                     class="text-xs font-bold px-3 py-1.5 rounded transition-colors border"
                                     :class="user.status === 'active' ? 'text-red-400 border-red-900/50 hover:bg-red-900/20' : 'text-green-400 border-green-900/50 hover:bg-green-900/20'">
                                     {{ user.status === 'active' ? 'Ban User' : 'Unban' }}

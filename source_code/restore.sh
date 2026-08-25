@@ -23,7 +23,7 @@ header()  { echo -e "\n${BOLD}${CYAN}══════════════�
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPOSE_FILE="${PROJECT_DIR}/docker-compose.prod.yml"
 
-header "Automated Restore Process - MyCOINFLIP"
+header "Automated Restore Process - mcfoption"
 
 # 1. Check .env file
 if [ -f "${PROJECT_DIR}/.env" ]; then
@@ -78,14 +78,14 @@ fi
 
 # 4. Prepare SSL Directory & Dummy Certificates if missing
 info "Checking SSL certificate configuration..."
-CERT_DIR="${PROJECT_DIR}/certbot/conf/live/mycoinflips.com"
+CERT_DIR="${PROJECT_DIR}/certbot/conf/live/mcfoption.com"
 mkdir -p "${CERT_DIR}"
 if [ ! -f "${CERT_DIR}/fullchain.pem" ] || [ ! -f "${CERT_DIR}/privkey.pem" ]; then
     warn "SSL certificates missing! Generating self-signed temporary certificates..."
     openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
         -keyout "${CERT_DIR}/privkey.pem" \
         -out "${CERT_DIR}/fullchain.pem" \
-        -subj '/CN=mycoinflips.com' 2>/dev/null
+        -subj '/CN=mcfoption.com' 2>/dev/null
     success "Temporary SSL certificates generated."
 else
     success "SSL certificates found."
