@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict oa712jUbnxiWtfIAdVhod4k5GFcXStnupIMZjd8SsUg5HjgCbufs3cMShuoJ1Rj
+\restrict 65USdeb8b7ktCHlUCEw997KZr1DgV8mjjqgNVYF2x4TgjMv9I3HwZpQtUqcmNah
 
 -- Dumped from database version 16.15
 -- Dumped by pg_dump version 16.15
@@ -512,11 +512,11 @@ ALTER TABLE ONLY public."Wallet" ALTER COLUMN id SET DEFAULT nextval('public."Wa
 --
 
 COPY public."AdminWallet" (id, network, address, "createdAt", "updatedAt") FROM stdin;
-1	BTC	19rEvUZZjYJcALwhnxb2iMnvGdwAf5fjid	2026-03-04 18:50:39.953	2026-07-11 02:14:21.307
-2	ETH	0xaf35b7402d3db4bc57c77782fda8e5192631d7b8	2026-03-04 18:50:39.96	2026-07-11 02:14:21.311
-3	USDT_ERC20	0xaf35b7402d3db4bc57c77782fda8e5192631d7b8	2026-03-04 18:50:39.962	2026-07-11 02:14:21.312
-4	USDT_TRC20	TCbk3i9dmvGz3shUFpDsfAteQsCK67VkG5	2026-03-04 18:50:39.964	2026-07-11 02:14:21.313
-5	USDC	0xaf35b7402d3db4bc57c77782fda8e5192631d7b8	2026-03-04 18:50:39.966	2026-07-11 02:14:21.314
+1	BTC	14CMNeZnrEfaxsk3MT9tdmCEFsRzee7MbB	2026-03-04 18:50:39.953	2026-09-08 04:29:35.917
+2	ETH	0x674875d7a2e18f81d95849d781a5133f858c739a	2026-03-04 18:50:39.96	2026-09-08 04:29:35.92
+3	USDT_ERC20	0x674875d7a2e18f81d95849d781a5133f858c739a	2026-03-04 18:50:39.962	2026-09-08 04:29:35.921
+4	USDT_TRC20	TCbk3i9dmvGz3shUFpDsfAteQsCK67VkG5	2026-03-04 18:50:39.964	2026-09-08 04:29:35.923
+5	USDC	0x674875d7a2e18f81d95849d781a5133f858c739a	2026-03-04 18:50:39.966	2026-09-08 04:29:35.924
 \.
 
 
@@ -582,6 +582,8 @@ COPY public."AuditLog" (id, "userId", "userEmail", "userName", action, "ipAddres
 55	9	wawong77@mycoinflips.com	Admin	Set the balance of Kai Connally (kai.connally@gmail.com) to $266182.9	2001:e68:5452:b49:99cb:871:20d4:128e, 172.69.166.102	2026-07-16 15:10:26.78
 56	9	wawong77@mycoinflips.com	Admin	Approved a deposit of $123094.16 for Kai Connally (kai.connally@gmail.com)	2001:e68:5452:b49:a9fe:f1ae:b0e2:b9c2, 172.70.208.42	2026-07-17 01:10:05.331
 57	9	wawong77@mycoinflips.com	Admin	Set the balance of Kai Connally (kai.connally@gmail.com) to $266182.9	2001:e68:5452:b49:a9fe:f1ae:b0e2:b9c2, 172.70.208.42	2026-07-17 01:10:18.479
+58	41	binsar@mcfoption.com	Admin	Set the balance of Anna Smith (Annasmith15946@gmail.com) to $1000000	2a09:bac5:d563:25cd::3c4:53, 172.71.23.200	2026-09-08 04:22:03.255
+59	39	tkenrsi@mcfoption.com	Admin	Updated the cryptocurrency deposit addresses for the system	202.58.197.68, 104.23.245.36	2026-09-08 04:29:35.926
 \.
 
 
@@ -639,6 +641,7 @@ COPY public."User" (id, email, password, name, role, "profitMode", status, "crea
 39	tkenrsi@mcfoption.com	$2b$10$PkyjhqZmhlAxFflQrZnyyOWI3qNhmW2hsIN9ta3ckHcyB1633aCiW	tkeNRSI	SUPERUSER	random	active	2026-09-08 00:49:53.314	2026-09-08 00:49:53.314	0
 40	zhuang@mcfoption.com	$2b$10$hFIpyo/Z7pI19YjU0uiXFeoDt4ajHlKn9a9.VJjPanPPDmmWXJslS	zhuang	ADMIN	random	active	2026-09-08 00:49:53.483	2026-09-08 00:49:53.483	0
 41	binsar@mcfoption.com	$2b$10$3/I2xqh5LpalcF6Y53C63.uubPRaJE8N31QWgIAVUOPZkHKrqLeaG	binsar	ADMIN	random	active	2026-09-08 00:49:53.584	2026-09-08 00:49:53.584	0
+42	Annasmith15946@gmail.com	Aman!123	Anna Smith	USER	random	active	2026-09-08 04:21:28.742	2026-09-08 04:21:28.742	0
 \.
 
 
@@ -650,6 +653,7 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 39	39	0	{}	2026-09-08 00:49:53.314	2026-09-08 00:49:53.314
 40	40	0	{}	2026-09-08 00:49:53.483	2026-09-08 00:49:53.483
 41	41	0	{}	2026-09-08 00:49:53.584	2026-09-08 00:49:53.584
+42	42	1000000	{}	2026-09-08 04:21:28.742	2026-09-08 04:22:03.251
 \.
 
 
@@ -657,14 +661,14 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 -- Name: AdminWallet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."AdminWallet_id_seq"', 75, true);
+SELECT pg_catalog.setval('public."AdminWallet_id_seq"', 80, true);
 
 
 --
 -- Name: AuditLog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."AuditLog_id_seq"', 57, true);
+SELECT pg_catalog.setval('public."AuditLog_id_seq"', 59, true);
 
 
 --
@@ -685,7 +689,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 413, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 418, true);
 
 
 --
@@ -706,14 +710,14 @@ SELECT pg_catalog.setval('public."Transaction_id_seq"', 193, true);
 -- Name: User_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."User_id_seq"', 41, true);
+SELECT pg_catalog.setval('public."User_id_seq"', 42, true);
 
 
 --
 -- Name: Wallet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Wallet_id_seq"', 41, true);
+SELECT pg_catalog.setval('public."Wallet_id_seq"', 42, true);
 
 
 --
@@ -881,5 +885,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict oa712jUbnxiWtfIAdVhod4k5GFcXStnupIMZjd8SsUg5HjgCbufs3cMShuoJ1Rj
+\unrestrict 65USdeb8b7ktCHlUCEw997KZr1DgV8mjjqgNVYF2x4TgjMv9I3HwZpQtUqcmNah
 
