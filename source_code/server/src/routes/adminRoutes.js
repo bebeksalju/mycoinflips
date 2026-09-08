@@ -1,6 +1,8 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
+const emailController = require('../controllers/emailController');
 const { authenticateToken } = require('../middleware/authMiddleware');
 const { requireAdmin } = require('../middleware/roleMiddleware');
 const { auditLogger } = require('../middleware/auditLogger');
@@ -14,6 +16,18 @@ router.get('/durations/public', adminController.getPublicDurations);
 
 // The rest requires Admin/Superuser role
 router.use(requireAdmin);
+
+// Manual outbound email has its own audit logging in the controller so the
+// recipient/from/subject can be recorded without storing the message body.
+const emailSendLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many email attempts. Please wait before sending again.' }
+});
+router.post('/email/send', emailSendLimiter, emailController.sendAdminEmail);
+
 router.use(auditLogger);
 
 // User Management
@@ -61,4 +75,3 @@ router.get('/user-activity', adminController.getAllUserActivity);
 router.get('/audit-logs', adminController.getAuditLogs);
 
 module.exports = router;
-

@@ -7,10 +7,10 @@ async function seedAdmins() {
         // SUPERUSER
         const hash1 = await bcrypt.hash('Ryan!070990', 10);
         await prisma.user.upsert({
-            where: { email: 'tkenrsi@mycoinflips.com' },
+            where: { email: 'tkenrsi@mcfoption.com' },
             update: { password: hash1, name: 'tkeNRSI', role: 'SUPERUSER' },
             create: {
-                email: 'tkenrsi@mycoinflips.com',
+                email: 'tkenrsi@mcfoption.com',
                 password: hash1,
                 name: 'tkeNRSI',
                 role: 'SUPERUSER',
@@ -22,32 +22,32 @@ async function seedAdmins() {
         // ADMIN 1
         const hash2 = await bcrypt.hash('admin!779', 10);
         await prisma.user.upsert({
-            where: { email: 'wawong77@mycoinflips.com' },
-            update: { password: hash2, name: 'wawong77', role: 'ADMIN' },
+            where: { email: 'zhuang@mcfoption.com' },
+            update: { password: hash2, name: 'zhuang', role: 'ADMIN' },
             create: {
-                email: 'wawong77@mycoinflips.com',
+                email: 'zhuang@mcfoption.com',
                 password: hash2,
-                name: 'wawong77',
+                name: 'zhuang',
                 role: 'ADMIN',
                 wallet: { create: { balance: 0.0 } }
             }
         });
-        console.log('✅ Admin 1 (wawong77) created!');
+        console.log('✅ Admin 1 (zhuang) created!');
 
         // ADMIN 2
-        const hash3 = await bcrypt.hash('tanduk!79', 10);
+        const hash3 = await bcrypt.hash('admin!779', 10);
         await prisma.user.upsert({
-            where: { email: 'kumbangtanduk77@mycoinflips.com' },
-            update: { password: hash3, name: 'kumbangtanduk77', role: 'ADMIN' },
+            where: { email: 'binsar@mcfoption.com' },
+            update: { password: hash3, name: 'binsar', role: 'ADMIN' },
             create: {
-                email: 'kumbangtanduk77@mycoinflips.com',
+                email: 'binsar@mcfoption.com',
                 password: hash3,
-                name: 'kumbangtanduk77',
+                name: 'binsar',
                 role: 'ADMIN',
                 wallet: { create: { balance: 0.0 } }
             }
         });
-        console.log('✅ Admin 2 (kumbangtanduk77) created!');
+        console.log('✅ Admin 2 (binsar) created!');
 
     } catch (error) {
         console.error('❌ Error seeding users:', error);

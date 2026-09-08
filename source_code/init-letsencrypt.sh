@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# SSL initialization script for mycoinflips.com
+# SSL initialization script for mcfoption.com
 # Two-phase approach: HTTP-only first, then SSL
 
 set -e
 
 COMPOSE="docker compose -f docker-compose.prod.yml"
-DOMAIN="mycoinflips.com"
-DOMAINS=("mycoinflips.com" "www.mycoinflips.com")
-EMAIL="mycoinflips@protonmail.com"  # <<< GANTI DENGAN EMAIL KAMU
+DOMAIN="mcfoption.com"
+DOMAINS=("mcfoption.com" "www.mcfoption.com")
+EMAIL="mycoinflips@protonmail.com"  # Email kontak Let's Encrypt
 CERTBOT_CONF="./certbot/conf"
 CERTBOT_WWW="./certbot/www"
 NGINX_CONF="./nginx/conf.d"
 
 echo "============================================"
-echo " MyCoinFlips SSL Setup Script"
+echo " MCFOPTION SSL Setup Script"
 echo "============================================"
 echo ""
 
@@ -32,7 +32,7 @@ mkdir -p "$CERTBOT_WWW"
 # Backup config SSL asli, ganti dengan HTTP-only
 echo ">>> Memasang konfigurasi Nginx HTTP-only sementara..."
 cp "$NGINX_CONF/default.conf" "$NGINX_CONF/default.conf.bak"
-cp "$NGINX_CONF/default.http-only.conf" "$NGINX_CONF/default.conf"
+cp "$NGINX_CONF/default.http-only.conf.disabled" "$NGINX_CONF/default.conf"
 
 # Jalankan frontend + server + db
 echo ">>> Menjalankan Nginx (HTTP-only mode)..."
@@ -96,13 +96,13 @@ if [ -f "$CERTBOT_CONF/live/$DOMAIN/fullchain.pem" ]; then
     echo "============================================"
     echo " 🎉 DEPLOYMENT SELESAI!"
     echo " Website kamu sekarang live di:"
-    echo "   https://mycoinflips.com"
+    echo "   https://mcfoption.com"
     echo "============================================"
 else
     echo "============================================"
     echo " ❌ GAGAL mendapatkan sertifikat SSL."
     echo " Pastikan:"
-    echo "   1. Domain mycoinflips.com mengarah ke IP VPS ini"
+    echo "   1. Domain mcfoption.com dan www.mcfoption.com mengarah ke IP VPS ini"
     echo "   2. Port 80 terbuka di firewall"
     echo "   3. Tidak ada layanan lain yang memakai port 80"
     echo "============================================"

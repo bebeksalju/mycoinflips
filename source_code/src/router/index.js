@@ -11,6 +11,7 @@ import Withdrawal from '../views/Withdrawal.vue'
 import KYC from '../views/KYC.vue'
 import Banned from '../views/Banned.vue'
 import { useAuthStore } from '../stores/auth'
+import api from '../api/axios'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,16 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: () => import('../views/ForgotPassword.vue')
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: () => import('../views/ResetPassword.vue')
     },
     {
       path: '/register',
@@ -100,13 +111,17 @@ const router = createRouter({
       meta: { requiresAdmin: true },
       children: [
         {
-          path: '', // Default to dashboard
-          redirect: '/admin/dashboard'
+          path: '',
+          redirect: (to) => {
+            const authStore = useAuthStore();
+            return authStore.user.role === 'SUPERUSER' ? '/admin/dashboard' : '/admin/users';
+          }
         },
         {
           path: 'dashboard',
           name: 'admin-dashboard',
-          component: () => import('../views/admin/AdminDashboard.vue')
+          component: () => import('../views/admin/AdminDashboard.vue'),
+          meta: { requiresSuperuser: true }
         },
         {
           path: 'finance',
@@ -116,7 +131,8 @@ const router = createRouter({
         {
           path: 'settings',
           name: 'admin-settings',
-          component: () => import('../views/admin/AdminSettings.vue')
+          component: () => import('../views/admin/AdminSettings.vue'),
+          meta: { requiresSuperuser: true }
         },
         {
           path: 'profile',
@@ -131,22 +147,32 @@ const router = createRouter({
         {
           path: 'kyc',
           name: 'admin-kyc',
-          component: () => import('../views/admin/AdminKYC.vue')
+          component: () => import('../views/admin/AdminKYC.vue'),
+          meta: { requiresSuperuser: true }
         },
         {
           path: 'admins',
           name: 'admin-admins',
-          component: () => import('../views/admin/AdminAdmins.vue')
+          component: () => import('../views/admin/AdminAdmins.vue'),
+          meta: { requiresSuperuser: true }
         },
         {
           path: 'logs',
           name: 'admin-logs',
-          component: () => import('../views/admin/AdminLogs.vue')
+          component: () => import('../views/admin/AdminLogs.vue'),
+          meta: { requiresSuperuser: true }
         },
         {
           path: 'user-activity',
           name: 'admin-user-activity',
-          component: () => import('../views/admin/AdminUserActivity.vue')
+          component: () => import('../views/admin/AdminUserActivity.vue'),
+          meta: { requiresSuperuser: true }
+        },
+        {
+          path: 'email',
+          name: 'admin-email',
+          component: () => import('../views/admin/AdminEmail.vue'),
+          meta: { requiresSuperuser: true }
         },
         {
           path: 'wallet',
@@ -165,35 +191,48 @@ const router = createRouter({
     {
       path: '/:pathMatch(.*)*',
       redirect: '/'
-
     }
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
 
-  // Auth Guard
+  // A full page refresh restores the token before the rest of the user object.
+  // Hydrate the current account before evaluating admin/superuser guards.
+  if (authStore.isAuthenticated && authStore.user.token && !authStore.user.id) {
+    try {
+      const response = await api.get('/auth/me');
+      const currentUser = response.data?.user;
+      if (currentUser) {
+        authStore.user.id = currentUser.id;
+        authStore.user.email = currentUser.email || '';
+        authStore.user.name = currentUser.name || '';
+        authStore.user.role = currentUser.role || 'USER';
+        authStore.user.status = currentUser.status || 'active';
+        authStore.user.profitMode = currentUser.profitMode || 'random';
+        authStore.user.kycStatus = response.data?.kycStatus || currentUser.kyc?.status?.toLowerCase() || 'unverified';
+        authStore.user.isAdmin = currentUser.role === 'ADMIN' || currentUser.role === 'SUPERUSER';
+      }
+    } catch (error) {
+      await authStore.logout();
+    }
+  }
+
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login');
   }
-  // Admin Guard
   else if (to.meta.requiresAdmin || to.meta.requiresSuperuser) {
     if (!authStore.isAuthenticated) {
-      next('/admin/login'); // Redirect to Admin Login
+      next('/admin/login');
     } else if (!authStore.user.isAdmin) {
-      next('/dashboard'); // Authorized but not admin
+      next('/dashboard');
     } else if (to.meta.requiresSuperuser && authStore.user.role !== 'SUPERUSER') {
-      next('/admin/dashboard'); // Admin but not superuser, redirect to admin dashboard
+      next('/admin/users');
     } else {
       next();
     }
   }
-  // Prevent Login access if already logged in -> DISABLED as per user request
-  // else if ((to.path === '/login' || to.path === '/register') && authStore.isAuthenticated) {
-  //    if (authStore.user.isAdmin) next('/admin');
-  //    else next('/dashboard');
-  // }
   else {
     next();
   }
