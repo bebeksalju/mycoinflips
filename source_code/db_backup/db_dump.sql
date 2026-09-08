@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
-\restrict 9QBFBZPPiCp0lnEweqcvZflvuJ8O3YVcYpE1Piwb17aIykfyF0fxaXhTMP1fa0g
+\restrict ZEk1VUGdh7mmZHNI7pjWCeQBdjU2qngFKhIqIqbztn3SZWTvo3ltpUHQ8xI7Awb
 
--- Dumped from database version 16.14
--- Dumped by pg_dump version 16.14
+-- Dumped from database version 16.15
+-- Dumped by pg_dump version 16.15
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -512,11 +512,11 @@ ALTER TABLE ONLY public."Wallet" ALTER COLUMN id SET DEFAULT nextval('public."Wa
 --
 
 COPY public."AdminWallet" (id, network, address, "createdAt", "updatedAt") FROM stdin;
-1	BTC	19rEvUZZjYJcALwhnxb2iMnvGdwAf5fjid	2026-03-04 18:50:39.953	2026-06-08 06:39:54.857
-2	ETH	0x4707be147f3fbb265923e0fda62c7192694f21b4	2026-03-04 18:50:39.96	2026-06-08 06:39:54.869
-3	USDT_ERC20	0x4707be147f3fbb265923e0fda62c7192694f21b4	2026-03-04 18:50:39.962	2026-06-08 06:39:54.871
-4	USDT_TRC20	TCbk3i9dmvGz3shUFpDsfAteQsCK67VkG5	2026-03-04 18:50:39.964	2026-06-08 06:39:54.873
-5	USDC	0x4707be147f3fbb265923e0fda62c7192694f21b4	2026-03-04 18:50:39.966	2026-06-08 06:39:54.875
+1	BTC	19rEvUZZjYJcALwhnxb2iMnvGdwAf5fjid	2026-03-04 18:50:39.953	2026-07-11 02:14:21.307
+2	ETH	0xaf35b7402d3db4bc57c77782fda8e5192631d7b8	2026-03-04 18:50:39.96	2026-07-11 02:14:21.311
+3	USDT_ERC20	0xaf35b7402d3db4bc57c77782fda8e5192631d7b8	2026-03-04 18:50:39.962	2026-07-11 02:14:21.312
+4	USDT_TRC20	TCbk3i9dmvGz3shUFpDsfAteQsCK67VkG5	2026-03-04 18:50:39.964	2026-07-11 02:14:21.313
+5	USDC	0xaf35b7402d3db4bc57c77782fda8e5192631d7b8	2026-03-04 18:50:39.966	2026-07-11 02:14:21.314
 \.
 
 
@@ -571,6 +571,17 @@ COPY public."AuditLog" (id, "userId", "userEmail", "userName", action, "ipAddres
 44	9	wawong77@mycoinflips.com	Admin	Approved a deposit of $486 for Kai Connally (kai.connally@gmail.com)	59.153.130.242	2026-06-29 11:12:20.787
 45	9	wawong77@mycoinflips.com	Admin	Set Kai Connally (kai.connally@gmail.com) to always win trades	59.153.130.242	2026-06-29 15:13:46.396
 46	9	wawong77@mycoinflips.com	Admin	Set Kai Connally (kai.connally@gmail.com) to always lose trades	59.153.130.242	2026-06-30 00:29:29.57
+47	9	wawong77@mycoinflips.com	Admin	Set the balance of Kai Connally (kai.connally@gmail.com) to $173147.99	202.58.194.36, 104.22.66.32	2026-07-11 02:10:28.848
+48	8	tkenrsi@mycoinflips.com	Admin	Updated the cryptocurrency deposit addresses for the system	202.58.194.36, 172.71.124.176	2026-07-11 02:14:21.316
+49	9	wawong77@mycoinflips.com	Admin	Set Kai Connally (kai.connally@gmail.com) to always win trades	202.58.194.36, 172.70.142.53	2026-07-11 02:59:36.062
+50	9	wawong77@mycoinflips.com	Admin	Set the balance of Kai Connally (kai.connally@gmail.com) to $2282182.9	202.58.194.36, 162.158.108.170	2026-07-11 03:40:38.126
+51	9	wawong77@mycoinflips.com	Admin	Set the balance of Anna Smith (Annasmith15@gmail.com) to $39660069	202.58.194.36, 172.69.176.24	2026-07-11 03:50:37.404
+52	9	wawong77@mycoinflips.com	Admin	Approved the identity verification (KYC) request for Kai Connally (kai.connally@gmail.com)	202.58.194.36, 172.71.124.176	2026-07-11 05:40:09.629
+53	9	wawong77@mycoinflips.com	Admin	Rejected a withdrawal of $450 for Mark Vogel (mvpantallica@gmail.com)	202.58.194.36, 172.70.142.53	2026-07-11 05:47:18.251
+54	9	wawong77@mycoinflips.com	Admin	Approved a deposit of $124980.22 for Kai Connally (kai.connally@gmail.com)	2001:e68:5452:b49:99cb:871:20d4:128e, 172.69.166.102	2026-07-16 15:09:55.068
+55	9	wawong77@mycoinflips.com	Admin	Set the balance of Kai Connally (kai.connally@gmail.com) to $266182.9	2001:e68:5452:b49:99cb:871:20d4:128e, 172.69.166.102	2026-07-16 15:10:26.78
+56	9	wawong77@mycoinflips.com	Admin	Approved a deposit of $123094.16 for Kai Connally (kai.connally@gmail.com)	2001:e68:5452:b49:a9fe:f1ae:b0e2:b9c2, 172.70.208.42	2026-07-17 01:10:05.331
+57	9	wawong77@mycoinflips.com	Admin	Set the balance of Kai Connally (kai.connally@gmail.com) to $266182.9	2001:e68:5452:b49:a9fe:f1ae:b0e2:b9c2, 172.70.208.42	2026-07-17 01:10:18.479
 \.
 
 
@@ -579,12 +590,6 @@ COPY public."AuditLog" (id, "userId", "userEmail", "userName", action, "ipAddres
 --
 
 COPY public."ChatMessage" (id, "userId", sender, message, read, "createdAt") FROM stdin;
-48	34	user	I can’t figure out my bitcoin address	t	2026-06-08 06:39:34.704
-50	37	user	Ini akun IT digunakan khusus untuk maintenance	t	2026-06-12 06:33:09.222
-52	34	user	I would like to withdraw could I make my account verified?	t	2026-06-23 01:43:20.039
-53	34	admin	Good morning/afternoon/evening Mr.Mark Vogel, We will verify your account; please wait a moment.	t	2026-06-23 01:44:05.543
-54	34	user	I attempted to withdraw on Sunday how long should I wait till the withdrawal goes through?	f	2026-06-29 19:06:44.271
-55	34	user	Why is my withdrawal taking so long?	f	2026-06-30 14:47:43.396
 \.
 
 
@@ -593,9 +598,6 @@ COPY public."ChatMessage" (id, "userId", sender, message, read, "createdAt") FRO
 --
 
 COPY public."Kyc" (id, "userId", status, "documentUrl", "documentUrlBack", "fullName", "idNumber", "createdAt", "updatedAt") FROM stdin;
-2	13	APPROVED	/uploads/kyc/kyc-1774054578132-44cyp2eyvwz.jpg	/uploads/kyc/kyc-1774054578133-fgniuc0z8vm.jpg	Anna smith	123456789	2026-03-21 00:56:18.136	2026-03-21 00:57:41.324
-3	19	APPROVED	/uploads/kyc/kyc-1774668777990-94h0ggx5ctg.jpeg	/uploads/kyc/kyc-1774668777992-dr67cxnkbko.jpeg	Baylan	Yuen	2026-03-28 03:32:57.996	2026-03-28 03:33:10.244
-7	34	APPROVED	/uploads/kyc/kyc-1782179135712-20bq41xvxye.jpg	/uploads/kyc/kyc-1782179135713-ajpf5ktqpjr.jpg	Mark	Vogel	2026-06-23 01:45:35.716	2026-06-23 01:48:09.439
 \.
 
 
@@ -604,20 +606,6 @@ COPY public."Kyc" (id, "userId", status, "documentUrl", "documentUrlBack", "full
 --
 
 COPY public."Session" (id, "userId", token, "expiresAt", "createdAt", "lastActivity") FROM stdin;
-340	34	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0LCJlbWFpbCI6Im12cGFudGFsbGljYUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgyODMwODMwLCJleHAiOjE3ODI5MTcyMzB9.H4e0Rl9fN_Dm4JQHK25A4ERaNK84AkwG0Hu8gWYgfIA	2026-07-01 14:47:10.293	2026-06-30 14:47:10.293	2026-06-30 14:47:10.293
-166	21	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIxLCJlbWFpbCI6ImVsYXNzb3dpcG9oQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3NzcyNTE5MTEsImV4cCI6MTc3NzMzODMxMX0.li7pBGABg2LaHuRfdhobTnlq9WjRbtDVEpEHIzU2_P0	2026-04-28 01:05:11.786	2026-04-27 01:05:11.786	2026-06-23 02:15:56.25
-248	30	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMwLCJlbWFpbCI6Im5pdmVhYnV0dGVyNzc5QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA5NzcxOTMsImV4cCI6MTc4MTA2MzU5M30.PJzTSwFuMNNBtpHPvxVCVyRygRx7vHqC3GKtpNC2HJY	2026-06-10 03:53:13.538	2026-06-09 03:53:13.538	2026-06-23 02:15:56.25
-250	30	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMwLCJlbWFpbCI6Im5pdmVhYnV0dGVyNzc5QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODEwNDk0NTksImV4cCI6MTc4MTEzNTg1OX0.qL88x67VpTefhc0OF3Pq9mTIyP6lPqnGrkfg9tVLi84	2026-06-10 23:57:39.587	2026-06-09 23:57:39.587	2026-06-23 02:15:56.25
-191	26	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI2LCJlbWFpbCI6Im1pa2Vjb2ZmZXkzNTdAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MDQ1Njc0OCwiZXhwIjoxNzgwNTQzMTQ4fQ.LzQwxbQyBgCgo2C4n1dyRoj9YxX7MHgOnFC5b2gQd4k	2026-06-04 03:19:08.18	2026-06-03 03:19:08.181	2026-06-23 02:15:56.25
-327	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODI2OTUyNTUsImV4cCI6MTc4Mjc4MTY1NX0.hOp8_7V94xs3z1yHypLxRIqv_cFVsKeC_KYLzAd3BpE	2026-06-30 01:07:35.302	2026-06-29 01:07:35.302	2026-06-29 01:07:35.302
-328	38	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM4LCJlbWFpbCI6ImthaS5jb25uYWxseUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgyNjk2NTExLCJleHAiOjE3ODI3ODI5MTF9.RBxcS6o4s7vvtjHiPBy7MC8IJNbUv4Dui61yC2NGPBY	2026-06-30 01:28:31.172	2026-06-29 01:28:31.172	2026-06-29 01:28:31.172
-332	13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEzLCJlbWFpbCI6IkFubmFzbWl0aDE1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODI3MzY5ODMsImV4cCI6MTc4MjgyMzM4M30.Wiqg9KQl4Ibg5q-yOIX0N1jnPce7Hxj6dEexEbu-EKc	2026-06-30 12:43:03.973	2026-06-29 12:43:03.973	2026-06-29 12:43:03.973
-219	33	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMzLCJlbWFpbCI6ImNoYXNyYWZpdGlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MDgwOTYzOCwiZXhwIjoxNzgwODk2MDM4fQ.26yLxQYlkX-v7IywySQw7OBvLEHEifUrewzRzu7wt4U	2026-06-08 05:20:38.703	2026-06-07 05:20:38.704	2026-06-23 02:15:56.25
-221	28	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI4LCJlbWFpbCI6ImdyaWZmaW5qbzc3QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODA4MzgxMjIsImV4cCI6MTc4MDkyNDUyMn0.KdbOEatqdYPUlaNTuzJWM5bxCaNXIdMRLxQy84wXlVo	2026-06-08 13:15:22.349	2026-06-07 13:15:22.349	2026-06-23 02:15:56.25
-334	34	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM0LCJlbWFpbCI6Im12cGFudGFsbGljYUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInRva2VuVmVyc2lvbiI6MCwiaWF0IjoxNzgyNzU5ODg1LCJleHAiOjE3ODI4NDYyODV9.yWUc7L5YGDkdhMs5dlrjLmuZnZF95Z5yw37flRYviK4	2026-06-30 19:04:45.937	2026-06-29 19:04:45.937	2026-06-29 19:04:45.937
-282	19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJlbWFpbCI6ImJheWxhbnlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MTU3NzExMiwiZXhwIjoxNzgxNjYzNTEyfQ.QHujgbCA0K6wZyFhitbVdang0vylKRO48pawSQtw8Xk	2026-06-17 02:31:52.91	2026-06-16 02:31:52.91	2026-06-23 02:15:56.25
-225	35	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjM1LCJlbWFpbCI6ImNlc2xpbmVsYXVAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MDg5NDk2NSwiZXhwIjoxNzgwOTgxMzY1fQ.mA8yRerU0k392AMxwphHFTEMyguC3tBSubcl_irZwVA	2026-06-09 05:02:45.865	2026-06-08 05:02:45.866	2026-06-23 02:15:56.25
-283	19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJlbWFpbCI6ImJheWxhbnlAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjAsImlhdCI6MTc4MTU3NzYzOCwiZXhwIjoxNzgxNjY0MDM4fQ.vg91RRrqZifQblM48_hRbAJ9wx6YGm4Arg191WgBaIw	2026-06-17 02:40:38.475	2026-06-16 02:40:38.475	2026-06-23 02:15:56.25
 \.
 
 
@@ -640,88 +628,6 @@ COPY public."TradingDuration" (id, seconds, percentage, "minBalance") FROM stdin
 --
 
 COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, status, "targetAddress", "proofUrl", "createdAt") FROM stdin;
-144	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-15 05:31:15.01
-145	19	30000	\N	BTC	WITHDRAWAL	COMPLETED	0x17884aC617d8b946F4EEc8F359C79FfE9dc31FF4	\N	2026-06-16 02:42:12.876
-146	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-17 01:00:37.499
-147	13	6000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-20 08:12:16.054
-148	34	120	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1782174094675-461waqdjilj.png	2026-06-23 00:21:34.677
-58	13	100000	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1773282653332-88byko7u3nh.jpg	2026-03-12 02:30:53.338
-59	13	10000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-12 02:32:23.328
-60	13	10000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-12 02:34:06.579
-65	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-12 12:25:20.767
-66	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-12 12:37:16.795
-67	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-16 03:32:51.15
-149	34	101	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1782175828589-wdbwt6uwflo.png	2026-06-23 00:50:28.594
-150	34	500	0	ETH/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-23 01:28:32.726
-151	13	123	\N	BTC	WITHDRAWAL	FAILED	123123	\N	2026-06-23 02:00:26.53
-152	34	12	\N	BTC	WITHDRAWAL	COMPLETED	bc1qexhcgvj3p2z3vkpd63lpph2tktgjwp2ak2lrjn	\N	2026-06-23 02:01:39.244
-153	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-23 02:41:27.042
-156	13	6000	0	XRP/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-24 03:48:34.033
-157	13	10000	0	ETH/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-25 00:53:40.809
-155	34	50	\N	BTC	WITHDRAWAL	FAILED	bc1q38nym202hxcz63lhl4hszwkspr5dz7z44t8txj	\N	2026-06-23 23:48:53.778
-154	34	500	\N	BTC	WITHDRAWAL	FAILED	bc1q38nym202hxcz63lhl4hszwkspr5dz7z44t8txj	\N	2026-06-23 23:48:18.685
-158	13	6000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-26 02:33:43.55
-159	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-26 12:07:11.473
-160	34	550	0	BTC/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-27 13:52:42.602
-93	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-22 09:29:24.365
-94	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-24 00:36:45.093
-95	13	7500	0	BTC/USDT	TRADE_SELL	PENDING	\N	\N	2026-03-24 02:39:02.255
-96	13	7500	0	BTC/USDT	TRADE_SELL	PENDING	\N	\N	2026-03-24 02:39:02.888
-97	13	7500	0	BTC/USDT	TRADE_SELL	PENDING	\N	\N	2026-03-24 02:39:06.235
-98	13	75000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-24 02:39:15.918
-99	13	7500	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-24 02:40:47.671
-100	13	8700	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-24 02:43:48.011
-101	13	8700	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-24 02:45:54.261
-102	13	8700	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-24 02:45:57.884
-103	13	6000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-24 02:47:24.875
-104	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-24 15:02:38.997
-105	13	7500	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-03-28 03:15:21.333
-161	34	123.75	0	XRP/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-27 13:55:16.685
-108	13	7000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-04-01 00:02:25.031
-109	13	8000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-04-04 14:08:13.23
-110	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-04-11 01:15:51.042
-111	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-04-11 01:15:53.406
-112	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-04-15 02:56:28.352
-113	13	10000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-04-18 01:13:25.922
-114	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-04-20 03:20:02.577
-116	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-04-21 12:13:00.777
-115	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-04-21 12:12:59.955
-162	34	50	0	XRP/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-27 13:56:39.896
-118	19	20000	\N	\N	WITHDRAWAL	FAILED	0xb2d7930C5EB2935D853EE190bfE23B85126e1C6F	\N	2026-04-25 23:15:35.575
-119	13	30000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-04-29 05:33:27.996
-120	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-04 01:04:25.53
-121	13	7400	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-05 02:44:52.632
-122	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-06 03:05:40.998
-123	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-06 03:14:46.449
-124	13	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-06 03:55:23.168
-125	13	1000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-07 13:30:06.893
-126	28	1000	0	BTC/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-07 13:32:30.081
-127	28	1000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-07 13:33:43.266
-128	28	1000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-07 13:34:44.271
-129	28	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-07 13:43:01.76
-130	13	88500	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-10 00:35:16.563
-131	13	16000	0	XRP/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-10 00:37:13.488
-132	13	10000	0	SOL/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-10 00:57:21.92
-133	13	20000	\N	\N	WITHDRAWAL	FAILED	BLABLABLABLABLA	\N	2026-06-11 05:45:41.325
-135	13	7000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-12 15:19:18.948
-136	13	140	0	USDT	DEPOSIT	FAILED	\N	/uploads/proofs/proof-1781439375021-593owth4zij.jfif	2026-06-14 12:16:15.026
-137	34	140	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1781439415495-7xvr5bhs90p.png	2026-06-14 12:16:55.495
-138	34	101	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1781440251287-x1m9oy0w3j.png	2026-06-14 12:30:51.291
-139	34	240	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-14 12:46:29.294
-140	34	260	0	ETH/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-14 12:51:47.07
-141	13	8500	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-15 02:06:00.814
-142	13	3000	0	XRP/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-15 05:24:24.466
-143	13	7500	0	ETH/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-15 05:28:05.095
-163	34	50	0	BTC/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-27 13:57:36.741
-164	34	50	0	ETH/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-27 13:58:39.811
-165	34	50	0	DOT/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-27 13:59:36.313
-166	34	50	0	BTC/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-27 14:00:27.729
-167	34	450	\N	BTC	WITHDRAWAL	PENDING	bc1q38nym202hxcz63lhl4hszwkspr5dz7z44t8txj	\N	2026-06-27 14:02:57.327
-168	38	486	0	USDT	DEPOSIT	COMPLETED	\N	/uploads/proofs/proof-1782697189264-x0iw6nl6qo8.jpg	2026-06-29 01:39:49.268
-169	13	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-29 12:43:24.831
-170	38	480	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-29 15:24:03.546
-171	38	530	0	SOL/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-06-29 15:28:50.992
-172	37	100	0	BTC/USDT	TRADE_LOSS	COMPLETED	\N	\N	2026-06-30 02:31:17.243
 \.
 
 
@@ -730,22 +636,9 @@ COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, stat
 --
 
 COPY public."User" (id, email, password, name, role, "profitMode", status, "createdAt", "updatedAt", "tokenVersion") FROM stdin;
-8	tkenrsi@mycoinflips.com	$2b$10$enQ1.PQeLWjFScbFm3Y/AeurKUfxqIwupocHUemMIuysaG.6cuqqi	tkeNRSI	SUPERUSER	random	active	2026-03-03 17:05:22.089	2026-03-03 17:05:22.089	2
-13	Annasmith15@gmail.com	Aman!123	Anna Smith	USER	win	active	2026-03-12 02:28:29.356	2026-03-12 02:31:35.178	0
-9	wawong77@mycoinflips.com	$2b$10$cVgtEreMxotmtgXn3Afp6uSCeBLtg9RaGaSaudgfTgZDOFjmcSFKC	wawong77	ADMIN	random	active	2026-03-03 17:05:22.169	2026-03-03 17:05:22.169	0
-10	kumbangtanduk77@mycoinflips.com	$2b$10$JzYZUxp6MRvAj7lDzTWuJ.yb5Y7tzbKZ9ffa4AuwfpHPaiKIQlfUS	kumbangtanduk77	ADMIN	random	active	2026-03-03 17:05:22.221	2026-03-03 17:05:22.221	0
-19	baylany@gmail.com	We wont rock you!	Baylan Yuen	USER	random	active	2026-03-28 02:09:41.475	2026-03-28 02:09:41.475	0
-21	elassowipoh@gmail.com	qusso5-zyjnym-vesveC	john lim	USER	random	active	2026-04-27 01:05:05.696	2026-04-27 01:05:05.696	0
-1	admin@myflipcoin.com	Monyet_ijo_Banyumas&*!	Super Admin	SUPERUSER	random	active	2026-02-27 15:31:14.314	2026-03-06 18:00:16.394	9
-26	mikecoffey357@gmail.com	Invest100	Mike Coffey	USER	random	active	2026-06-03 03:18:56.383	2026-06-03 03:18:56.383	0
-27	drvnchevy@gmail.com	Mufasa1995!	Jake Nordberg	USER	random	active	2026-06-03 14:57:14.12	2026-06-03 14:57:14.12	0
-33	chasrafiti@gmail.com	Love!123	Chas Rafiti	USER	random	active	2026-06-07 05:12:02.874	2026-06-07 05:12:02.874	0
-28	griffinjo77@gmail.com	91Huskies	Griffin  Johnson	USER	random	active	2026-06-04 07:46:03.566	2026-06-07 13:44:09.922	0
-35	ceslinelau@gmail.com	wawong17	cesline lau	USER	random	active	2026-06-08 05:02:31.801	2026-06-08 05:02:31.801	0
-30	niveabutter779@gmail.com	GideonStone9864$@#	Michael Schultz	USER	loss	active	2026-06-05 04:40:07.314	2026-06-10 03:34:42.61	0
-34	mvpantallica@gmail.com	Zebra@1993	Mark Vogel	USER	loss	active	2026-06-07 07:25:20.449	2026-06-23 01:29:46.52	0
-38	kai.connally@gmail.com	a3SUCrXiMWFKwEG	Kai Connally	USER	loss	active	2026-06-25 05:42:20.762	2026-06-30 00:29:29.567	0
-37	akunit@mycoinflips.com	bokepindoh	Akun IT Mycoinflips	USER	loss	active	2026-06-12 06:31:43.484	2026-06-30 02:30:46.844	0
+39	tkenrsi@mcfoption.com	$2b$10$PkyjhqZmhlAxFflQrZnyyOWI3qNhmW2hsIN9ta3ckHcyB1633aCiW	tkeNRSI	SUPERUSER	random	active	2026-09-08 00:49:53.314	2026-09-08 00:49:53.314	0
+40	zhuang@mcfoption.com	$2b$10$hFIpyo/Z7pI19YjU0uiXFeoDt4ajHlKn9a9.VJjPanPPDmmWXJslS	zhuang	ADMIN	random	active	2026-09-08 00:49:53.483	2026-09-08 00:49:53.483	0
+41	binsar@mcfoption.com	$2b$10$3/I2xqh5LpalcF6Y53C63.uubPRaJE8N31QWgIAVUOPZkHKrqLeaG	binsar	ADMIN	random	active	2026-09-08 00:49:53.584	2026-09-08 00:49:53.584	0
 \.
 
 
@@ -754,22 +647,9 @@ COPY public."User" (id, email, password, name, role, "profitMode", status, "crea
 --
 
 COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") FROM stdin;
-1	1	0	{}	2026-02-27 15:31:14.339	2026-02-27 15:31:14.339
-13	13	220600	{}	2026-03-12 02:28:29.356	2026-06-29 12:44:25.899
-8	8	0	{}	2026-03-03 17:05:22.089	2026-03-03 17:05:22.089
-9	9	0	{}	2026-03-03 17:05:22.169	2026-03-03 17:05:22.169
-10	10	0	{}	2026-03-03 17:05:22.221	2026-03-03 17:05:22.221
-38	38	587	{}	2026-06-25 05:42:20.762	2026-06-29 15:29:22.358
-21	21	0	{}	2026-04-27 01:05:05.696	2026-04-27 01:05:05.696
-26	26	0	{}	2026-06-03 03:18:56.383	2026-06-03 03:18:56.383
-27	27	0	{}	2026-06-03 14:57:14.12	2026-06-03 14:57:14.12
-37	37	0	{}	2026-06-12 06:31:43.484	2026-06-30 02:32:38.703
-19	19	1284565	{}	2026-03-28 02:09:41.475	2026-06-16 02:42:12.875
-30	30	230	{}	2026-06-05 04:40:07.314	2026-06-06 05:09:16.833
-33	33	0	{}	2026-06-07 05:12:02.874	2026-06-07 05:12:02.874
-28	28	11100	{}	2026-06-04 07:46:03.566	2026-06-07 13:44:02.677
-35	35	0	{}	2026-06-08 05:02:31.801	2026-06-08 05:02:31.801
-34	34	7.625	{}	2026-06-07 07:25:20.449	2026-06-27 14:02:57.326
+39	39	0	{}	2026-09-08 00:49:53.314	2026-09-08 00:49:53.314
+40	40	0	{}	2026-09-08 00:49:53.483	2026-09-08 00:49:53.483
+41	41	0	{}	2026-09-08 00:49:53.584	2026-09-08 00:49:53.584
 \.
 
 
@@ -777,35 +657,35 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 -- Name: AdminWallet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."AdminWallet_id_seq"', 70, true);
+SELECT pg_catalog.setval('public."AdminWallet_id_seq"', 75, true);
 
 
 --
 -- Name: AuditLog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."AuditLog_id_seq"', 46, true);
+SELECT pg_catalog.setval('public."AuditLog_id_seq"', 57, true);
 
 
 --
 -- Name: ChatMessage_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."ChatMessage_id_seq"', 55, true);
+SELECT pg_catalog.setval('public."ChatMessage_id_seq"', 58, true);
 
 
 --
 -- Name: Kyc_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Kyc_id_seq"', 7, true);
+SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 
 
 --
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 341, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 413, true);
 
 
 --
@@ -819,21 +699,21 @@ SELECT pg_catalog.setval('public."TradingDuration_id_seq"', 10, true);
 -- Name: Transaction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Transaction_id_seq"', 172, true);
+SELECT pg_catalog.setval('public."Transaction_id_seq"', 193, true);
 
 
 --
 -- Name: User_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."User_id_seq"', 38, true);
+SELECT pg_catalog.setval('public."User_id_seq"', 41, true);
 
 
 --
 -- Name: Wallet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Wallet_id_seq"', 38, true);
+SELECT pg_catalog.setval('public."Wallet_id_seq"', 41, true);
 
 
 --
@@ -1001,5 +881,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 9QBFBZPPiCp0lnEweqcvZflvuJ8O3YVcYpE1Piwb17aIykfyF0fxaXhTMP1fa0g
+\unrestrict ZEk1VUGdh7mmZHNI7pjWCeQBdjU2qngFKhIqIqbztn3SZWTvo3ltpUHQ8xI7Awb
 
