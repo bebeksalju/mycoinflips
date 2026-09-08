@@ -96,12 +96,16 @@ echo "4. Pushing backup to GitHub..."
 git config user.name "VPS Backup Agent"
 git config user.email "backup@major-tour.com"
 
+# Ensure git origin remote URL contains updated credentials
+git remote set-url origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_USER}/${GITHUB_REPO}.git"
+
 # Check if there are changes before committing
 if [ -n "$(git status --porcelain)" ]; then
     git add -A
     git commit -m "Automated backup: $(date +'%Y-%m-%d %H:%M:%S')"
-    # Push to main or master
-    git push origin main || git push origin master
+    # Push to current branch or main
+    BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+    git push origin "$BRANCH_NAME"
     echo "   -> Backup successfully pushed to GitHub!"
 else
     echo "   -> No changes detected. Backup is up to date."
