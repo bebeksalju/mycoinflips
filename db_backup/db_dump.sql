@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict D9CMogoRSa1gBg6jGPjbVC5af6wnMk6Gn4uDK2bCkIOdoc3QjCAz6hXIiJDHGgy
+\restrict UgzzNcVYqddD6O735N0rQ39W4i6uL6rrUJGxSIe75TV6kckcx7Z4BOdlDh7Zn3X
 
 -- Dumped from database version 16.15
 -- Dumped by pg_dump version 16.15
@@ -886,5 +886,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict D9CMogoRSa1gBg6jGPjbVC5af6wnMk6Gn4uDK2bCkIOdoc3QjCAz6hXIiJDHGgy
+\unrestrict UgzzNcVYqddD6O735N0rQ39W4i6uL6rrUJGxSIe75TV6kckcx7Z4BOdlDh7Zn3X
 
