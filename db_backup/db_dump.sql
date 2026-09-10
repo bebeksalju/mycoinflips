@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict cOUzj5Ng9fVlccDP4seKIRXfu68q6w4Ef4omeIjLLVYuhNWrAZslEXF0vwlTkwb
+\restrict YvmgwkQmf6XRu0dgbvU5efzWrCvhopm6KrLMcPoPpUDuZWASmiWYhiVtrUM8vkk
 
 -- Dumped from database version 16.15
 -- Dumped by pg_dump version 16.15
@@ -584,6 +584,7 @@ COPY public."AuditLog" (id, "userId", "userEmail", "userName", action, "ipAddres
 57	9	wawong77@mycoinflips.com	Admin	Set the balance of Kai Connally (kai.connally@gmail.com) to $266182.9	2001:e68:5452:b49:a9fe:f1ae:b0e2:b9c2, 172.70.208.42	2026-07-17 01:10:18.479
 58	41	binsar@mcfoption.com	Admin	Set the balance of Anna Smith (Annasmith15946@gmail.com) to $1000000	2a09:bac5:d563:25cd::3c4:53, 172.71.23.200	2026-09-08 04:22:03.255
 59	39	tkenrsi@mcfoption.com	Admin	Updated the cryptocurrency deposit addresses for the system	202.58.197.68, 104.23.245.36	2026-09-08 04:29:35.926
+60	39	tkenrsi@mcfoption.com	Admin	Set Anna Smith (Annasmith15946@gmail.com) to always win trades	202.58.197.68, 104.22.1.145	2026-09-10 11:47:50.185
 \.
 
 
@@ -608,7 +609,7 @@ COPY public."Kyc" (id, "userId", status, "documentUrl", "documentUrlBack", "full
 --
 
 COPY public."Session" (id, "userId", token, "expiresAt", "createdAt", "lastActivity") FROM stdin;
-420	42	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQyLCJlbWFpbCI6IkFubmFzbWl0aDE1OTQ2QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODkwMDE4NzMsImV4cCI6MTc4OTA4ODI3M30.K2AftlgicKoqvN1uyjKM-3RxDSQx1UQ5AuLNWqZNnN8	2026-09-11 00:57:53.043	2026-09-10 00:57:53.043	2026-09-10 00:57:53.043
+421	42	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQyLCJlbWFpbCI6IkFubmFzbWl0aDE1OTQ2QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODkwNDA4MDcsImV4cCI6MTc4OTEyNzIwN30.9P4nEm0tXoWiXXXhcl2GpGrwT9sQlDNmTM59yyJ0xxA	2026-09-11 11:46:47.01	2026-09-10 11:46:47.01	2026-09-10 11:46:47.01
 \.
 
 
@@ -632,6 +633,7 @@ COPY public."TradingDuration" (id, seconds, percentage, "minBalance") FROM stdin
 
 COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, status, "targetAddress", "proofUrl", "createdAt") FROM stdin;
 194	42	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-09-10 00:58:00.036
+195	42	15000	0	BNB/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-09-10 11:48:29.296
 \.
 
 
@@ -643,7 +645,7 @@ COPY public."User" (id, email, password, name, role, "profitMode", status, "crea
 39	tkenrsi@mcfoption.com	$2b$10$PkyjhqZmhlAxFflQrZnyyOWI3qNhmW2hsIN9ta3ckHcyB1633aCiW	tkeNRSI	SUPERUSER	random	active	2026-09-08 00:49:53.314	2026-09-08 00:49:53.314	0
 40	zhuang@mcfoption.com	$2b$10$hFIpyo/Z7pI19YjU0uiXFeoDt4ajHlKn9a9.VJjPanPPDmmWXJslS	zhuang	ADMIN	random	active	2026-09-08 00:49:53.483	2026-09-08 00:49:53.483	0
 41	binsar@mcfoption.com	$2b$10$3/I2xqh5LpalcF6Y53C63.uubPRaJE8N31QWgIAVUOPZkHKrqLeaG	binsar	ADMIN	random	active	2026-09-08 00:49:53.584	2026-09-08 00:49:53.584	0
-42	Annasmith15946@gmail.com	Aman!123	Anna Smith	USER	random	active	2026-09-08 04:21:28.742	2026-09-08 04:21:28.742	0
+42	Annasmith15946@gmail.com	Aman!123	Anna Smith	USER	win	active	2026-09-08 04:21:28.742	2026-09-10 11:47:50.182	0
 \.
 
 
@@ -655,7 +657,7 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 39	39	0	{}	2026-09-08 00:49:53.314	2026-09-08 00:49:53.314
 40	40	0	{}	2026-09-08 00:49:53.483	2026-09-08 00:49:53.483
 41	41	0	{}	2026-09-08 00:49:53.584	2026-09-08 00:49:53.584
-42	42	1000500	{}	2026-09-08 04:21:28.742	2026-09-10 00:58:30.714
+42	42	1003500	{}	2026-09-08 04:21:28.742	2026-09-10 11:49:29.96
 \.
 
 
@@ -670,7 +672,7 @@ SELECT pg_catalog.setval('public."AdminWallet_id_seq"', 80, true);
 -- Name: AuditLog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."AuditLog_id_seq"', 59, true);
+SELECT pg_catalog.setval('public."AuditLog_id_seq"', 60, true);
 
 
 --
@@ -691,7 +693,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 420, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 423, true);
 
 
 --
@@ -705,7 +707,7 @@ SELECT pg_catalog.setval('public."TradingDuration_id_seq"', 10, true);
 -- Name: Transaction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Transaction_id_seq"', 194, true);
+SELECT pg_catalog.setval('public."Transaction_id_seq"', 195, true);
 
 
 --
@@ -887,5 +889,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict cOUzj5Ng9fVlccDP4seKIRXfu68q6w4Ef4omeIjLLVYuhNWrAZslEXF0vwlTkwb
+\unrestrict YvmgwkQmf6XRu0dgbvU5efzWrCvhopm6KrLMcPoPpUDuZWASmiWYhiVtrUM8vkk
 
