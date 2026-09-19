@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict IotkvMEPS5OMLw62zXHloHwQNvPBqoFZZEHddSFdvcJQC6Vv4Mv5mPN4LtVx6ZO
+\restrict Z5PA4f1nzB6JXH5sfidgtpgh82Jso7K99qcpVurisV44GIyQasLf1kf6w4nHopZ
 
 -- Dumped from database version 16.15
 -- Dumped by pg_dump version 16.15
@@ -610,6 +610,8 @@ COPY public."Kyc" (id, "userId", status, "documentUrl", "documentUrlBack", "full
 
 COPY public."Session" (id, "userId", token, "expiresAt", "createdAt", "lastActivity") FROM stdin;
 430	42	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQyLCJlbWFpbCI6IkFubmFzbWl0aDE1OTQ2QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODk3ODE1NjgsImV4cCI6MTc4OTg2Nzk2OH0._-4hl-4L_a-c0uIJgjitzZmZ_ElE154itn8cF57UFag	2026-09-20 01:32:48.029	2026-09-19 01:32:48.029	2026-09-19 01:32:48.029
+431	42	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQyLCJlbWFpbCI6IkFubmFzbWl0aDE1OTQ2QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODk3ODM0NTksImV4cCI6MTc4OTg2OTg1OX0.C7a6PSbT_xEhTbh2XcwBJEhBQyvqHyYknYZpTyMX9Zo	2026-09-20 02:04:19.607	2026-09-19 02:04:19.607	2026-09-19 02:04:19.607
+432	42	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQyLCJlbWFpbCI6IkFubmFzbWl0aDE1OTQ2QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwidG9rZW5WZXJzaW9uIjowLCJpYXQiOjE3ODk3ODM1ODcsImV4cCI6MTc4OTg2OTk4N30.6KslciFkcMh6ltgsEEIjthy2avDr1V5KiMsuU0jEIH8	2026-09-20 02:06:27.692	2026-09-19 02:06:27.692	2026-09-19 02:06:27.692
 \.
 
 
@@ -635,6 +637,7 @@ COPY public."Transaction" (id, "userId", amount, price, "coinSymbol", type, stat
 194	42	5000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-09-10 00:58:00.036
 195	42	15000	0	BNB/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-09-10 11:48:29.296
 196	42	11000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-09-15 10:54:50.569
+197	42	15000	0	BTC/USDT	TRADE_WIN	COMPLETED	\N	\N	2026-09-19 02:06:36.516
 \.
 
 
@@ -658,7 +661,7 @@ COPY public."Wallet" (id, "userId", balance, assets, "createdAt", "updatedAt") F
 39	39	0	{}	2026-09-08 00:49:53.314	2026-09-08 00:49:53.314
 40	40	0	{}	2026-09-08 00:49:53.483	2026-09-08 00:49:53.483
 41	41	0	{}	2026-09-08 00:49:53.584	2026-09-08 00:49:53.584
-42	42	1007900	{}	2026-09-08 04:21:28.742	2026-09-15 10:56:51.853
+42	42	1010900	{}	2026-09-08 04:21:28.742	2026-09-19 02:08:59.815
 \.
 
 
@@ -694,7 +697,7 @@ SELECT pg_catalog.setval('public."Kyc_id_seq"', 9, true);
 -- Name: Session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Session_id_seq"', 430, true);
+SELECT pg_catalog.setval('public."Session_id_seq"', 432, true);
 
 
 --
@@ -708,7 +711,7 @@ SELECT pg_catalog.setval('public."TradingDuration_id_seq"', 10, true);
 -- Name: Transaction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: uTS9w2eoB9Ru
 --
 
-SELECT pg_catalog.setval('public."Transaction_id_seq"', 196, true);
+SELECT pg_catalog.setval('public."Transaction_id_seq"', 197, true);
 
 
 --
@@ -890,5 +893,5 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict IotkvMEPS5OMLw62zXHloHwQNvPBqoFZZEHddSFdvcJQC6Vv4Mv5mPN4LtVx6ZO
+\unrestrict Z5PA4f1nzB6JXH5sfidgtpgh82Jso7K99qcpVurisV44GIyQasLf1kf6w4nHopZ
 
